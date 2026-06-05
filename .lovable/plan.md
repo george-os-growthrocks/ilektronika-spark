@@ -1,227 +1,113 @@
-## Goal
+# Build Plan — ilektronikatsigara.gr v2
 
-Turn the catalog into a Skroutz/Amazon-style affiliate front for vapeandmore.gr:
-every product card and product page shows the live image, brand, price, stock,
-a "Διαθέσιμο στο vapeandmore.gr" badge with the source logo, and an
-"Αγορά τώρα" button that opens the real product page on vapeandmore.gr with a
-UTM tag — so we route traffic and money to the user's real store.
+Big push across navigation, content, SEO and conversational AI. Grouped into 8 workstreams; each ships independently.
 
-## Data ingestion (one-time build script)
+## 1. Mega Menu (desktop) + Full-screen Mobile Menu
 
-`scripts/import-products.ts` (Node, run with `bun`) consumes
-`user-uploads://wc-product-export-5-6-2026-1780661121789.csv`:
+**Desktop mega menu** (replaces current Header dropdowns):
+- Hover/click opens full-width panel under header
+- Layout per category: left column = subcategories list, center = 3-4 featured/bestseller products (ProductCard mini), right = brand shortcuts
+- Marketing badges inline next to category names: `NEW`, `HOT`, `-X%`, `SALE` (driven by data in `categories.generated.json` — add `badge` field, manually curated for top categories)
+- Featured products = first 4 in-stock products of the category, sorted by has-image + price desc
 
-1. Parse all 1,407 rows. Keep `simple` (1,000) and `variable` (75) — drop
-   `variation` (332) so each product appears once.
-2. For each row produce a `Product` record:
-   - `id` = ID, `name`, `brand` (from "Μάρκες"; first if multiple)
-   - `slug` = greeklish-slugified name, deduped with `-<id>` if collision
-   - `categories[]` = parsed "Κατηγορίες" tree (e.g.
-     `Υγρά αναπλήρωσης > Flavorshots > Flavorshots 60ml` → array of
-     `{slug,label}` breadcrumbs) — also keep `primaryCategorySlug`
-   - `images[]` = pipe-split "Εικόνες" (hotlinked from vapeandmore.gr CDN)
-   - `price` = "Κανονική τιμή" (parse "9,9" → 9.90)
-   - `salePrice` = "Τιμή προσφοράς" if present
-   - `inStock` = "Σε απόθεμα;" === "1"
-   - `shortDescription` = "Σύντομη περιγραφή" stripped of WP/Elementor HTML
-   - `attributes` = "Όνομα ιδιότητας 1/2" + "Τιμή(ές) ιδιότητας 1/2"
-     (e.g. Γεύση, Νικοτίνη)
-   - `sku` from "Κωδικός προϊόντος"
-3. Output a single `src/data/products.generated.ts` (~1075 products,
-   ~1.5 MB string). Top-level `Product[]` plus
-   `productsBySlug`, `productsByCategory`, `productsByBrand` lookup maps
-   built lazily at runtime to keep imports cheap.
-4. Categories: build `src/data/categories.generated.ts` from the unique
-   category paths, with parent/child relations, product counts, and
-   slugified URLs. Greek labels preserved.
-5. Brands: build `src/data/brands.generated.ts` from "Μάρκες" with counts.
+**Mobile menu**:
+- Full-screen overlay (edge-to-edge, `fixed inset-0 z-50`), slide-in from right
+- Accordion category list with same badges
+- Search bar pinned top, quick links (Προσφορές, Νέα, Brands, Επικοινωνία) pinned bottom
+- Body scroll-lock when open
 
-Run `bun scripts/import-products.ts` once; commit the generated files.
-(The old `src/data/products.ts` + `src/data/categories.ts` are replaced.)
+Files: rewrite `src/components/Header.tsx`, add `src/components/MegaMenu.tsx`, `src/components/MobileMenu.tsx`, extend `categories.generated.json` schema with optional `badge`.
 
-## Affiliate URL resolution (Firecrawl URL map)
+## 2. AI-Generated FAQs (one-time, committed)
 
-Server function `src/lib/vapeandmore-urls.functions.ts`:
+Use Lovable AI Gateway via a Python script in `scripts/generate-faqs.py`:
+- Generate 5-7 Greek FAQs per category (85 categories) → `src/data/faqs.categories.generated.json`
+- Generate 4-6 Greek FAQs per product (1070 products, batched) → `src/data/faqs.products.generated.json`
+- Model: `google/gemini-3-flash-preview`, structured JSON output, prompt includes category/product name + attributes + Greek vape-shop tone
+- Render as `<details>` accordion on category, subcategory, and product pages with `FAQPage` JSON-LD
 
-- Uses Firecrawl `map()` once against `https://vapeandmore.gr/product-sitemap.xml`
-  (or `/product-category/`) to fetch every real product URL.
-- Matches each CSV product to a real URL by slug → falls back to SKU lookup
-  → falls back to derived `/product/<slug>/`.
-- Caches the resulting `slug → vapeandmoreUrl` map in
-  `src/data/vapeandmore-urls.generated.json`.
-- Build helper `productAffiliateUrl(product)` returns
-  `https://vapeandmore.gr/product/<slug>/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=catalog`.
+Estimated runtime: ~20-30 min for products (batched 20/req). One-time cost.
 
-This needs the **Firecrawl connector** linked (one click). If the user
-declines, we fall back to derived `/product/<slug>/` URLs.
+## 3. Category Descriptions & Internal Linking
 
-## Routes (rebuilt)
+- AI-generate 80-150 word Greek intro paragraph per category & subcategory (same script run) → stored in the categories JSON
+- Render above product grid on `$category.tsx` and `$category.$subcategory.tsx`
+- Internal linking block at bottom of each category page: "Σχετικές κατηγορίες" (siblings) + "Δημοφιλείς μάρκες" (top 6 brands in category)
+- Product pages already link to category/brand; add "Παρόμοια προϊόντα" (4 from same subcategory) and "Άλλα προϊόντα της μάρκας"
 
-- `/` — home with featured/new arrivals from real catalog
-- `/katigories` — full category tree
-- `/$category` — top-level category page (e.g. `/ygra-anaplirosis`,
-  `/disposables`, `/narghiledes`) with subcategory chips + product grid
-  + filters (brand, in-stock, price range), 24 per page, pagination
-- `/$category/$subcategory` — drill-down (e.g.
-  `/ygra-anaplirosis/flavorshots/flavorshots-60ml`)
-- `/proionta/$slug` — product detail page (see below)
-- `/marka/$brand` — brand landing page
-- `/anazitisi` — search by name/SKU/brand (client-side filter over the
-  generated JSON)
+## 4. Blog — 2026 Rewrite
 
-`__root.tsx`, blog, FAQ, legal pages stay as-is.
+Generate ~10-12 fresh Greek posts via AI script (one per major category cluster). Topics auto-picked per category:
+- Disposable vapes 2026 trends
+- Pod systems buyer's guide 2026
+- Nicotine salts vs freebase
+- DIY e-liquid basics
+- Coil & atomizer maintenance
+- Greek vaping law update 2026
+- Best vape kit under 50€ 2026
+- (etc., one per top category)
 
-## Product detail page (`/proionta/$slug`)
+Each post: 800-1200 words, 3-5 contextual outbound links to vapeandmore.gr (with UTM), 2-3 internal links to our category/product pages, JSON-LD `Article`. Overwrite `src/data/blog.generated.json`.
 
-Skroutz-style layout:
+## 5. Full SEO Pass
 
-```text
-┌────────────────────────────────────────────────────────────┐
-│ breadcrumbs  Αρχική › Υγρά › Flavorshots › <name>           │
-├──────────────────────────┬─────────────────────────────────┤
-│  [main image]            │  Brand chip                      │
-│  [thumbnails]            │  <H1 product name>               │
-│                          │  ★ rating (placeholder)          │
-│                          │  €9,90  ~~€12,90~~ (if sale)     │
-│                          │                                  │
-│                          │  ✓ Σε απόθεμα / ✗ Εξαντλημένο    │
-│                          │                                  │
-│                          │  ┌─ Διαθέσιμο σε κατάστημα ───┐  │
-│                          │  │ [vapeandmore.gr logo]      │  │
-│                          │  │ Vape and More              │  │
-│                          │  │ Ρέθυμνο · Πανελλαδική      │  │
-│                          │  │ €9,90  [ ΑΓΟΡΑ ΤΩΡΑ → ]   │  │
-│                          │  └────────────────────────────┘  │
-│                          │                                  │
-│                          │  Γεύση: Tobacco · Νικοτίνη: 20mg│
-└──────────────────────────┴─────────────────────────────────┘
-│  Περιγραφή · Χαρακτηριστικά · Σχετικά προϊόντα · FAQ        │
-```
+- Audit every route's `head()`: title <60ch, description <160ch, og:title, og:description, og:url, JSON-LD where relevant
+- Rewrite root `__root.tsx` defaults (Organization JSON-LD with brand, social)
+- Per-category & per-product unique meta (templated from data)
+- `sitemap.xml.ts` — verify all 1070 products + 85 categories + brands + blog + static pages included, lastmod, priority
+- `public/robots.txt` — allow all, point to sitemap
+- `public/llms.txt` — site overview + curated link list per llms.txt spec
+- `public/llms-full.txt` — full catalog dump: every category & product as markdown blocks with name, description, attributes, affiliate URL
 
-- "ΑΓΟΡΑ ΤΩΡΑ" button = primary CTA, opens `vapeandmoreUrl` in new tab
-  with `rel="noopener nofollow sponsored"` and a small `↗` icon.
-- "Διαθέσιμο σε κατάστημα" merchant card mimics Skroutz: vapeandmore.gr
-  logo (already on CDN as `src/assets/logo.webp.asset.json`), shop name,
-  shipping note, mirrored price, second smaller "Αγορά τώρα" link.
-- Out-of-stock products keep the card but show `Εξαντλημένο` and a
-  secondary "Δες παρόμοια προϊόντα" button.
-- JSON-LD `Product` schema (name, image, brand, offers, availability,
-  url=vapeandmore.gr URL) + `BreadcrumbList`.
-- `<link rel="canonical">` points to the vapeandmore.gr URL — explicitly
-  prevents duplicate-content cannibalization (per your earlier directive).
-- Related: 4 products from same primary category, excluding current.
+## 6. Legal & Contact Pages (Firecrawl scrape)
 
-## Category & listing pages
+Scrape vapeandmore.gr legal pages with Firecrawl connector:
+- `/oroi-xrisis` (Όροι Χρήσης)
+- `/politiki-aporritou` (Πολιτική Απορρήτου)
+- `/cookies`
+- `/epikoinonia` (Contact) — surface store address, phone, email, hours, map embed
+- `/apostoles-epistrofes` (Shipping/Returns)
 
-Product card:
-- 4:5 image (lazy)
-- Brand label (small caps)
-- Product name (2-line clamp)
-- Price line: bold sale price + strikethrough regular if discounted
-- Stock pill: `Διαθέσιμο` (teal) / `Εξαντλημένο` (muted)
-- Hover reveals a small "Αγορά τώρα" pill linking direct to vapeandmore.gr
-- Whole card links to `/proionta/$slug` (internal detail page)
+Render as static routes; add disclaimer banner "Affiliate site — purchases happen on vapeandmore.gr". Update footer to link them.
 
-Filters (URL-synced via search params):
-- brand (multi)
-- in-stock toggle (default on per your "show out-of-stock too" answer,
-  but sorted to bottom)
-- price min/max
-- sort: relevance / price asc / price desc / newest
+## 7. Footer
 
-Pagination: 24 per page, prev/next + numeric.
+- Add logo (top-left of footer)
+- 4 columns: Brand+about, Κατηγορίες (top 8), Εξυπηρέτηση (legal/contact), Newsletter (placeholder, no backend)
+- Affiliate disclaimer line bottom
 
-## Live stock refresh (Firecrawl nightly)
+## 8. AI Chat Assistant ("Full" scope)
 
-Server route `src/routes/api/public/refresh-stock.ts`:
-- Cron-friendly endpoint, signed with `REFRESH_STOCK_SECRET`.
-- Uses Firecrawl `batchScrape` over `vapeandmoreUrl` list in chunks
-  (50 at a time) extracting `availability` + `price` via JSON schema.
-- Writes results to `src/data/stock-snapshot.generated.json`
-  (`{ slug: { inStock, price, salePrice, checkedAt } }`).
-- Product pages prefer snapshot data when it's <24h old, else fall back
-  to CSV.
-- A scheduling option: free Cloudflare cron (set in a follow-up) or
-  cron-job.org hitting the stable preview URL. Out of scope for this
-  build — the endpoint is shipped, scheduling step is documented in the
-  closing message.
+**UX**: Floating chat bubble bottom-right, opens panel (mobile = full-screen).
+- Streaming responses (SSE), markdown rendering, message history in `sessionStorage`
+- Tool-calling: model can return product references → render rich `ProductCard` inline in chat with image, price, stock, ΑΓΟΡΑ ΤΩΡΑ CTA
 
-## SEO
+**Backend** — TanStack server route `src/routes/api/chat.ts`:
+- Reads `LOVABLE_API_KEY`, calls AI Gateway `/v1/chat/completions` with `stream: true`
+- System prompt loaded from `src/lib/chat-system-prompt.ts` — includes shop identity, all 85 categories, top brands, legal/shipping facts (scraped), tone (friendly Greek, age-gate disclaimer)
+- Tool: `recommend_products({query, category?, max_price?, limit})` — searches local catalog (in-memory filter on `products.generated.json`), returns up to 6 product IDs with reason
+- Tool: `lookup_faq({topic})` — searches scraped legal/shipping facts + category FAQs
+- Tool: `compare_products({ids})` — returns attribute matrix
+- Streams text + emits `[[PRODUCT:id1,id2,id3]]` sentinel tokens that the client parses and replaces with product cards
 
-- Canonical on every product/category → vapeandmore.gr equivalent (avoids
-  duplicate-content penalty; we act as an affiliate, not a competitor).
-- Sitemap regenerated to include all category, subcategory, brand, and
-  product URLs from the generated data.
-- Robots stays open. Every product page emits Product JSON-LD + Breadcrumb.
-- Category pages emit ItemList JSON-LD with top 24 products.
-- Greek `lang="el"` already in place.
+**Training data**: System prompt + RAG-lite via tools (no vector DB needed — 1070 products fit in memory, filtered server-side per query).
 
-## Palette / branding
+## Technical notes
 
-No changes — sticking with the Classy palette you locked in
-(`#168781` primary, `#2b4878` secondary, `#6079ad` accent,
-`#95b1ae` muted, `#334b49` foreground). Header logo unchanged.
+- Mega menu uses Radix HoverCard/Popover for accessibility
+- Mobile menu uses Sheet from shadcn with custom full-screen variant
+- AI FAQ script reuses `scripts/import-products.py` pattern (Python, uses `requests` to AI Gateway)
+- Chat uses existing `client.ts` patterns; no DB persistence (sessionStorage only — user can ask "remember this" later if needed)
+- All affiliate CTAs go through `productAffiliateUrl()` (already correct `?p=ID` format)
+- Firecrawl scraping done one-time via script; results committed as JSON
 
-## File-level changes
+## Execution order
 
-```text
-NEW   scripts/import-products.ts                # one-shot CSV → TS
-NEW   src/data/products.generated.ts            # ~1075 products
-NEW   src/data/categories.generated.ts          # category tree
-NEW   src/data/brands.generated.ts              # brand index
-NEW   src/data/vapeandmore-urls.generated.json  # slug → real URL
-NEW   src/lib/affiliate.ts                      # productAffiliateUrl(...)
-NEW   src/lib/vapeandmore-urls.functions.ts     # Firecrawl URL mapper
-NEW   src/lib/catalog.ts                        # search/filter/sort helpers
-NEW   src/components/ProductCard.tsx
-NEW   src/components/MerchantCard.tsx           # "Διαθέσιμο σε κατάστημα"
-NEW   src/components/CategoryNav.tsx
-NEW   src/components/FilterSidebar.tsx
-NEW   src/routes/katigories.tsx
-NEW   src/routes/$category.$subcategory.tsx
-NEW   src/routes/marka.$brand.tsx
-NEW   src/routes/anazitisi.tsx
-NEW   src/routes/api/public/refresh-stock.ts
-EDIT  src/routes/$category.tsx                  # use real data + filters
-EDIT  src/routes/proionta.$slug.tsx             # Skroutz-style layout
-EDIT  src/routes/index.tsx                      # real featured products
-EDIT  src/routes/sitemap[.]xml.ts               # all routes
-EDIT  src/components/Header.tsx                 # real category mega-menu
-DROP  src/data/products.ts (demo)               # superseded
-DROP  src/data/categories.ts (demo)             # superseded
-```
+1. Mega menu + mobile menu + footer logo (foundation, immediate visual win)
+2. Firecrawl scrape legal/contact → static routes
+3. AI script: category descriptions + FAQs (categories + products)
+4. AI script: blog rewrite
+5. SEO sweep + sitemap + llms.txt + llms-full.txt
+6. AI chat assistant (largest, last)
 
-## Connector & secret asks (during build)
-
-- Link the **Firecrawl** connector (for URL map + nightly stock refresh).
-- Add `REFRESH_STOCK_SECRET` (random 32-char string) so the cron endpoint
-  is not callable by random visitors.
-
-## What's out of scope (v1)
-
-- Real checkout / cart on ilektronikatsigara.gr (by design — every buy
-  action goes to vapeandmore.gr).
-- User accounts, reviews submission.
-- Actually scheduling the nightly cron (endpoint shipped, scheduler is
-  one extra step after publish).
-- Migrating blog/FAQ content (already in place from earlier work).
-
-## Build order
-
-1. Write `scripts/import-products.ts` and run it → generate the three
-   data files.
-2. Link Firecrawl, build `vapeandmore-urls.functions.ts`, run once,
-   commit the URL map JSON.
-3. New shared components (ProductCard, MerchantCard, FilterSidebar,
-   CategoryNav).
-4. Rewrite `proionta.$slug.tsx` with Skroutz-style layout + JSON-LD +
-   canonical to vapeandmore.gr.
-5. Rewrite `$category.tsx`, add `$category.$subcategory.tsx`,
-   `katigories.tsx`, `marka.$brand.tsx`, `anazitisi.tsx`.
-6. Refresh `index.tsx` and `Header.tsx` with real categories/featured.
-7. Update sitemap to enumerate all generated routes.
-8. Ship `api/public/refresh-stock.ts` + add `REFRESH_STOCK_SECRET`.
-9. QA: spot-check 5 products, verify "Αγορά τώρα" hits a real
-   vapeandmore.gr URL with UTM, verify canonical, verify Lighthouse
-   isn't tanked by the 1k-product data import (lazy maps + per-route
-   slicing).
+Reply **"go"** to start building, or tell me which workstream to prioritize / skip.

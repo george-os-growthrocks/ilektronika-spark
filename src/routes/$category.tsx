@@ -8,6 +8,8 @@ import {
   subcategoriesOf,
 } from "../data/catalog";
 import { ProductCard } from "../components/ProductCard";
+import { FaqSection, faqJsonLd } from "../components/FaqSection";
+import { faqsForCategory, categoryDescription } from "../data/faqs-generated";
 
 const searchSchema = z.object({
   page: z.coerce.number().int().positive().optional().default(1),
@@ -32,19 +34,26 @@ export const Route = createFileRoute("/$category")({
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) return {};
-    const { category, all } = loaderData;
+    const { category } = loaderData;
     const title = `${category.label} | ilektronikatsigara.gr`;
-    const description = `Συλλογή ${category.label} — ${all.length} προϊόντα από Vape and More. Αυθεντικά, με ταχεία αποστολή σε όλη την Ελλάδα.`;
+    const description = categoryDescription(category.slug).slice(0, 160);
     const canonical = `https://vapeandmore.gr/product-category/${params.category}/`;
+    const faqs = faqsForCategory(category.slug);
     return {
       meta: [
         { title },
-        { name: "description", content: description.slice(0, 160) },
+        { name: "description", content: description },
         { property: "og:title", content: title },
-        { property: "og:description", content: description.slice(0, 160) },
+        { property: "og:description", content: description },
         { property: "og:url", content: canonical },
       ],
       links: [{ rel: "canonical", href: canonical }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(faqJsonLd(faqs)),
+        },
+      ],
     };
   },
   component: CategoryPage,
@@ -99,8 +108,8 @@ function CategoryPage() {
           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">
             {category.label}
           </h1>
-          <p className="text-muted-foreground mt-2">
-            {all.length} προϊόντα · {filtered.length} εμφανίζονται με τα τρέχοντα φίλτρα
+          <p className="text-muted-foreground mt-3 max-w-3xl leading-relaxed">
+            {categoryDescription(category.slug)}
           </p>
           {subs.length > 0 && (
             <div className="mt-6 flex flex-wrap gap-2">
@@ -247,6 +256,7 @@ function CategoryPage() {
           )}
         </div>
       </div>
+      <FaqSection faqs={faqsForCategory(category.slug)} />
     </>
   );
 }

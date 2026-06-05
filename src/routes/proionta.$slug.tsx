@@ -10,6 +10,8 @@ import {
 } from "../data/catalog";
 import { MerchantCard } from "../components/MerchantCard";
 import { ProductCard } from "../components/ProductCard";
+import { FaqSection, faqJsonLd } from "../components/FaqSection";
+import { faqsForProduct } from "../data/faqs-generated";
 import { productAffiliateUrl, productCanonicalUrl, STORE_NAME } from "../lib/affiliate";
 
 export const Route = createFileRoute("/proionta/$slug")({
