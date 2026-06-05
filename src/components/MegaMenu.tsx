@@ -91,7 +91,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
 
             {isOpen && subs.length > 0 && (
               <div
-                className="absolute left-1/2 top-full z-50 pt-3 -translate-x-1/2"
+                className="absolute right-0 top-full z-50 pt-3"
                 onMouseEnter={cancelClose}
                 onMouseLeave={scheduleClose}
               >
