@@ -1,103 +1,227 @@
+## Goal
 
-# ilektronikatsigara.gr — Content Hub & Catalog (Phase 1)
+Turn the catalog into a Skroutz/Amazon-style affiliate front for vapeandmore.gr:
+every product card and product page shows the live image, brand, price, stock,
+a "Διαθέσιμο στο vapeandmore.gr" badge with the source logo, and an
+"Αγορά τώρα" button that opens the real product page on vapeandmore.gr with a
+UTM tag — so we route traffic and money to the user's real store.
 
-A Greek-language, fully responsive, SEO-optimized content site for ηλεκτρονικά τσιγάρα, disposables, υγρά αναπλήρωσης, pods, ναργιλέδες & αξεσουάρ. Catalog browsing only in Phase 1; checkout added later once suppliers are in place.
+## Data ingestion (one-time build script)
 
-## Important constraints (read first)
+`scripts/import-products.ts` (Node, run with `bun`) consumes
+`user-uploads://wc-product-export-5-6-2026-1780661121789.csv`:
 
-- **No copying from vapeandmore.gr.** Product copy, images, logos, and brand assets are their IP. All content on this site will be original Greek copy I write, plus AI-generated imagery in your own brand style.
-- **No canonical tags pointing to vapeandmore.gr.** That would tell Google to de-index your site and credit them. Canonicals will be self-referential (point to your own URLs), which is the only correct SEO behavior. If you want a referral relationship later, that's an affiliate link in the page body — not a canonical.
-- **Greek legal note (not legal advice):** Greek law (Ν. 4419/2016 transposing TPD) prohibits cross-border distance sales of vape products to consumers and requires age verification. The site will include an 18+ age gate and disclaimers; you should consult a lawyer before launching sales.
+1. Parse all 1,407 rows. Keep `simple` (1,000) and `variable` (75) — drop
+   `variation` (332) so each product appears once.
+2. For each row produce a `Product` record:
+   - `id` = ID, `name`, `brand` (from "Μάρκες"; first if multiple)
+   - `slug` = greeklish-slugified name, deduped with `-<id>` if collision
+   - `categories[]` = parsed "Κατηγορίες" tree (e.g.
+     `Υγρά αναπλήρωσης > Flavorshots > Flavorshots 60ml` → array of
+     `{slug,label}` breadcrumbs) — also keep `primaryCategorySlug`
+   - `images[]` = pipe-split "Εικόνες" (hotlinked from vapeandmore.gr CDN)
+   - `price` = "Κανονική τιμή" (parse "9,9" → 9.90)
+   - `salePrice` = "Τιμή προσφοράς" if present
+   - `inStock` = "Σε απόθεμα;" === "1"
+   - `shortDescription` = "Σύντομη περιγραφή" stripped of WP/Elementor HTML
+   - `attributes` = "Όνομα ιδιότητας 1/2" + "Τιμή(ές) ιδιότητας 1/2"
+     (e.g. Γεύση, Νικοτίνη)
+   - `sku` from "Κωδικός προϊόντος"
+3. Output a single `src/data/products.generated.ts` (~1075 products,
+   ~1.5 MB string). Top-level `Product[]` plus
+   `productsBySlug`, `productsByCategory`, `productsByBrand` lookup maps
+   built lazily at runtime to keep imports cheap.
+4. Categories: build `src/data/categories.generated.ts` from the unique
+   category paths, with parent/child relations, product counts, and
+   slugified URLs. Greek labels preserved.
+5. Brands: build `src/data/brands.generated.ts` from "Μάρκες" with counts.
 
-## Phase 1 scope
+Run `bun scripts/import-products.ts` once; commit the generated files.
+(The old `src/data/products.ts` + `src/data/categories.ts` are replaced.)
 
-### 1. Brand & design
-- Site name: **ilektronikatsigara.gr** (custom wordmark, no third-party logo).
-- 3 rendered design directions (full HTML previews) — you pick one. Locked palette/type/layout across all three; they vary in composition and density.
-- Tailwind v4 design tokens in `src/styles.css` (oklch). Mobile-first, fully responsive.
-- AI-generated hero/category/product imagery in `src/assets/`.
+## Affiliate URL resolution (Firecrawl URL map)
 
-### 2. Information architecture (routes)
+Server function `src/lib/vapeandmore-urls.functions.ts`:
+
+- Uses Firecrawl `map()` once against `https://vapeandmore.gr/product-sitemap.xml`
+  (or `/product-category/`) to fetch every real product URL.
+- Matches each CSV product to a real URL by slug → falls back to SKU lookup
+  → falls back to derived `/product/<slug>/`.
+- Caches the resulting `slug → vapeandmoreUrl` map in
+  `src/data/vapeandmore-urls.generated.json`.
+- Build helper `productAffiliateUrl(product)` returns
+  `https://vapeandmore.gr/product/<slug>/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=catalog`.
+
+This needs the **Firecrawl connector** linked (one click). If the user
+declines, we fall back to derived `/product/<slug>/` URLs.
+
+## Routes (rebuilt)
+
+- `/` — home with featured/new arrivals from real catalog
+- `/katigories` — full category tree
+- `/$category` — top-level category page (e.g. `/ygra-anaplirosis`,
+  `/disposables`, `/narghiledes`) with subcategory chips + product grid
+  + filters (brand, in-stock, price range), 24 per page, pagination
+- `/$category/$subcategory` — drill-down (e.g.
+  `/ygra-anaplirosis/flavorshots/flavorshots-60ml`)
+- `/proionta/$slug` — product detail page (see below)
+- `/marka/$brand` — brand landing page
+- `/anazitisi` — search by name/SKU/brand (client-side filter over the
+  generated JSON)
+
+`__root.tsx`, blog, FAQ, legal pages stay as-is.
+
+## Product detail page (`/proionta/$slug`)
+
+Skroutz-style layout:
+
+```text
+┌────────────────────────────────────────────────────────────┐
+│ breadcrumbs  Αρχική › Υγρά › Flavorshots › <name>           │
+├──────────────────────────┬─────────────────────────────────┤
+│  [main image]            │  Brand chip                      │
+│  [thumbnails]            │  <H1 product name>               │
+│                          │  ★ rating (placeholder)          │
+│                          │  €9,90  ~~€12,90~~ (if sale)     │
+│                          │                                  │
+│                          │  ✓ Σε απόθεμα / ✗ Εξαντλημένο    │
+│                          │                                  │
+│                          │  ┌─ Διαθέσιμο σε κατάστημα ───┐  │
+│                          │  │ [vapeandmore.gr logo]      │  │
+│                          │  │ Vape and More              │  │
+│                          │  │ Ρέθυμνο · Πανελλαδική      │  │
+│                          │  │ €9,90  [ ΑΓΟΡΑ ΤΩΡΑ → ]   │  │
+│                          │  └────────────────────────────┘  │
+│                          │                                  │
+│                          │  Γεύση: Tobacco · Νικοτίνη: 20mg│
+└──────────────────────────┴─────────────────────────────────┘
+│  Περιγραφή · Χαρακτηριστικά · Σχετικά προϊόντα · FAQ        │
 ```
-/                       Αρχική — hero, κατηγορίες, top guides, featured FAQs
-/disposables            Κατηγορία: ηλεκτρονικά τσιγάρα μιας χρήσης
-/pods                   Κατηγορία: pod systems
-/ygra                   Κατηγορία: υγρά αναπλήρωσης (e-liquids)
-/atmistikes             Κατηγορία: ατμοποιητές / mods
-/narghiledes            Κατηγορία: ναργιλέδες & αξεσουάρ
-/proionta/$slug         Σελίδα προϊόντος (catalog, no cart)
-/blog                   Index άρθρων
-/blog/$slug             Άρθρο
-/odigos-arxarion        Pillar guide: «Οδηγός για αρχάριους»
-/syxnes-erotiseis       FAQ / PAA hub (FAQPage schema)
-/sxetika                Σχετικά με εμάς
-/epikoinonia            Φόρμα επικοινωνίας
-/oroi-xrisis            Όροι Χρήσης
-/politiki-aporritou     Πολιτική Απορρήτου
-/cookies                Πολιτική Cookies
-/apostoles-epistrofes   Αποστολές & Επιστροφές
-/sitemap.xml            Dynamic sitemap (server route)
-/robots.txt             Allow all + sitemap reference
+
+- "ΑΓΟΡΑ ΤΩΡΑ" button = primary CTA, opens `vapeandmoreUrl` in new tab
+  with `rel="noopener nofollow sponsored"` and a small `↗` icon.
+- "Διαθέσιμο σε κατάστημα" merchant card mimics Skroutz: vapeandmore.gr
+  logo (already on CDN as `src/assets/logo.webp.asset.json`), shop name,
+  shipping note, mirrored price, second smaller "Αγορά τώρα" link.
+- Out-of-stock products keep the card but show `Εξαντλημένο` and a
+  secondary "Δες παρόμοια προϊόντα" button.
+- JSON-LD `Product` schema (name, image, brand, offers, availability,
+  url=vapeandmore.gr URL) + `BreadcrumbList`.
+- `<link rel="canonical">` points to the vapeandmore.gr URL — explicitly
+  prevents duplicate-content cannibalization (per your earlier directive).
+- Related: 4 products from same primary category, excluding current.
+
+## Category & listing pages
+
+Product card:
+- 4:5 image (lazy)
+- Brand label (small caps)
+- Product name (2-line clamp)
+- Price line: bold sale price + strikethrough regular if discounted
+- Stock pill: `Διαθέσιμο` (teal) / `Εξαντλημένο` (muted)
+- Hover reveals a small "Αγορά τώρα" pill linking direct to vapeandmore.gr
+- Whole card links to `/proionta/$slug` (internal detail page)
+
+Filters (URL-synced via search params):
+- brand (multi)
+- in-stock toggle (default on per your "show out-of-stock too" answer,
+  but sorted to bottom)
+- price min/max
+- sort: relevance / price asc / price desc / newest
+
+Pagination: 24 per page, prev/next + numeric.
+
+## Live stock refresh (Firecrawl nightly)
+
+Server route `src/routes/api/public/refresh-stock.ts`:
+- Cron-friendly endpoint, signed with `REFRESH_STOCK_SECRET`.
+- Uses Firecrawl `batchScrape` over `vapeandmoreUrl` list in chunks
+  (50 at a time) extracting `availability` + `price` via JSON schema.
+- Writes results to `src/data/stock-snapshot.generated.json`
+  (`{ slug: { inStock, price, salePrice, checkedAt } }`).
+- Product pages prefer snapshot data when it's <24h old, else fall back
+  to CSV.
+- A scheduling option: free Cloudflare cron (set in a follow-up) or
+  cron-job.org hitting the stable preview URL. Out of scope for this
+  build — the endpoint is shipped, scheduling step is documented in the
+  closing message.
+
+## SEO
+
+- Canonical on every product/category → vapeandmore.gr equivalent (avoids
+  duplicate-content penalty; we act as an affiliate, not a competitor).
+- Sitemap regenerated to include all category, subcategory, brand, and
+  product URLs from the generated data.
+- Robots stays open. Every product page emits Product JSON-LD + Breadcrumb.
+- Category pages emit ItemList JSON-LD with top 24 products.
+- Greek `lang="el"` already in place.
+
+## Palette / branding
+
+No changes — sticking with the Classy palette you locked in
+(`#168781` primary, `#2b4878` secondary, `#6079ad` accent,
+`#95b1ae` muted, `#334b49` foreground). Header logo unchanged.
+
+## File-level changes
+
+```text
+NEW   scripts/import-products.ts                # one-shot CSV → TS
+NEW   src/data/products.generated.ts            # ~1075 products
+NEW   src/data/categories.generated.ts          # category tree
+NEW   src/data/brands.generated.ts              # brand index
+NEW   src/data/vapeandmore-urls.generated.json  # slug → real URL
+NEW   src/lib/affiliate.ts                      # productAffiliateUrl(...)
+NEW   src/lib/vapeandmore-urls.functions.ts     # Firecrawl URL mapper
+NEW   src/lib/catalog.ts                        # search/filter/sort helpers
+NEW   src/components/ProductCard.tsx
+NEW   src/components/MerchantCard.tsx           # "Διαθέσιμο σε κατάστημα"
+NEW   src/components/CategoryNav.tsx
+NEW   src/components/FilterSidebar.tsx
+NEW   src/routes/katigories.tsx
+NEW   src/routes/$category.$subcategory.tsx
+NEW   src/routes/marka.$brand.tsx
+NEW   src/routes/anazitisi.tsx
+NEW   src/routes/api/public/refresh-stock.ts
+EDIT  src/routes/$category.tsx                  # use real data + filters
+EDIT  src/routes/proionta.$slug.tsx             # Skroutz-style layout
+EDIT  src/routes/index.tsx                      # real featured products
+EDIT  src/routes/sitemap[.]xml.ts               # all routes
+EDIT  src/components/Header.tsx                 # real category mega-menu
+DROP  src/data/products.ts (demo)               # superseded
+DROP  src/data/categories.ts (demo)             # superseded
 ```
 
-### 3. Content (original, Greek, SEO-driven)
-Keyword research targets (indicative, expanded during build):
-- Head: ηλεκτρονικό τσιγάρο, disposable vape, υγρά αναπλήρωσης, pod system, ναργιλές, ατμιστικές
-- Long-tail: «καλύτερο ηλεκτρονικό τσιγάρο για αρχάριους», «disposable vape χωρίς νικοτίνη», «πώς να καθαρίσω τον ναργιλέ μου», «διαφορά pod και mod»
+## Connector & secret asks (during build)
 
-Deliverables:
-- 6 category landing pages with intro copy, buying guide, FAQ block
-- 8 blog/guide posts (~800–1200 λέξεις, original) — pillar + cluster structure
-- 12 demo products per main category with original Greek descriptions
-- FAQ hub + per-page FAQ blocks (FAQPage JSON-LD on FAQ pages, per-product FAQ blocks)
-- People-Also-Ask style Q&A blocks embedded in category pages
+- Link the **Firecrawl** connector (for URL map + nightly stock refresh).
+- Add `REFRESH_STOCK_SECRET` (random 32-char string) so the cron endpoint
+  is not callable by random visitors.
 
-### 4. SEO / AEO / GEO
-- Per-route `head()` with unique title, description, og:title, og:description, og:image
-- Self-referential canonicals on every leaf route
-- JSON-LD: `WebSite` + `Organization` (root), `Product` (product pages), `Article` (blog), `FAQPage` (FAQ + category FAQs), `BreadcrumbList` (deep routes)
-- Dynamic `/sitemap.xml` server route generated from route list + content
-- `/robots.txt` with sitemap reference
-- Greek `lang="el"`, geo meta (`geo.region=GR`), `hreflang=el`
-- AEO/GEO: clear Q&A formatting, short answer paragraphs, semantic HTML, alt text
+## What's out of scope (v1)
 
-### 5. Compliance / UX
-- **18+ age gate modal** on first visit (localStorage flag), blocks all routes until accepted
-- Nicotine/health warning banner in footer of every page
-- Cookie consent banner (basic — no third-party analytics in Phase 1)
-- Σχετικά / Επικοινωνία / Όροι Χρήσης / Απορρήτου / Cookies / Αποστολές & Επιστροφές — full Greek copy (template, you review with lawyer)
-
-### 6. Tech / quality bar
-- TanStack Start (current template), Tailwind v4, shadcn UI
-- TanStack Query for data, file-based routing, per-route metadata
-- Lighthouse targets: Perf ≥ 90 mobile, SEO 100, A11y ≥ 95
-- All images lazy-loaded with width/height, alt in Greek
-- Error boundaries + 404 page in Greek
-
-## Out of scope for Phase 1 (Phase 2 add-ons)
-- Real checkout (Shopify or Stripe)
-- Real inventory / supplier feed import
-- User accounts, wishlist, reviews
-- Email capture → newsletter automation
-- Analytics (GA4/Plausible) + Search Console verification
+- Real checkout / cart on ilektronikatsigara.gr (by design — every buy
+  action goes to vapeandmore.gr).
+- User accounts, reviews submission.
+- Actually scheduling the nightly cron (endpoint shipped, scheduler is
+  one extra step after publish).
+- Migrating blog/FAQ content (already in place from earlier work).
 
 ## Build order
-1. Design directions (3 rendered previews → you pick)
-2. Brand tokens, layout shell, header/footer, age gate
-3. Routes scaffold + per-route metadata + sitemap + robots
-4. Home + 6 category pages with original copy + generated imagery
-5. Product detail template + 12 demo products per category
-6. Blog index + 8 articles, FAQ hub
-7. Legal pages (Greek)
-8. SEO QA pass + responsive QA pass
 
-## Technical notes
-- `src/styles.css` only — no `tailwind.config.js`
-- All routes in `src/routes/` (flat dot-notation), `__root.tsx` for shell
-- Canonicals on leaf routes only (TanStack dedup caveat)
-- `og:image` on leaf routes only
-- Greek fonts via `@fontsource` (e.g. Manrope + Cormorant or similar, chosen during design step)
-
----
-
-Approve this plan and I'll generate the 3 design directions next.
+1. Write `scripts/import-products.ts` and run it → generate the three
+   data files.
+2. Link Firecrawl, build `vapeandmore-urls.functions.ts`, run once,
+   commit the URL map JSON.
+3. New shared components (ProductCard, MerchantCard, FilterSidebar,
+   CategoryNav).
+4. Rewrite `proionta.$slug.tsx` with Skroutz-style layout + JSON-LD +
+   canonical to vapeandmore.gr.
+5. Rewrite `$category.tsx`, add `$category.$subcategory.tsx`,
+   `katigories.tsx`, `marka.$brand.tsx`, `anazitisi.tsx`.
+6. Refresh `index.tsx` and `Header.tsx` with real categories/featured.
+7. Update sitemap to enumerate all generated routes.
+8. Ship `api/public/refresh-stock.ts` + add `REFRESH_STOCK_SECRET`.
+9. QA: spot-check 5 products, verify "Αγορά τώρα" hits a real
+   vapeandmore.gr URL with UTM, verify canonical, verify Lighthouse
+   isn't tanked by the 1k-product data import (lazy maps + per-route
+   slicing).

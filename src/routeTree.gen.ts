@@ -14,14 +14,18 @@ import { Route as SxetikaRouteImport } from './routes/sxetika'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PolitikiAporritouRouteImport } from './routes/politiki-aporritou'
 import { Route as OroiXrisisRouteImport } from './routes/oroi-xrisis'
+import { Route as KatigoriesRouteImport } from './routes/katigories'
 import { Route as EpikoinoniaRouteImport } from './routes/epikoinonia'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as ApostolesEpistrofesRouteImport } from './routes/apostoles-epistrofes'
+import { Route as AnazitisiRouteImport } from './routes/anazitisi'
 import { Route as CategoryRouteImport } from './routes/$category'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProiontaSlugRouteImport } from './routes/proionta.$slug'
+import { Route as MarkaBrandRouteImport } from './routes/marka.$brand'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as CategorySubcategoryRouteImport } from './routes/$category.$subcategory'
 
 const SyxnesErotiseisRoute = SyxnesErotiseisRouteImport.update({
   id: '/syxnes-erotiseis',
@@ -48,6 +52,11 @@ const OroiXrisisRoute = OroiXrisisRouteImport.update({
   path: '/oroi-xrisis',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KatigoriesRoute = KatigoriesRouteImport.update({
+  id: '/katigories',
+  path: '/katigories',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EpikoinoniaRoute = EpikoinoniaRouteImport.update({
   id: '/epikoinonia',
   path: '/epikoinonia',
@@ -68,6 +77,11 @@ const ApostolesEpistrofesRoute = ApostolesEpistrofesRouteImport.update({
   path: '/apostoles-epistrofes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnazitisiRoute = AnazitisiRouteImport.update({
+  id: '/anazitisi',
+  path: '/anazitisi',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CategoryRoute = CategoryRouteImport.update({
   id: '/$category',
   path: '/$category',
@@ -83,56 +97,78 @@ const ProiontaSlugRoute = ProiontaSlugRouteImport.update({
   path: '/proionta/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MarkaBrandRoute = MarkaBrandRouteImport.update({
+  id: '/marka/$brand',
+  path: '/marka/$brand',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
+const CategorySubcategoryRoute = CategorySubcategoryRouteImport.update({
+  id: '/$subcategory',
+  path: '/$subcategory',
+  getParentRoute: () => CategoryRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/$category': typeof CategoryRoute
+  '/$category': typeof CategoryRouteWithChildren
+  '/anazitisi': typeof AnazitisiRoute
   '/apostoles-epistrofes': typeof ApostolesEpistrofesRoute
   '/blog': typeof BlogRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/epikoinonia': typeof EpikoinoniaRoute
+  '/katigories': typeof KatigoriesRoute
   '/oroi-xrisis': typeof OroiXrisisRoute
   '/politiki-aporritou': typeof PolitikiAporritouRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sxetika': typeof SxetikaRoute
   '/syxnes-erotiseis': typeof SyxnesErotiseisRoute
+  '/$category/$subcategory': typeof CategorySubcategoryRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/marka/$brand': typeof MarkaBrandRoute
   '/proionta/$slug': typeof ProiontaSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/$category': typeof CategoryRoute
+  '/$category': typeof CategoryRouteWithChildren
+  '/anazitisi': typeof AnazitisiRoute
   '/apostoles-epistrofes': typeof ApostolesEpistrofesRoute
   '/blog': typeof BlogRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/epikoinonia': typeof EpikoinoniaRoute
+  '/katigories': typeof KatigoriesRoute
   '/oroi-xrisis': typeof OroiXrisisRoute
   '/politiki-aporritou': typeof PolitikiAporritouRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sxetika': typeof SxetikaRoute
   '/syxnes-erotiseis': typeof SyxnesErotiseisRoute
+  '/$category/$subcategory': typeof CategorySubcategoryRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/marka/$brand': typeof MarkaBrandRoute
   '/proionta/$slug': typeof ProiontaSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/$category': typeof CategoryRoute
+  '/$category': typeof CategoryRouteWithChildren
+  '/anazitisi': typeof AnazitisiRoute
   '/apostoles-epistrofes': typeof ApostolesEpistrofesRoute
   '/blog': typeof BlogRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/epikoinonia': typeof EpikoinoniaRoute
+  '/katigories': typeof KatigoriesRoute
   '/oroi-xrisis': typeof OroiXrisisRoute
   '/politiki-aporritou': typeof PolitikiAporritouRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sxetika': typeof SxetikaRoute
   '/syxnes-erotiseis': typeof SyxnesErotiseisRoute
+  '/$category/$subcategory': typeof CategorySubcategoryRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/marka/$brand': typeof MarkaBrandRoute
   '/proionta/$slug': typeof ProiontaSlugRoute
 }
 export interface FileRouteTypes {
@@ -140,61 +176,76 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$category'
+    | '/anazitisi'
     | '/apostoles-epistrofes'
     | '/blog'
     | '/cookies'
     | '/epikoinonia'
+    | '/katigories'
     | '/oroi-xrisis'
     | '/politiki-aporritou'
     | '/sitemap.xml'
     | '/sxetika'
     | '/syxnes-erotiseis'
+    | '/$category/$subcategory'
     | '/blog/$slug'
+    | '/marka/$brand'
     | '/proionta/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$category'
+    | '/anazitisi'
     | '/apostoles-epistrofes'
     | '/blog'
     | '/cookies'
     | '/epikoinonia'
+    | '/katigories'
     | '/oroi-xrisis'
     | '/politiki-aporritou'
     | '/sitemap.xml'
     | '/sxetika'
     | '/syxnes-erotiseis'
+    | '/$category/$subcategory'
     | '/blog/$slug'
+    | '/marka/$brand'
     | '/proionta/$slug'
   id:
     | '__root__'
     | '/'
     | '/$category'
+    | '/anazitisi'
     | '/apostoles-epistrofes'
     | '/blog'
     | '/cookies'
     | '/epikoinonia'
+    | '/katigories'
     | '/oroi-xrisis'
     | '/politiki-aporritou'
     | '/sitemap.xml'
     | '/sxetika'
     | '/syxnes-erotiseis'
+    | '/$category/$subcategory'
     | '/blog/$slug'
+    | '/marka/$brand'
     | '/proionta/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CategoryRoute: typeof CategoryRoute
+  CategoryRoute: typeof CategoryRouteWithChildren
+  AnazitisiRoute: typeof AnazitisiRoute
   ApostolesEpistrofesRoute: typeof ApostolesEpistrofesRoute
   BlogRoute: typeof BlogRouteWithChildren
   CookiesRoute: typeof CookiesRoute
   EpikoinoniaRoute: typeof EpikoinoniaRoute
+  KatigoriesRoute: typeof KatigoriesRoute
   OroiXrisisRoute: typeof OroiXrisisRoute
   PolitikiAporritouRoute: typeof PolitikiAporritouRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SxetikaRoute: typeof SxetikaRoute
   SyxnesErotiseisRoute: typeof SyxnesErotiseisRoute
+  MarkaBrandRoute: typeof MarkaBrandRoute
   ProiontaSlugRoute: typeof ProiontaSlugRoute
 }
 
@@ -235,6 +286,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OroiXrisisRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/katigories': {
+      id: '/katigories'
+      path: '/katigories'
+      fullPath: '/katigories'
+      preLoaderRoute: typeof KatigoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/epikoinonia': {
       id: '/epikoinonia'
       path: '/epikoinonia'
@@ -263,6 +321,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApostolesEpistrofesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/anazitisi': {
+      id: '/anazitisi'
+      path: '/anazitisi'
+      fullPath: '/anazitisi'
+      preLoaderRoute: typeof AnazitisiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$category': {
       id: '/$category'
       path: '/$category'
@@ -284,6 +349,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProiontaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/marka/$brand': {
+      id: '/marka/$brand'
+      path: '/marka/$brand'
+      fullPath: '/marka/$brand'
+      preLoaderRoute: typeof MarkaBrandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/$slug'
@@ -291,8 +363,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
     }
+    '/$category/$subcategory': {
+      id: '/$category/$subcategory'
+      path: '/$subcategory'
+      fullPath: '/$category/$subcategory'
+      preLoaderRoute: typeof CategorySubcategoryRouteImport
+      parentRoute: typeof CategoryRoute
+    }
   }
 }
+
+interface CategoryRouteChildren {
+  CategorySubcategoryRoute: typeof CategorySubcategoryRoute
+}
+
+const CategoryRouteChildren: CategoryRouteChildren = {
+  CategorySubcategoryRoute: CategorySubcategoryRoute,
+}
+
+const CategoryRouteWithChildren = CategoryRoute._addFileChildren(
+  CategoryRouteChildren,
+)
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
@@ -306,16 +397,19 @@ const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CategoryRoute: CategoryRoute,
+  CategoryRoute: CategoryRouteWithChildren,
+  AnazitisiRoute: AnazitisiRoute,
   ApostolesEpistrofesRoute: ApostolesEpistrofesRoute,
   BlogRoute: BlogRouteWithChildren,
   CookiesRoute: CookiesRoute,
   EpikoinoniaRoute: EpikoinoniaRoute,
+  KatigoriesRoute: KatigoriesRoute,
   OroiXrisisRoute: OroiXrisisRoute,
   PolitikiAporritouRoute: PolitikiAporritouRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SxetikaRoute: SxetikaRoute,
   SyxnesErotiseisRoute: SyxnesErotiseisRoute,
+  MarkaBrandRoute: MarkaBrandRoute,
   ProiontaSlugRoute: ProiontaSlugRoute,
 }
 export const routeTree = rootRouteImport
