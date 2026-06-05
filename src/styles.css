@@ -35,27 +35,33 @@
 
 :root {
   --radius: 0.5rem;
-  /* Brand palette from vapeandmore.gr */
-  --background: oklch(0.99 0.005 265);   /* #f9faff */
-  --foreground: oklch(0.24 0.09 265);    /* #112954 */
-  --surface: oklch(0.97 0.012 265);
+  /* Classy palette — hierarchy:
+     primary  #168781  (teal)
+     dark     #334b49  (foreground)
+     muted    #95b1ae  (sage)
+     accent   #6079ad  (soft blue)
+     deep     #2b4878  (navy)
+  */
+  --background: oklch(0.99 0.003 180);
+  --foreground: oklch(0.32 0.018 180);     /* #334b49 */
+  --surface: oklch(0.96 0.008 180);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.24 0.09 265);
+  --card-foreground: oklch(0.32 0.018 180);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.24 0.09 265);
-  --primary: oklch(0.50 0.20 265);       /* #3859d0 */
-  --primary-foreground: oklch(0.99 0.005 265);
-  --secondary: oklch(0.92 0.03 265);     /* #dfe7f9 */
-  --secondary-foreground: oklch(0.24 0.09 265);
-  --muted: oklch(0.70 0.04 265);
-  --muted-foreground: oklch(0.45 0.05 265);
-  --accent: oklch(0.92 0.03 265);
-  --accent-foreground: oklch(0.24 0.09 265);
+  --popover-foreground: oklch(0.32 0.018 180);
+  --primary: oklch(0.53 0.085 195);        /* #168781 */
+  --primary-foreground: oklch(0.99 0.003 180);
+  --secondary: oklch(0.36 0.08 265);       /* #2b4878 */
+  --secondary-foreground: oklch(0.99 0.003 180);
+  --muted: oklch(0.74 0.025 180);          /* #95b1ae */
+  --muted-foreground: oklch(0.48 0.025 185);
+  --accent: oklch(0.56 0.085 265);         /* #6079ad */
+  --accent-foreground: oklch(0.99 0.003 180);
   --destructive: oklch(0.58 0.24 27);
   --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.90 0.02 265);
-  --input: oklch(0.90 0.02 265);
-  --ring: oklch(0.50 0.20 265);
+  --border: oklch(0.88 0.012 185);
+  --input: oklch(0.88 0.012 185);
+  --ring: oklch(0.53 0.085 195);
 }
 
 .dark {
