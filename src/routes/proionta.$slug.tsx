@@ -121,7 +121,7 @@ function ProductPage() {
             <div className="border-t border-border pt-6">
               <h2 className="font-bold mb-3 uppercase text-xs tracking-widest text-muted-foreground">Χαρακτηριστικά</h2>
               <ul className="space-y-2">
-                {product.features.map((f, i) => (
+                {product.features.map((f: string, i: number) => (
                   <li key={i} className="text-sm flex gap-2">
                     <span className="text-primary">✓</span> {f}
                   </li>
@@ -141,7 +141,7 @@ function ProductPage() {
           <div>
             <h2 className="text-2xl font-extrabold tracking-tighter mb-4">Προδιαγραφές</h2>
             <dl className="space-y-2">
-              {product.specs.map((s, i) => (
+              {product.specs.map((s: { label: string; value: string }, i: number) => (
                 <div key={i} className="flex justify-between py-2 border-b border-border">
                   <dt className="font-mono text-xs uppercase tracking-widest text-muted-foreground">{s.label}</dt>
                   <dd className="font-bold text-sm">{s.value}</dd>
@@ -157,7 +157,7 @@ function ProductPage() {
           <div className="max-w-7xl mx-auto px-6">
             <h2 className="text-2xl font-extrabold tracking-tighter mb-8">Παρόμοια Προϊόντα</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {related.map((p) => (
+              {related.map((p: typeof related[number]) => (
                 <Link
                   key={p.slug}
                   to="/proionta/$slug"
