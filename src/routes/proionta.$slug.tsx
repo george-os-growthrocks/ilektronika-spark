@@ -11,6 +11,7 @@ import {
 import { MerchantCard } from "../components/MerchantCard";
 import { ProductCard } from "../components/ProductCard";
 import { FaqSection, faqJsonLd } from "../components/FaqSection";
+import { RichText } from "../components/RichText";
 import { faqsForProduct } from "../data/faqs-generated";
 import { productAffiliateUrl, productCanonicalUrl, STORE_NAME } from "../lib/affiliate";
 
@@ -223,9 +224,7 @@ function ProductPage() {
               </div>
             )}
             {product.shortDescription && (
-              <p className="text-muted-foreground leading-relaxed">
-                {product.shortDescription}
-              </p>
+              <RichText text={product.shortDescription} className="text-muted-foreground" />
             )}
 
             <MerchantCard product={product} />
@@ -263,9 +262,7 @@ function ProductPage() {
         <section className="py-12 bg-surface border-y border-border">
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-2xl font-extrabold tracking-tight mb-4">Περιγραφή</h2>
-            <p className="text-foreground leading-relaxed whitespace-pre-line">
-              {product.description}
-            </p>
+            <RichText text={product.description} />
           </div>
         </section>
       )}

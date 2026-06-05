@@ -1,27 +1,68 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { MerchantBlock, LegalCta } from "../components/LegalBlocks";
+
+const SOURCE = "https://vapeandmore.gr/%cf%80%ce%bf%ce%bb%ce%b9%cf%84%ce%b9%ce%ba%ce%b7-%ce%b1%cf%80%ce%bf%cf%81%cf%81%ce%b7%cf%84%ce%bf%cf%85/";
 
 export const Route = createFileRoute("/politiki-aporritou")({
   head: () => ({
     meta: [
       { title: "Πολιτική Απορρήτου | ilektronikatsigara.gr" },
-      { name: "description", content: "Πολιτική απορρήτου και προστασία προσωπικών δεδομένων κατά GDPR." },
+      { name: "description", content: "Πώς διαχειρίζονται τα προσωπικά σας δεδομένα στο συνεργαζόμενο κατάστημα vapeandmore.gr — GDPR συμμόρφωση, δικαιώματα χρήστη." },
       { property: "og:url", content: "/politiki-aporritou" },
     ],
     links: [{ rel: "canonical", href: "/politiki-aporritou" }],
   }),
-  component: () => (
-    <section className="py-16 max-w-3xl mx-auto px-6">
-      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tighter mb-8">Πολιτική Απορρήτου</h1>
-      <div className="space-y-5 text-foreground leading-relaxed">
-        <p>Σεβόμαστε την ιδιωτικότητα σας και τηρούμε τις απαιτήσεις του Γενικού Κανονισμού Προστασίας Δεδομένων (GDPR — Κανονισμός (ΕΕ) 2016/679).</p>
-        <h2 className="text-2xl font-extrabold tracking-tighter mt-6">Δεδομένα που συλλέγουμε</h2>
-        <p>Συλλέγουμε μόνο τα απολύτως απαραίτητα δεδομένα για τη λειτουργία του site: στοιχεία επικοινωνίας όταν συμπληρώνετε φόρμα, και τεχνικά cookies για τη λειτουργία της εφαρμογής.</p>
-        <h2 className="text-2xl font-extrabold tracking-tighter mt-6">Δικαιώματά σας</h2>
-        <p>Έχετε δικαίωμα πρόσβασης, διόρθωσης, διαγραφής και περιορισμού επεξεργασίας των δεδομένων σας. Για κάθε αίτημα: info@ilektronikatsigara.gr</p>
-        <h2 className="text-2xl font-extrabold tracking-tighter mt-6">Διατήρηση</h2>
-        <p>Διατηρούμε τα δεδομένα σας για όσο χρόνο είναι απαραίτητο για τους σκοπούς για τους οποίους συλλέχθηκαν, και όχι περισσότερο από όσο επιτρέπει η νομοθεσία.</p>
-        <p className="text-sm text-muted-foreground">Ενδεικτικό κείμενο template — συμβουλευτείτε νομικό σύμβουλο πριν την πραγματική χρήση.</p>
-      </div>
-    </section>
-  ),
+  component: Page,
 });
+
+function Page() {
+  return (
+    <section className="py-16 max-w-3xl mx-auto px-6">
+      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-3">Πολιτική Απορρήτου</h1>
+      <p className="text-muted-foreground mb-10">
+        Το ilektronikatsigara.gr είναι affiliate κατάλογος. Οι παραγγελίες και η επεξεργασία προσωπικών δεδομένων γίνονται από το συνεργαζόμενο κατάστημα{" "}
+        <a href="https://vapeandmore.gr" target="_blank" rel="noopener noreferrer sponsored" className="text-primary underline">vapeandmore.gr</a>.
+      </p>
+
+      <div className="prose prose-sm max-w-none space-y-6 text-foreground/90">
+        <section>
+          <h2 className="text-xl font-extrabold">1. Υπεύθυνος επεξεργασίας</h2>
+          <p>Υπεύθυνος επεξεργασίας των δεδομένων που υποβάλλετε κατά την παραγγελία είναι η <strong>Vape and More</strong>, Αρκαδίου 82, Ρέθυμνο. Επικοινωνία: <a href="mailto:info@vapeandmore.gr" className="text-primary underline">info@vapeandmore.gr</a>.</p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-extrabold">2. Τι δεδομένα συλλέγουμε</h2>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>Στοιχεία παραγγελίας (όνομα, διεύθυνση, τηλέφωνο, email) — μόνο κατά το checkout στο vapeandmore.gr.</li>
+            <li>Δεδομένα πλοήγησης (cookies, IP, browser) — βλέπε <a href="/cookies" className="text-primary underline">Πολιτική Cookies</a>.</li>
+            <li>Επαλήθευση ηλικίας 18+ για αγορά προϊόντων ατμίσματος.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-extrabold">3. Σκοπός χρήσης</h2>
+          <p>Εκτέλεση παραγγελίας, αποστολή, εξυπηρέτηση πελατών, νόμιμες υποχρεώσεις (ΑΑΔΕ, παράβολο ατμίσματος).</p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-extrabold">4. Διατήρηση</h2>
+          <p>Τα φορολογικά παραστατικά τηρούνται για όσο ορίζει η ελληνική νομοθεσία. Δεδομένα marketing διαγράφονται με απλό αίτημα.</p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-extrabold">5. Τα δικαιώματά σας (GDPR)</h2>
+          <p>Πρόσβαση, διόρθωση, διαγραφή, φορητότητα, εναντίωση. Αίτημα στο <a href="mailto:info@vapeandmore.gr" className="text-primary underline">info@vapeandmore.gr</a>.</p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-extrabold">6. Αναλυτική πολιτική</h2>
+          <p>Η πλήρης, νομικά δεσμευτική πολιτική απορρήτου του καταστήματος βρίσκεται στο{" "}
+            <a href={SOURCE} target="_blank" rel="noopener noreferrer" className="text-primary underline">vapeandmore.gr/πολιτικη-απορρητου</a>.</p>
+        </section>
+      </div>
+
+      <LegalCta />
+      <MerchantBlock />
+    </section>
+  );
+}

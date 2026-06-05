@@ -1,29 +1,64 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { MerchantBlock, LegalCta } from "../components/LegalBlocks";
 
 export const Route = createFileRoute("/sxetika")({
   head: () => ({
     meta: [
       { title: "Σχετικά με εμάς | ilektronikatsigara.gr" },
-      { name: "description", content: "Γνωρίστε την ομάδα του ilektronikatsigara.gr — Έλληνες ειδικοί στο άτμισμα." },
+      { name: "description", content: "Το ilektronikatsigara.gr είναι ο ελληνόφωνος κατάλογος προϊόντων ατμίσματος του συνεργαζόμενου καταστήματος Vape and More (Ρέθυμνο)." },
       { property: "og:url", content: "/sxetika" },
     ],
     links: [{ rel: "canonical", href: "/sxetika" }],
   }),
-  component: () => (
-    <section className="py-16 max-w-3xl mx-auto px-6">
-      <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-6">Σχετικά με εμάς</h1>
-      <div className="space-y-5 text-foreground leading-relaxed">
-        <p>Το ilektronikatsigara.gr ξεκίνησε με έναν στόχο: να προσφέρει στους Έλληνες ατμιστές αξιόπιστη πληροφορία και αυθεντικά προϊόντα.</p>
-        <p>Επιλέγουμε προσεκτικά κάθε προϊόν στον κατάλογό μας — από κορυφαίους κατασκευαστές της Ευρώπης και του εξωτερικού, με πλήρη συμμόρφωση στην οδηγία TPD.</p>
-        <p>Πιστεύουμε ότι το άτμισμα μπορεί να είναι σημαντικό εργαλείο μείωσης βλάβης για ενήλικες καπνιστές, και ότι κάθε καταναλωτής αξίζει σαφείς, μη παραπλανητικές πληροφορίες.</p>
-        <h2 className="text-2xl font-extrabold tracking-tighter mt-8">Η δέσμευσή μας</h2>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>100% αυθεντικά προϊόντα με εγγύηση κατασκευαστή</li>
-          <li>Εξειδικευμένη υποστήριξη στα ελληνικά</li>
-          <li>Αυστηρή τήρηση της ηλικιακής επαλήθευσης (18+)</li>
-          <li>Διαφανής, μη παραπλανητική επικοινωνία</li>
-        </ul>
-      </div>
-    </section>
-  ),
+  component: Page,
 });
+
+function Page() {
+  return (
+    <section className="py-16 max-w-3xl mx-auto px-6">
+      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">Σχετικά με εμάς</h1>
+      <p className="text-lg text-muted-foreground mb-10">
+        Ένας ελληνόφωνος, καλά οργανωμένος κατάλογος για όλο το vape & ναργιλέ — σε συνεργασία με ένα από τα πιο αξιόπιστα φυσικά καταστήματα της Ελλάδας.
+      </p>
+
+      <div className="space-y-8 text-foreground/90">
+        <section>
+          <h2 className="text-2xl font-extrabold mb-2">Ποιοι είμαστε</h2>
+          <p>
+            Το <strong>ilektronikatsigara.gr</strong> είναι affiliate κατάλογος που παρουσιάζει πάνω από 1.000 προϊόντα ατμίσματος, υγρών, pods, disposables και ναργιλέ στα ελληνικά. Όλη η γκάμα συγχρονίζεται με το{" "}
+            <a href="https://vapeandmore.gr" target="_blank" rel="noopener noreferrer sponsored" className="text-primary underline font-bold">vapeandmore.gr</a>, που εκτελεί τις παραγγελίες, την αποστολή και την υποστήριξη.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-extrabold mb-2">Ο συνεργάτης μας — Vape and More</h2>
+          <p>
+            Η Vape and More λειτουργεί φυσικό κατάστημα στη <strong>Αρκαδίου 82 στο Ρέθυμνο</strong> και πραγματοποιεί πανελλαδικές αποστολές. Αυθεντικά προϊόντα από επίσημους εισαγωγείς, τεχνική υποστήριξη από vapers, και ένα από τα πιο πλήρη stock στο νησί.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-extrabold mb-2">Γιατί δύο sites;</h2>
+          <p>
+            Το vapeandmore.gr είναι το e-shop. Το ilektronikatsigara.gr είναι ο <strong>καθαρά ενημερωτικός</strong> κατάλογος με AI βοηθό, οδηγούς, FAQ και SEO-friendly δομή — ώστε όποιος ψάχνει στα ελληνικά "ηλεκτρονικό τσιγάρο" να βρίσκει αμέσως το σωστό προϊόν, σε σωστή τιμή, σε αξιόπιστο κατάστημα.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-extrabold mb-2">Διαφάνεια affiliate</h2>
+          <p>
+            Λαμβάνουμε μικρή προμήθεια για παραγγελίες που προέρχονται από συνδέσμους μας. <strong>Η τιμή για τον πελάτη δεν αλλάζει.</strong> Όλες οι συναλλαγές, τα προσωπικά δεδομένα, η αποστολή και η εγγύηση χειρίζονται αποκλειστικά από το vapeandmore.gr.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-extrabold mb-2">Ηλικιακός περιορισμός</h2>
+          <p>Όλα τα προϊόντα προορίζονται αυστηρά για ενήλικες (18+). Τα προϊόντα ατμίσματος δεν αποτελούν εγκεκριμένη μέθοδο διακοπής καπνίσματος.</p>
+        </section>
+      </div>
+
+      <LegalCta />
+      <MerchantBlock />
+    </section>
+  );
+}

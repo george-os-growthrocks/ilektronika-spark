@@ -1,25 +1,53 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { MerchantBlock, LegalCta } from "../components/LegalBlocks";
+
+const SOURCE = "https://vapeandmore.gr/cookies/";
 
 export const Route = createFileRoute("/cookies")({
   head: () => ({
     meta: [
       { title: "Πολιτική Cookies | ilektronikatsigara.gr" },
-      { name: "description", content: "Πληροφορίες για τα cookies που χρησιμοποιεί το ilektronikatsigara.gr." },
+      { name: "description", content: "Ποια cookies χρησιμοποιούμε στο ilektronikatsigara.gr και στο συνεργαζόμενο vapeandmore.gr — διαχείριση συγκαταθέσεων." },
       { property: "og:url", content: "/cookies" },
     ],
     links: [{ rel: "canonical", href: "/cookies" }],
   }),
-  component: () => (
-    <section className="py-16 max-w-3xl mx-auto px-6">
-      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tighter mb-8">Πολιτική Cookies</h1>
-      <div className="space-y-5 text-foreground leading-relaxed">
-        <p>Τα cookies είναι μικρά αρχεία που αποθηκεύονται στον browser σας για την ορθή λειτουργία της ιστοσελίδας.</p>
-        <h2 className="text-2xl font-extrabold tracking-tighter mt-6">Τύποι Cookies</h2>
-        <p><strong>Λειτουργικά:</strong> απαραίτητα για τη λειτουργία (π.χ. αποθήκευση επιβεβαίωσης ηλικίας 18+).</p>
-        <p><strong>Στατιστικά:</strong> για ανώνυμη ανάλυση επισκεψιμότητας (προαιρετικά).</p>
-        <h2 className="text-2xl font-extrabold tracking-tighter mt-6">Διαχείριση</h2>
-        <p>Μπορείτε να διαχειριστείτε ή να διαγράψετε τα cookies από τις ρυθμίσεις του browser σας ανά πάσα στιγμή.</p>
-      </div>
-    </section>
-  ),
+  component: Page,
 });
+
+function Page() {
+  return (
+    <section className="py-16 max-w-3xl mx-auto px-6">
+      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-3">Πολιτική Cookies</h1>
+      <p className="text-muted-foreground mb-10">
+        Χρησιμοποιούμε cookies για βασική λειτουργία, στατιστικά και affiliate tracking προς το{" "}
+        <a href="https://vapeandmore.gr" target="_blank" rel="noopener noreferrer sponsored" className="text-primary underline">vapeandmore.gr</a>.
+      </p>
+
+      <div className="space-y-6 text-foreground/90">
+        <section>
+          <h2 className="text-xl font-extrabold">Κατηγορίες cookies</h2>
+          <ul className="list-disc pl-5 space-y-2">
+            <li><strong>Απολύτως απαραίτητα</strong> — επαλήθευση 18+, αποθήκευση συνομιλίας AI βοηθού.</li>
+            <li><strong>Στατιστικά</strong> — ανώνυμη μέτρηση επισκεψιμότητας.</li>
+            <li><strong>Affiliate</strong> — UTM παράμετροι (utm_source=ilektronikatsigara) για απόδοση παραγγελιών.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-extrabold">Διαχείριση</h2>
+          <p>Μπορείτε να διαγράψετε ή να αποκλείσετε τα cookies από τις ρυθμίσεις του browser σας.</p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-extrabold">Αναλυτικά</h2>
+          <p>Πλήρης πολιτική cookies του καταστήματος:{" "}
+            <a href={SOURCE} target="_blank" rel="noopener noreferrer" className="text-primary underline">vapeandmore.gr/cookies</a>.</p>
+        </section>
+      </div>
+
+      <LegalCta />
+      <MerchantBlock />
+    </section>
+  );
+}
