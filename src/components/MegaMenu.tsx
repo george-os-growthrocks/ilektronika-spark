@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router";
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import {
-  topLevelCategories,
   relatedCategoriesForPillar,
   subcategoriesOf,
   productsInCategory,

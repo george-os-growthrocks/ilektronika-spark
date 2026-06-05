@@ -56,6 +56,9 @@ function BlogIndex() {
                 {post.title}
               </h2>
               <p className="text-muted-foreground leading-relaxed">{post.excerpt}</p>
+              <span className="mt-5 inline-flex text-xs font-extrabold uppercase tracking-widest text-primary">
+                Διαβάστε άρθρο →
+              </span>
             </Link>
           ))}
         </div>
