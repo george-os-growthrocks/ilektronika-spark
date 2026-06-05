@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: "Όλες οι κατηγορίες | ilektronikatsigara.gr",
     url: "/katigories",
   },
-  alternates: { canonical: "https://vapeandmore.gr/product-category/" },
+  alternates: { canonical: "/katigories" },
 };
 
 export default function CategoriesHubPage() {

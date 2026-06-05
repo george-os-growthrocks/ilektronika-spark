@@ -30,7 +30,7 @@ export async function generateMetadata({
       description: description.slice(0, 160),
       url: `/marka/${brand.slug}`,
     },
-    alternates: { canonical: `https://vapeandmore.gr/brand/${brand.slug}/` },
+    alternates: { canonical: `https://ilektronikatsigara.gr/marka/${brand.slug}` },
   };
 }
 

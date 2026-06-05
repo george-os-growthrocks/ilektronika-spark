@@ -21,6 +21,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ilektronikatsigara.gr"),
   title: {
     default: "ilektronikatsigara.gr | Ηλεκτρονικά Τσιγάρα, Disposables, Υγρά, Ναργιλέδες",
     template: "%s | ilektronikatsigara.gr",

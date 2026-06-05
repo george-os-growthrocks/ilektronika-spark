@@ -23,7 +23,7 @@ export async function generateMetadata({
   if (!category || category.depth !== 0) return {};
   const title = `${category.label} | Τιμές & Αγορά Online | ilektronikatsigara.gr`;
   const description = `Βρείτε αυθεντικά ${category.label.toLowerCase()} στο Vape and More. Δείτε τιμές, διαθεσιμότητα και αγοράστε online με άμεση αποστολή 1-3 ημέρες.`;
-  const canonical = `https://vapeandmore.gr/product-category/${slug}/`;
+  const canonical = `https://ilektronikatsigara.gr/${slug}`;
   return {
     title,
     description: description.slice(0, 160),

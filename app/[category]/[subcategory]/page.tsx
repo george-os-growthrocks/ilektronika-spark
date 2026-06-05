@@ -25,7 +25,7 @@ export async function generateMetadata({
   const all = productsInCategory(sub.slug);
   const title = `${sub.label} | ${parent.label} | ilektronikatsigara.gr`;
   const description = `Βρείτε ${sub.label.toLowerCase()} (${parent.label.toLowerCase()}) στο Vape and More. Δείτε ${all.length} αυθεντικά προϊόντα, τιμές, διαθεσιμότητα και αγοράστε online.`;
-  const canonical = `https://vapeandmore.gr/product-category/${category}/${subcategory}/`;
+  const canonical = `https://ilektronikatsigara.gr/${category}/${subcategory}`;
   return {
     title,
     description: description.slice(0, 160),

@@ -8,10 +8,9 @@ export function productAffiliateUrl(product: Pick<Product, "id" | "wpSlug" | "sl
   return `${STORE_BASE}/?p=${encodeURIComponent(product.id)}&${UTM}`;
 }
 
-/** Canonical URL pointing to the original product page on vapeandmore.gr.
- *  Used in <link rel="canonical"> to prevent duplicate-content cannibalization. */
+/** Canonical URL pointing to the product page on ilektronikatsigara.gr. */
 export function productCanonicalUrl(product: Pick<Product, "id" | "wpSlug" | "slug">): string {
-  return `${STORE_BASE}/?p=${encodeURIComponent(product.id)}`;
+  return `https://ilektronikatsigara.gr/proionta/${encodeURIComponent(product.slug)}`;
 }
 
 export const STORE_NAME = "Vape and More";
