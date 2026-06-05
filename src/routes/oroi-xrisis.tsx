@@ -1,48 +1,64 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { MerchantBlock, LegalCta } from "../components/LegalBlocks";
 
-function LegalPage({ title, body }: { title: string; body: { h?: string; p?: string }[] }) {
-  return (
-    <section className="py-16 max-w-3xl mx-auto px-6">
-      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tighter mb-8">{title}</h1>
-      <div className="space-y-5 text-foreground leading-relaxed">
-        {body.map((b, i) =>
-          b.h ? (
-            <h2 key={i} className="text-2xl font-extrabold tracking-tighter mt-8">{b.h}</h2>
-          ) : (
-            <p key={i}>{b.p}</p>
-          ),
-        )}
-      </div>
-    </section>
-  );
-}
+const SOURCE = "https://vapeandmore.gr/%ce%bf%cf%81%ce%bf%ce%b9-%cf%87%cf%81%ce%b7%cf%83%ce%b7%cf%83/";
 
 export const Route = createFileRoute("/oroi-xrisis")({
   head: () => ({
     meta: [
       { title: "Όροι Χρήσης | ilektronikatsigara.gr" },
-      { name: "description", content: "Οι όροι χρήσης του ilektronikatsigara.gr — δικαιώματα και υποχρεώσεις." },
+      { name: "description", content: "Όροι χρήσης για τον affiliate κατάλογο ilektronikatsigara.gr και το συνεργαζόμενο κατάστημα vapeandmore.gr." },
       { property: "og:url", content: "/oroi-xrisis" },
     ],
     links: [{ rel: "canonical", href: "/oroi-xrisis" }],
   }),
-  component: () => (
-    <LegalPage
-      title="Όροι Χρήσης"
-      body={[
-        { p: "Καλωσορίσατε στο ilektronikatsigara.gr. Η χρήση της ιστοσελίδας μας συνεπάγεται την ανεπιφύλακτη αποδοχή των παρακάτω όρων." },
-        { h: "1. Ηλικιακό όριο" },
-        { p: "Η ιστοσελίδα και τα προϊόντα που παρουσιάζει απευθύνονται αποκλειστικά σε ενήλικες άνω των 18 ετών. Η χρήση από ανηλίκους απαγορεύεται αυστηρά." },
-        { h: "2. Περιεχόμενο" },
-        { p: "Όλο το περιεχόμενο (κείμενα, εικόνες, λογότυπα) είναι ιδιοκτησία του ilektronikatsigara.gr ή των αντίστοιχων κατόχων δικαιωμάτων. Απαγορεύεται η αναπαραγωγή χωρίς γραπτή άδεια." },
-        { h: "3. Προϊόντα" },
-        { p: "Τα προϊόντα που παρουσιάζονται είναι ενδεικτικά. Διαθεσιμότητα και τιμές μπορεί να μεταβληθούν χωρίς προειδοποίηση." },
-        { h: "4. Ευθύνη" },
-        { p: "Η εταιρεία δεν φέρει ευθύνη για οποιαδήποτε άμεση ή έμμεση ζημιά από τη χρήση των προϊόντων. Συμβουλευτείτε ιατρό αν έχετε ζητήματα υγείας." },
-        { h: "5. Νομοθεσία" },
-        { p: "Οι όροι διέπονται από το ελληνικό δίκαιο. Αρμόδια δικαστήρια ορίζονται τα δικαστήρια Αθηνών." },
-        { p: "Τελευταία ενημέρωση: Ιούνιος 2026. Συμβουλευτείτε νομικό σύμβουλο πριν τη χρήση σε πραγματικό περιβάλλον — το κείμενο είναι ενδεικτικό template." },
-      ]}
-    />
-  ),
+  component: Page,
 });
+
+function Page() {
+  return (
+    <section className="py-16 max-w-3xl mx-auto px-6">
+      <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-3">Όροι Χρήσης</h1>
+      <p className="text-muted-foreground mb-10">
+        Με τη χρήση του ilektronikatsigara.gr αποδέχεστε τους παρακάτω όρους και τους όρους του συνεργαζόμενου καταστήματος{" "}
+        <a href={SOURCE} target="_blank" rel="noopener noreferrer" className="text-primary underline">vapeandmore.gr</a>.
+      </p>
+
+      <div className="space-y-6 text-foreground/90">
+        <section>
+          <h2 className="text-xl font-extrabold">1. Φύση του ιστότοπου</h2>
+          <p>Το ilektronikatsigara.gr είναι ενημερωτικός κατάλογος προϊόντων ατμίσματος και ναργιλέ. Δεν πραγματοποιεί πωλήσεις. Όλες οι παραγγελίες εκτελούνται στο <a href="https://vapeandmore.gr" target="_blank" rel="noopener noreferrer sponsored" className="text-primary underline">vapeandmore.gr</a>.</p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-extrabold">2. Ηλικιακός περιορισμός 18+</h2>
+          <p>Η πρόσβαση επιτρέπεται μόνο σε ενήλικες (18+). Τα προϊόντα ατμίσματος <strong>δεν</strong> αποτελούν εγκεκριμένη θεραπεία διακοπής καπνίσματος.</p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-extrabold">3. Τιμές & διαθεσιμότητα</h2>
+          <p>Τιμές, αποθέματα και χαρακτηριστικά αντλούνται από το vapeandmore.gr και ενδέχεται να αλλάξουν χωρίς προειδοποίηση. Δεσμευτικές είναι μόνο οι τιμές στο checkout του vapeandmore.gr.</p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-extrabold">4. Affiliate σχέση</h2>
+          <p>Λαμβάνουμε προμήθεια για παραγγελίες που προέρχονται από συνδέσμους μας. Αυτό δεν επηρεάζει την τιμή που πληρώνει ο πελάτης.</p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-extrabold">5. Πνευματικά δικαιώματα</h2>
+          <p>Λογότυπα και φωτογραφίες προϊόντων ανήκουν στους νόμιμους κατόχους τους και χρησιμοποιούνται για ενημερωτικούς σκοπούς.</p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-extrabold">6. Πλήρεις όροι</h2>
+          <p>Οι πλήρεις, νομικά δεσμευτικοί όροι αγοράς και χρήσης βρίσκονται στο{" "}
+            <a href={SOURCE} target="_blank" rel="noopener noreferrer" className="text-primary underline">vapeandmore.gr/οροι-χρησης</a>.</p>
+        </section>
+      </div>
+
+      <LegalCta />
+      <MerchantBlock />
+    </section>
+  );
+}
