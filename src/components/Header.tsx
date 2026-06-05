@@ -12,11 +12,20 @@ export function Header() {
   const [desktop, setDesktop] = useState(false);
 
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1280px)");
-    const update = () => setDesktop(mq.matches);
+    const getViewportWidth = () =>
+      Math.min(
+        window.innerWidth || Number.POSITIVE_INFINITY,
+        document.documentElement.clientWidth || Number.POSITIVE_INFINITY,
+        window.visualViewport?.width || Number.POSITIVE_INFINITY,
+      );
+    const update = () => setDesktop(getViewportWidth() >= 1280);
     update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
+    window.addEventListener("resize", update);
+    window.visualViewport?.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.visualViewport?.removeEventListener("resize", update);
+    };
   }, []);
 
   return (
