@@ -149,9 +149,8 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
             <ul>
               {subs.map((s) => (
                 <li key={s.slug} className="border-b border-border">
-                  <Link
-                    to="/$category/$subcategory"
-                    params={{ category: activeCat, subcategory: s.slug }}
+                  <a
+                    href={s.depth === 0 ? `/${s.slug}` : `/${activeCat}/${s.slug}`}
                     onClick={onClose}
                     className="flex items-center px-4 py-4"
                   >
@@ -160,7 +159,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
                       {s.count}
                     </span>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
