@@ -1,7 +1,6 @@
 import type { Product } from "@/data/catalog";
 import { effectivePrice, formatPrice } from "@/data/catalog";
 import { productAffiliateUrl, STORE_LOCATION, STORE_NAME } from "@/lib/affiliate";
-import logo from "@/assets/logo.webp.asset.json";
 
 export function MerchantCard({ product }: { product: Product }) {
   const price = effectivePrice(product);
@@ -31,7 +30,7 @@ export function MerchantCard({ product }: { product: Product }) {
       >
         <div className="w-16 h-16 grid place-items-center bg-background rounded border border-border shrink-0">
           <img
-            src={logo.url}
+            src="/logo-vape-and-more.png"
             alt={STORE_NAME}
             className="max-w-[52px] max-h-[52px] object-contain"
           />
