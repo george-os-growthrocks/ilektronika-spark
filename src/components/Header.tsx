@@ -39,7 +39,7 @@ export function Header() {
       </div>
 
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-md border-b border-border">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 h-14 sm:h-16 lg:h-20 flex items-center gap-3 lg:gap-5">
+        <div className="relative max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 h-14 sm:h-16 lg:h-20 flex items-center gap-3 lg:gap-5">
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0" aria-label="Αρχική">
             <img
@@ -59,7 +59,7 @@ export function Header() {
               <button
                 onClick={() => setMobileOpen(true)}
                 aria-label="Άνοιγμα μενού"
-                className="inline-flex p-2 -mr-2 hover:text-primary shrink-0"
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-10 inline-flex h-11 w-11 items-center justify-center border border-border bg-background text-foreground hover:text-primary shrink-0"
               >
                 <Menu className="h-6 w-6" />
               </button>
