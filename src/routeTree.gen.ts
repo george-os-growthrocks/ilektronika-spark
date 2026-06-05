@@ -9,38 +9,267 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SyxnesErotiseisRouteImport } from './routes/syxnes-erotiseis'
+import { Route as SxetikaRouteImport } from './routes/sxetika'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PolitikiAporritouRouteImport } from './routes/politiki-aporritou'
+import { Route as OroiXrisisRouteImport } from './routes/oroi-xrisis'
+import { Route as EpikoinoniaRouteImport } from './routes/epikoinonia'
+import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as ApostolesEpistrofesRouteImport } from './routes/apostoles-epistrofes'
+import { Route as CategoryRouteImport } from './routes/$category'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProiontaSlugRouteImport } from './routes/proionta.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
+const SyxnesErotiseisRoute = SyxnesErotiseisRouteImport.update({
+  id: '/syxnes-erotiseis',
+  path: '/syxnes-erotiseis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SxetikaRoute = SxetikaRouteImport.update({
+  id: '/sxetika',
+  path: '/sxetika',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PolitikiAporritouRoute = PolitikiAporritouRouteImport.update({
+  id: '/politiki-aporritou',
+  path: '/politiki-aporritou',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OroiXrisisRoute = OroiXrisisRouteImport.update({
+  id: '/oroi-xrisis',
+  path: '/oroi-xrisis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EpikoinoniaRoute = EpikoinoniaRouteImport.update({
+  id: '/epikoinonia',
+  path: '/epikoinonia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApostolesEpistrofesRoute = ApostolesEpistrofesRouteImport.update({
+  id: '/apostoles-epistrofes',
+  path: '/apostoles-epistrofes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoryRoute = CategoryRouteImport.update({
+  id: '/$category',
+  path: '/$category',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProiontaSlugRoute = ProiontaSlugRouteImport.update({
+  id: '/proionta/$slug',
+  path: '/proionta/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$category': typeof CategoryRoute
+  '/apostoles-epistrofes': typeof ApostolesEpistrofesRoute
+  '/blog': typeof BlogRouteWithChildren
+  '/cookies': typeof CookiesRoute
+  '/epikoinonia': typeof EpikoinoniaRoute
+  '/oroi-xrisis': typeof OroiXrisisRoute
+  '/politiki-aporritou': typeof PolitikiAporritouRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sxetika': typeof SxetikaRoute
+  '/syxnes-erotiseis': typeof SyxnesErotiseisRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/proionta/$slug': typeof ProiontaSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$category': typeof CategoryRoute
+  '/apostoles-epistrofes': typeof ApostolesEpistrofesRoute
+  '/blog': typeof BlogRouteWithChildren
+  '/cookies': typeof CookiesRoute
+  '/epikoinonia': typeof EpikoinoniaRoute
+  '/oroi-xrisis': typeof OroiXrisisRoute
+  '/politiki-aporritou': typeof PolitikiAporritouRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sxetika': typeof SxetikaRoute
+  '/syxnes-erotiseis': typeof SyxnesErotiseisRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/proionta/$slug': typeof ProiontaSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$category': typeof CategoryRoute
+  '/apostoles-epistrofes': typeof ApostolesEpistrofesRoute
+  '/blog': typeof BlogRouteWithChildren
+  '/cookies': typeof CookiesRoute
+  '/epikoinonia': typeof EpikoinoniaRoute
+  '/oroi-xrisis': typeof OroiXrisisRoute
+  '/politiki-aporritou': typeof PolitikiAporritouRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sxetika': typeof SxetikaRoute
+  '/syxnes-erotiseis': typeof SyxnesErotiseisRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/proionta/$slug': typeof ProiontaSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/$category'
+    | '/apostoles-epistrofes'
+    | '/blog'
+    | '/cookies'
+    | '/epikoinonia'
+    | '/oroi-xrisis'
+    | '/politiki-aporritou'
+    | '/sitemap.xml'
+    | '/sxetika'
+    | '/syxnes-erotiseis'
+    | '/blog/$slug'
+    | '/proionta/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/$category'
+    | '/apostoles-epistrofes'
+    | '/blog'
+    | '/cookies'
+    | '/epikoinonia'
+    | '/oroi-xrisis'
+    | '/politiki-aporritou'
+    | '/sitemap.xml'
+    | '/sxetika'
+    | '/syxnes-erotiseis'
+    | '/blog/$slug'
+    | '/proionta/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/$category'
+    | '/apostoles-epistrofes'
+    | '/blog'
+    | '/cookies'
+    | '/epikoinonia'
+    | '/oroi-xrisis'
+    | '/politiki-aporritou'
+    | '/sitemap.xml'
+    | '/sxetika'
+    | '/syxnes-erotiseis'
+    | '/blog/$slug'
+    | '/proionta/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CategoryRoute: typeof CategoryRoute
+  ApostolesEpistrofesRoute: typeof ApostolesEpistrofesRoute
+  BlogRoute: typeof BlogRouteWithChildren
+  CookiesRoute: typeof CookiesRoute
+  EpikoinoniaRoute: typeof EpikoinoniaRoute
+  OroiXrisisRoute: typeof OroiXrisisRoute
+  PolitikiAporritouRoute: typeof PolitikiAporritouRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SxetikaRoute: typeof SxetikaRoute
+  SyxnesErotiseisRoute: typeof SyxnesErotiseisRoute
+  ProiontaSlugRoute: typeof ProiontaSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/syxnes-erotiseis': {
+      id: '/syxnes-erotiseis'
+      path: '/syxnes-erotiseis'
+      fullPath: '/syxnes-erotiseis'
+      preLoaderRoute: typeof SyxnesErotiseisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sxetika': {
+      id: '/sxetika'
+      path: '/sxetika'
+      fullPath: '/sxetika'
+      preLoaderRoute: typeof SxetikaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politiki-aporritou': {
+      id: '/politiki-aporritou'
+      path: '/politiki-aporritou'
+      fullPath: '/politiki-aporritou'
+      preLoaderRoute: typeof PolitikiAporritouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oroi-xrisis': {
+      id: '/oroi-xrisis'
+      path: '/oroi-xrisis'
+      fullPath: '/oroi-xrisis'
+      preLoaderRoute: typeof OroiXrisisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/epikoinonia': {
+      id: '/epikoinonia'
+      path: '/epikoinonia'
+      fullPath: '/epikoinonia'
+      preLoaderRoute: typeof EpikoinoniaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apostoles-epistrofes': {
+      id: '/apostoles-epistrofes'
+      path: '/apostoles-epistrofes'
+      fullPath: '/apostoles-epistrofes'
+      preLoaderRoute: typeof ApostolesEpistrofesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$category': {
+      id: '/$category'
+      path: '/$category'
+      fullPath: '/$category'
+      preLoaderRoute: typeof CategoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,12 +277,57 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/proionta/$slug': {
+      id: '/proionta/$slug'
+      path: '/proionta/$slug'
+      fullPath: '/proionta/$slug'
+      preLoaderRoute: typeof ProiontaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
   }
 }
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CategoryRoute: CategoryRoute,
+  ApostolesEpistrofesRoute: ApostolesEpistrofesRoute,
+  BlogRoute: BlogRouteWithChildren,
+  CookiesRoute: CookiesRoute,
+  EpikoinoniaRoute: EpikoinoniaRoute,
+  OroiXrisisRoute: OroiXrisisRoute,
+  PolitikiAporritouRoute: PolitikiAporritouRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SxetikaRoute: SxetikaRoute,
+  SyxnesErotiseisRoute: SyxnesErotiseisRoute,
+  ProiontaSlugRoute: ProiontaSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
