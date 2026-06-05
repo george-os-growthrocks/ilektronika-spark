@@ -104,31 +104,6 @@
   }
 }
 
-.header-mega-slot,
-.mega-menu-nav {
-  display: none;
-}
-
-.header-mobile-trigger {
-  display: inline-flex;
-}
-
-.header-mobile-spacer {
-  display: block;
-}
-
-@media (min-width: 1280px) {
-  .header-mega-slot,
-  .mega-menu-nav {
-    display: flex;
-  }
-
-  .header-mobile-trigger,
-  .header-mobile-spacer {
-    display: none;
-  }
-}
-
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
