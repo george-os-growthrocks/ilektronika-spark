@@ -1,113 +1,81 @@
-# Build Plan — ilektronikatsigara.gr v2
+# Fix pack: header, text rendering, chat, legal pages
 
-Big push across navigation, content, SEO and conversational AI. Grouped into 8 workstreams; each ships independently.
+## 1. Header — stop overflowing into the category section
 
-## 1. Mega Menu (desktop) + Full-screen Mobile Menu
+Root cause: at certain widths the right-side buttons (AI / Search / 18+) push outside the header box because the layout uses an oversized flex row. They visually float over the category hero below, which is what makes the chips "uncklickable" — the chips ARE `<Link>`s, but the AI / Search buttons sit on top and intercept clicks.
 
-**Desktop mega menu** (replaces current Header dropdowns):
-- Hover/click opens full-width panel under header
-- Layout per category: left column = subcategories list, center = 3-4 featured/bestseller products (ProductCard mini), right = brand shortcuts
-- Marketing badges inline next to category names: `NEW`, `HOT`, `-X%`, `SALE` (driven by data in `categories.generated.json` — add `badge` field, manually curated for top categories)
-- Featured products = first 4 in-stock products of the category, sorted by has-image + price desc
+Fix (no redesign, just sizing):
+- Header gets `overflow-hidden` on the inner row so nothing escapes the bar.
+- Right-side action cluster gets `min-w-0` + `flex-shrink-0` on each button, smaller paddings on `<lg`, and the `18+` chip moves into the mobile menu (hidden until `lg`).
+- Mega-menu container gets `min-w-0 overflow-hidden` and the visible categories drop to a max of 5 on `xl` (smaller breakpoint reverts to burger).
+- Promo strip stays as-is.
 
-**Mobile menu**:
-- Full-screen overlay (edge-to-edge, `fixed inset-0 z-50`), slide-in from right
-- Accordion category list with same badges
-- Search bar pinned top, quick links (Προσφορές, Νέα, Brands, Επικοινωνία) pinned bottom
-- Body scroll-lock when open
+## 2. Product / brand / category descriptions render as garbled `\n \n` text
 
-Files: rewrite `src/components/Header.tsx`, add `src/components/MegaMenu.tsx`, `src/components/MobileMenu.tsx`, extend `categories.generated.json` schema with optional `badge`.
+Root cause: 414 of 1070 products have literal backslash-n sequences (`\n`) inside `description` because the original WP feed embedded them as text instead of real newlines. `whitespace-pre-line` only honors real `\n`, so the visible string stays "`Vaporesso Luxe XR 5ml DTL Pod Δεξαμενή \n \n \n Η ...`".
 
-## 2. AI-Generated FAQs (one-time, committed)
+Fix in two places:
+- One-time clean-up pass on `src/data/products.generated.json`:
+  - Replace literal `\n` with real newlines.
+  - Collapse 3+ blank lines down to 2.
+  - Trim per-line whitespace.
+  - Same pass for `shortDescription`.
+- Render with a small `<RichText>` helper (in `src/components/RichText.tsx`) that splits on blank lines into `<p>` blocks, so descriptions look like real paragraphs everywhere they appear (product page, brand pages if any).
 
-Use Lovable AI Gateway via a Python script in `scripts/generate-faqs.py`:
-- Generate 5-7 Greek FAQs per category (85 categories) → `src/data/faqs.categories.generated.json`
-- Generate 4-6 Greek FAQs per product (1070 products, batched) → `src/data/faqs.products.generated.json`
-- Model: `google/gemini-3-flash-preview`, structured JSON output, prompt includes category/product name + attributes + Greek vape-shop tone
-- Render as `<details>` accordion on category, subcategory, and product pages with `FAQPage` JSON-LD
+## 3. Category / subcategory chips look run-together and "not clickable"
 
-Estimated runtime: ~20-30 min for products (batched 20/req). One-time cost.
+Two separate problems:
+- The "not clickable" half is fixed by #1 (header was sitting on top of them).
+- The "no spacing" half: chips already use `flex flex-wrap gap-2`, but on `/$category/$subcategory.tsx` the gap collapses when chips wrap onto the same line because there's no vertical breathing room. Bump to `gap-x-2 gap-y-2`, add `inline-flex items-center` on each chip, and ensure the count badge has its own `ml-1` (already there). Visual confirmation after the header fix.
 
-## 3. Category Descriptions & Internal Linking
+## 4. AI Chat — bigger, edge-to-edge mobile, presets, clear, disclaimer
 
-- AI-generate 80-150 word Greek intro paragraph per category & subcategory (same script run) → stored in the categories JSON
-- Render above product grid on `$category.tsx` and `$category.$subcategory.tsx`
-- Internal linking block at bottom of each category page: "Σχετικές κατηγορίες" (siblings) + "Δημοφιλείς μάρκες" (top 6 brands in category)
-- Product pages already link to category/brand; add "Παρόμοια προϊόντα" (4 from same subcategory) and "Άλλα προϊόντα της μάρκας"
+Rewrite `src/components/ChatWidget.tsx` with:
+- Mobile (`<sm`): truly full-screen — `inset-0`, no border-radius, sticky header & input bars, the floating bubble hides while open.
+- Desktop: 420 × 640 panel anchored bottom-right, rounded, shadow.
+- Header bar: title + "Νέα συνομιλία" (clear/reset) button + close.
+- First-message state shows 4 predefined prompt chips:
+  - "Πρότεινέ μου ένα disposable"
+  - "Τι pod system για αρχάριο;"
+  - "Ψάχνω υγρό με μέντα"
+  - "Φτηνός ναργιλές για αρχή"
+  - Clicking sends that prompt immediately.
+- Footer disclaimer line under the input: "AI βοηθός — μπορεί να κάνει λάθη. 18+. Αγορές στο vapeandmore.gr."
+- Larger fonts/touch targets on mobile (text-base, h-12 input).
+- "Νέα συνομιλία" resets messages to the welcome and re-shows the presets.
+- Server fn (`sendChat`) stays unchanged — already returns reply + product cards.
 
-## 4. Blog — 2026 Rewrite
+## 5. Legal / Contact / About pages rewritten around vapeandmore.gr
 
-Generate ~10-12 fresh Greek posts via AI script (one per major category cluster). Topics auto-picked per category:
-- Disposable vapes 2026 trends
-- Pod systems buyer's guide 2026
-- Nicotine salts vs freebase
-- DIY e-liquid basics
-- Coil & atomizer maintenance
-- Greek vaping law update 2026
-- Best vape kit under 50€ 2026
-- (etc., one per top category)
+Scrape the 5 vapeandmore.gr legal URLs the user provided using **Firecrawl** (markdown format). Firecrawl is currently not connected — I'll ask to connect it during build, then run the scrape.
 
-Each post: 800-1200 words, 3-5 contextual outbound links to vapeandmore.gr (with UTM), 2-3 internal links to our category/product pages, JSON-LD `Article`. Overwrite `src/data/blog.generated.json`.
+Per page:
+- Rewrite into our own concise Greek copy (NOT a verbatim copy — that would be duplicate content) summarising the policy and **always** linking back to the original vapeandmore.gr page as the authoritative source.
+- Include the real merchant block on every legal page footer + on `/epikoinonia` + `/sxetika`:
+  > Vape and More — Αρκαδίου 82, Ρέθυμνο, GR
+  > T: [2831181046](tel:+302831181046) · [info@vapeandmore.gr](mailto:info@vapeandmore.gr)
+  > Κατάστημα: [vapeandmore.gr](https://vapeandmore.gr) (συνεργαζόμενο)
+- Update routes:
+  - `/oroi-xrisis` → from `/οροι-χρησησ/`
+  - `/apostoles-epistrofes` → split into delivery+returns; pull from `/πληρωμή-παράδοση/` and `/ασφάλεια-συναλλαγών/`
+  - `/cookies` → from `/cookies/`
+  - `/politiki-aporritou` → from `/πολιτικη-απορρητου/`
+  - `/epikoinonia` → real address + phone + email + Google-maps link + form-less contact info
+  - `/sxetika` (About) → rewrite around the partnership: who Vape and More is (Ρέθυμνο, panhellenic shipping, authentic products), what ilektronikatsigara.gr does (curated Greek-language catalog + AI assistant), why we link out.
+- Every page gets a prominent `Αγοράστε στο vapeandmore.gr` CTA button.
+- All five legal pages and the about page get distinct `head()` meta (title + description + canonical) and an `og:url`.
 
-## 5. Full SEO Pass
+## 6. Verification
 
-- Audit every route's `head()`: title <60ch, description <160ch, og:title, og:description, og:url, JSON-LD where relevant
-- Rewrite root `__root.tsx` defaults (Organization JSON-LD with brand, social)
-- Per-category & per-product unique meta (templated from data)
-- `sitemap.xml.ts` — verify all 1070 products + 85 categories + brands + blog + static pages included, lastmod, priority
-- `public/robots.txt` — allow all, point to sitemap
-- `public/llms.txt` — site overview + curated link list per llms.txt spec
-- `public/llms-full.txt` — full catalog dump: every category & product as markdown blocks with name, description, attributes, affiliate URL
-
-## 6. Legal & Contact Pages (Firecrawl scrape)
-
-Scrape vapeandmore.gr legal pages with Firecrawl connector:
-- `/oroi-xrisis` (Όροι Χρήσης)
-- `/politiki-aporritou` (Πολιτική Απορρήτου)
-- `/cookies`
-- `/epikoinonia` (Contact) — surface store address, phone, email, hours, map embed
-- `/apostoles-epistrofes` (Shipping/Returns)
-
-Render as static routes; add disclaimer banner "Affiliate site — purchases happen on vapeandmore.gr". Update footer to link them.
-
-## 7. Footer
-
-- Add logo (top-left of footer)
-- 4 columns: Brand+about, Κατηγορίες (top 8), Εξυπηρέτηση (legal/contact), Newsletter (placeholder, no backend)
-- Affiliate disclaimer line bottom
-
-## 8. AI Chat Assistant ("Full" scope)
-
-**UX**: Floating chat bubble bottom-right, opens panel (mobile = full-screen).
-- Streaming responses (SSE), markdown rendering, message history in `sessionStorage`
-- Tool-calling: model can return product references → render rich `ProductCard` inline in chat with image, price, stock, ΑΓΟΡΑ ΤΩΡΑ CTA
-
-**Backend** — TanStack server route `src/routes/api/chat.ts`:
-- Reads `LOVABLE_API_KEY`, calls AI Gateway `/v1/chat/completions` with `stream: true`
-- System prompt loaded from `src/lib/chat-system-prompt.ts` — includes shop identity, all 85 categories, top brands, legal/shipping facts (scraped), tone (friendly Greek, age-gate disclaimer)
-- Tool: `recommend_products({query, category?, max_price?, limit})` — searches local catalog (in-memory filter on `products.generated.json`), returns up to 6 product IDs with reason
-- Tool: `lookup_faq({topic})` — searches scraped legal/shipping facts + category FAQs
-- Tool: `compare_products({ids})` — returns attribute matrix
-- Streams text + emits `[[PRODUCT:id1,id2,id3]]` sentinel tokens that the client parses and replaces with product cards
-
-**Training data**: System prompt + RAG-lite via tools (no vector DB needed — 1070 products fit in memory, filtered server-side per query).
+After edits:
+- Reload `/antistaseis` and `/antistaseis/ergostasiakes-antistaseis` and click a subcategory chip — must navigate.
+- Open a product like `vaporesso-luxe-xr-5ml-dtl-pod-dexameni` and confirm description renders as paragraphs, no visible `\n`.
+- Open chat on mobile viewport (375px) — must be edge-to-edge, preset chips visible, "Νέα συνομιλία" works.
+- Visit each legal page — has real vapeandmore.gr backlinks + merchant contact block.
 
 ## Technical notes
 
-- Mega menu uses Radix HoverCard/Popover for accessibility
-- Mobile menu uses Sheet from shadcn with custom full-screen variant
-- AI FAQ script reuses `scripts/import-products.py` pattern (Python, uses `requests` to AI Gateway)
-- Chat uses existing `client.ts` patterns; no DB persistence (sessionStorage only — user can ask "remember this" later if needed)
-- All affiliate CTAs go through `productAffiliateUrl()` (already correct `?p=ID` format)
-- Firecrawl scraping done one-time via script; results committed as JSON
-
-## Execution order
-
-1. Mega menu + mobile menu + footer logo (foundation, immediate visual win)
-2. Firecrawl scrape legal/contact → static routes
-3. AI script: category descriptions + FAQs (categories + products)
-4. AI script: blog rewrite
-5. SEO sweep + sitemap + llms.txt + llms-full.txt
-6. AI chat assistant (largest, last)
-
-Reply **"go"** to start building, or tell me which workstream to prioritize / skip.
+- No DB / schema work.
+- New file: `src/components/RichText.tsx` (paragraph splitter).
+- Modified files: `src/components/Header.tsx`, `src/components/ChatWidget.tsx`, `src/routes/$category.tsx`, `src/routes/$category.$subcategory.tsx`, `src/routes/proionta.$slug.tsx`, `src/data/products.generated.json` (cleanup pass), `src/routes/oroi-xrisis.tsx`, `src/routes/politiki-aporritou.tsx`, `src/routes/cookies.tsx`, `src/routes/apostoles-epistrofes.tsx`, `src/routes/epikoinonia.tsx`, `src/routes/sxetika.tsx`.
+- Firecrawl connector needs to be linked before #5 runs. If you'd rather skip the scrape and have me write the legal copy from scratch (using only the contact info + your structure), say so and I'll proceed without Firecrawl.
