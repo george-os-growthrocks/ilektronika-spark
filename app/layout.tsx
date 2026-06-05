@@ -98,7 +98,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 "@type": "LocalBusiness",
                 "@id": "https://vapeandmore.gr/#localbusiness",
                 "name": "Vape and More",
-                "image": "https://vapeandmore.gr/wp-content/uploads/2023/12/logo-vape-and-more.png",
+                "image": "https://vapeandmore.gr/wp-content/uploads/2025/02/remove-bg_3.png",
                 "telephone": "+302831181046",
                 "email": "info@vapeandmore.gr",
                 "url": "https://vapeandmore.gr",
