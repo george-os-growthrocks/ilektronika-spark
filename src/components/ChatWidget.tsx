@@ -231,7 +231,7 @@ export function ChatWidget() {
                             <a
                               href={p.affiliateUrl}
                               target="_blank"
-                              rel="noopener noreferrer sponsored"
+                              rel="noopener sponsored"
                               className="text-[10px] font-extrabold uppercase tracking-widest bg-primary text-primary-foreground px-2.5 py-1 rounded inline-flex items-center gap-1 hover:opacity-90"
                             >
                               ΑΓΟΡΑ <ExternalLink className="h-3 w-3" />
@@ -319,7 +319,7 @@ export function ChatWidget() {
               <a
                 href="https://vapeandmore.gr"
                 target="_blank"
-                rel="noopener noreferrer sponsored"
+                rel="noopener"
                 className="underline hover:text-primary"
               >
                 vapeandmore.gr

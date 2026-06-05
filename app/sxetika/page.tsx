@@ -27,7 +27,7 @@ export default function AboutPage() {
             <a
               href="https://vapeandmore.gr"
               target="_blank"
-              rel="noopener noreferrer sponsored"
+              rel="noopener"
               className="text-primary underline font-bold"
             >
               vapeandmore.gr

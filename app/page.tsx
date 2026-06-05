@@ -4,7 +4,6 @@ import { products, topLevelCategories } from "@/data/catalog";
 import { ProductCard } from "@/components/ProductCard";
 import { blogPosts } from "@/data/blog";
 import { generalFaqs } from "@/data/faqs";
-import { JsonLd } from "@/components/JsonLd";
 import { toGreekUppercase } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -28,15 +27,6 @@ export default function HomePage() {
 
   return (
     <>
-      <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "ilektronikatsigara.gr",
-          url: "/",
-          inLanguage: "el",
-        }}
-      />
       <section className="pt-16 pb-20">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
           <div className="md:col-span-7 animate-fade-up">

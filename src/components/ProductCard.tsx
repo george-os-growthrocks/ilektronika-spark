@@ -60,7 +60,7 @@ export function ProductCard({ product }: { product: Product }) {
         <a
           href={productAffiliateUrl(product)}
           target="_blank"
-          rel="noopener nofollow sponsored"
+          rel="noopener sponsored"
           className="mt-1 inline-flex items-center justify-center gap-1 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest px-3 py-2 rounded hover:opacity-90 transition-opacity"
         >
           ΑΓΟΡΑ ΤΩΡΑ <span aria-hidden>↗</span>

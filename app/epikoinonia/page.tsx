@@ -37,7 +37,7 @@ export default function ContactPage() {
         <a
           href="https://vapeandmore.gr"
           target="_blank"
-          rel="noopener noreferrer sponsored"
+          rel="noopener"
           className="text-primary underline font-bold"
         >
           Vape and More

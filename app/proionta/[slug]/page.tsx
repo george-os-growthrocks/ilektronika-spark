@@ -107,18 +107,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Αρχική", item: "/" },
+            { "@type": "ListItem", position: 1, name: "Αρχική", item: "https://ilektronikatsigara.gr/" },
             ...product.primaryCategoryPath.map((node, i) => ({
               "@type": "ListItem",
               position: i + 2,
               name: node.label,
-              item: `/${node.slug}`,
+              item: `https://ilektronikatsigara.gr/${node.slug}`,
             })),
             {
               "@type": "ListItem",
               position: product.primaryCategoryPath.length + 2,
               name: product.name,
-              item: `/proionta/${product.slug}`,
+              item: `https://ilektronikatsigara.gr/proionta/${product.slug}`,
             },
           ],
         }}

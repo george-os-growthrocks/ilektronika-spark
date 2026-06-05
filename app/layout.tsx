@@ -36,9 +36,15 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "ilektronikatsigara.gr",
     locale: "el_GR",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
+  },
+  alternates: {
+    languages: {
+      el: "https://ilektronikatsigara.gr",
+    },
   },
   other: {
     "geo.region": "GR",
@@ -79,7 +85,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 "publisher": {
                   "@id": "https://ilektronikatsigara.gr/#organization"
                 },
-                "inLanguage": "el"
+                "inLanguage": "el",
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": {
+                    "@type": "EntryPoint",
+                    "urlTemplate": "https://ilektronikatsigara.gr/anazitisi?q={search_term_string}"
+                  },
+                  "query-input": "required name=search_term_string"
+                }
               },
               {
                 "@type": "Organization",

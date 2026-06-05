@@ -25,7 +25,7 @@ export function MerchantCard({ product }: { product: Product }) {
       <a
         href={productAffiliateUrl(product)}
         target="_blank"
-        rel="noopener nofollow sponsored"
+        rel="noopener sponsored"
         className="flex items-center gap-3 mb-4 group"
       >
         <div className="w-16 h-16 grid place-items-center bg-background rounded border border-border shrink-0">
@@ -60,7 +60,7 @@ export function MerchantCard({ product }: { product: Product }) {
       <a
         href={productAffiliateUrl(product)}
         target="_blank"
-        rel="noopener nofollow sponsored"
+        rel="noopener sponsored"
         className="w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-bold uppercase tracking-widest px-6 py-3.5 rounded hover:opacity-90 transition-opacity"
       >
         ΑΓΟΡΑ ΤΩΡΑ <span aria-hidden>↗</span>

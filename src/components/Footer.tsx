@@ -17,7 +17,7 @@ export function Footer() {
               <a
                 href="https://vapeandmore.gr?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=footer"
                 target="_blank"
-                rel="noopener nofollow sponsored"
+                rel="noopener"
                 className="text-primary font-semibold hover:underline"
               >
                 vapeandmore.gr
@@ -95,7 +95,7 @@ export function Footer() {
             <a
               href="https://vapeandmore.gr?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=footer-legal"
               target="_blank"
-              rel="noopener nofollow sponsored"
+              rel="noopener sponsored"
               className="text-primary hover:underline"
             >
               vapeandmore.gr

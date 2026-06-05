@@ -1,6 +1,8 @@
 import { topLevelCategories, subcategoriesOf, brands, products } from "@/data/catalog";
 import { blogPosts } from "@/data/blog";
 
+const BASE_URL = "https://ilektronikatsigara.gr";
+
 export async function GET() {
   const cats = topLevelCategories();
 
@@ -8,16 +10,16 @@ export async function GET() {
     .map((c) => {
       const subs = subcategoriesOf(c.slug);
       const subList = subs.length
-        ? subs.map((s) => ` - [${s.label}](/${c.slug}/${s.slug}) - ${s.count}`).join("\n")
+        ? subs.map((s) => ` - [${s.label}](${BASE_URL}/${c.slug}/${s.slug}) - ${s.count}`).join("\n")
         : "";
-      return `### ${c.label} (/${c.slug}) - ${c.count} προϊόντα\n${subList}`;
+      return `### ${c.label} (${BASE_URL}/${c.slug}) - ${c.count} προϊόντα\n${subList}`;
     })
     .join("\n\n");
 
   const topBrands = [...brands]
     .sort((a, b) => b.count - a.count)
     .slice(0, 40)
-    .map((b) => `- [${b.label}](/marka/${b.slug}) - ${b.count}`)
+    .map((b) => `- [${b.label}](${BASE_URL}/marka/${b.slug}) - ${b.count}`)
     .join("\n");
 
   const featuredProducts = products
@@ -25,14 +27,14 @@ export async function GET() {
     .slice(0, 60)
     .map(
       (p) =>
-        `- [${p.name}](/proionta/${p.slug})${p.brand ? ` - ${p.brand}` : ""}${p.price ? ` - ${p.price.toFixed(2)}€` : ""}`,
+        `- [${p.name}](${BASE_URL}/proionta/${p.slug})${p.brand ? ` - ${p.brand}` : ""}${p.price ? ` - ${p.price.toFixed(2)}€` : ""}`,
     )
     .join("\n");
 
   const blogList = blogPosts
     .map(
       (p) =>
-        `### [${p.title}](/blog/${p.slug})\n${p.excerpt}\nΛέξεις-κλειδιά: ${p.keywords.join(", ")}\n`,
+        `### [${p.title}](${BASE_URL}/blog/${p.slug})\n${p.excerpt}\nΛέξεις-κλειδιά: ${p.keywords.join(", ")}\n`,
     )
     .join("\n");
 
@@ -62,7 +64,7 @@ ${blogList}
 - Πιστοποιήσεις & συμβατότητα: αυθεντικά προϊόντα από εξουσιοδοτημένους διανομείς.
 
 ## Sitemap
-/sitemap.xml
+${BASE_URL}/sitemap.xml
 `;
 
   return new Response(body, {

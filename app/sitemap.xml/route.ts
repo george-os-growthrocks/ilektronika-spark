@@ -1,4 +1,4 @@
-import { categories, products } from "@/data/catalog";
+import { categories, products, brands } from "@/data/catalog";
 import { blogPosts } from "@/data/blog";
 
 const BASE_URL = "https://ilektronikatsigara.gr";
@@ -43,12 +43,19 @@ export async function GET() {
     lastmod: p.publishedAt,
   }));
 
+  const brandPaths = brands.map((b) => ({
+    path: `/marka/${b.slug}`,
+    priority: "0.7",
+    changefreq: "weekly" as const,
+  }));
+
   const entries = [
     ...staticPaths,
     ...categoryPaths,
     ...subcategoryPaths,
     ...productPaths,
     ...blogPaths,
+    ...brandPaths,
   ];
 
   const urls = entries
