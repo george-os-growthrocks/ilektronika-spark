@@ -256,6 +256,7 @@ function CategoryPage() {
           )}
         </div>
       </div>
+      <FaqSection faqs={faqsForCategory(category.slug)} />
     </>
   );
 }
