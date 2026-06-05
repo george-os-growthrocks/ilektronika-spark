@@ -40,6 +40,7 @@ export const blogPosts: BlogPost[] = [
       "## Τι να αποφύγετε",
       "Μην αγοράζετε φθηνά clone προϊόντα — οι αυθεντικές συσκευές έχουν πιστοποιήσεις ασφαλείας. Μην αγοράζετε υγρά αμφιβόλου προέλευσης (μόνο TPD-compliant από ΕΕ/ΗΒ). Μην χρησιμοποιείτε τη συσκευή κατά τη φόρτιση. Μην ατμίζετε σε χώρους που απαγορεύεται.",
       "Το άτμισμα δεν είναι χωρίς κινδύνους, αλλά υπολογίζεται από επιστημονικούς οργανισμούς (Public Health England) ως 95% λιγότερο επιβλαβές από το κάπνισμα. Αν δεν καπνίζετε, μην ξεκινήσετε το άτμισμα.",
+      "Συνεχίστε στο συνεργαζόμενο κατάστημα [vapeandmore.gr](https://vapeandmore.gr/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) για διαθεσιμότητα, τιμές 2026 και πανελλαδική αποστολή 1-3 εργάσιμες. Δείτε επίσης [disposable vapes](https://vapeandmore.gr/product-category/disposable-vapes/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog), [pod systems](https://vapeandmore.gr/product-category/syskeyes-vape/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) και [υγρά αναπλήρωσης](https://vapeandmore.gr/product-category/ygra-anaplirosis/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog).",
     ],
     metaDescription:
       "Πλήρης οδηγός αρχαρίων για το άτμισμα 2026: τύποι ηλεκτρονικών τσιγάρων, νικοτίνη, MTL vs DTL, πρακτικές συμβουλές για να ξεκινήσετε σωστά.",
@@ -69,6 +70,7 @@ export const blogPosts: BlogPost[] = [
       "Αν ήσασταν καπνιστής και θέλετε να κόψετε: ξεκινήστε με **MTL** και υψηλή νικοτίνη (20mg salts σε pod system).",
       "Αν θέλετε hobby, μεγάλα σύννεφα και πειραματισμό με γεύσεις: επιλέξτε **DTL** σε ένα sub-ohm setup.",
       "Αν δεν είστε σίγουροι: ένα **pod system με adjustable airflow** σας αφήνει να δοκιμάσετε και τα δύο.",
+      "Συνεχίστε στο συνεργαζόμενο κατάστημα [vapeandmore.gr](https://vapeandmore.gr/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) για διαθεσιμότητα, τιμές 2026 και πανελλαδική αποστολή 1-3 εργάσιμες. Δείτε επίσης [disposable vapes](https://vapeandmore.gr/product-category/disposable-vapes/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog), [pod systems](https://vapeandmore.gr/product-category/syskeyes-vape/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) και [υγρά αναπλήρωσης](https://vapeandmore.gr/product-category/ygra-anaplirosis/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog).",
     ],
     metaDescription:
       "MTL vs DTL: αναλυτική σύγκριση των δύο στυλ ατμίσματος. Ποιες συσκευές, νικοτίνη και γεύσεις ταιριάζουν σε κάθε στυλ.",
@@ -106,6 +108,7 @@ export const blogPosts: BlogPost[] = [
       "Πράσινο μήλο, ξινό και φρέσκο. Καθαρή και ζωντανή γεύση.",
       "## Συμβουλή επιλογής",
       "Αν δοκιμάζετε νέα μάρκα, ξεκινήστε με γεύση που γνωρίζετε ήδη ότι σας αρέσει (π.χ. καρπούζι ή φράουλα). Έτσι μπορείτε να αξιολογήσετε αν είναι η μάρκα που σας ταιριάζει ή η γεύση.",
+      "Συνεχίστε στο συνεργαζόμενο κατάστημα [vapeandmore.gr](https://vapeandmore.gr/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) για διαθεσιμότητα, τιμές 2026 και πανελλαδική αποστολή 1-3 εργάσιμες. Δείτε επίσης [disposable vapes](https://vapeandmore.gr/product-category/disposable-vapes/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog), [pod systems](https://vapeandmore.gr/product-category/syskeyes-vape/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) και [υγρά αναπλήρωσης](https://vapeandmore.gr/product-category/ygra-anaplirosis/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog).",
     ],
     metaDescription:
       "Οι 10 καλύτερες γεύσεις disposable vape για το 2026: Elf Bar, Lost Mary, Geek Bar Pulse, IVG και άλλες αξιόλογες επιλογές της αγοράς.",
@@ -138,6 +141,7 @@ export const blogPosts: BlogPost[] = [
       "Οι περισσότεροι μοντέρνοι σωλήνες είναι washable. Περάστε ζεστό νερό μέσα από αυτούς και αφήστε τους να στεγνώσουν κρεμασμένους ψηλά. ΜΗΝ πλένετε παραδοσιακούς δερμάτινους σωλήνες με νερό — θα καταστραφούν. Αυτούς απλά καθαρίζετε με στεγνό πανί και αλλάζετε όταν αρχίσουν να μυρίζουν.",
       "## Συμβουλές προληπτικά",
       "Χρησιμοποιείτε φιλτραρισμένο ή εμφιαλωμένο νερό στη βάση — αποτρέπει άλατα. Μην αφήνετε ποτέ νερό στη βάση παραπάνω από μερικές ώρες. Αλλάζετε σωλήνα κάθε 6-12 μήνες ανάλογα με τη χρήση.",
+      "Συνεχίστε στο συνεργαζόμενο κατάστημα [vapeandmore.gr](https://vapeandmore.gr/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) για διαθεσιμότητα, τιμές 2026 και πανελλαδική αποστολή 1-3 εργάσιμες. Δείτε επίσης [disposable vapes](https://vapeandmore.gr/product-category/disposable-vapes/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog), [pod systems](https://vapeandmore.gr/product-category/syskeyes-vape/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) και [υγρά αναπλήρωσης](https://vapeandmore.gr/product-category/ygra-anaplirosis/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog).",
     ],
     metaDescription:
       "Αναλυτικός οδηγός καθαρισμού ναργιλέ: καθημερινή φροντίδα, εβδομαδιαίος βαθύς καθαρισμός, συμβουλές για διάρκεια και υγιεινή.",
@@ -170,6 +174,7 @@ export const blogPosts: BlogPost[] = [
       "**Ενδιάμεση συσκευή/MTL tank:** freebase 6-12mg.",
       "## Ασφάλεια",
       "Τα nicotine salts ΔΕΝ είναι περισσότερο επιβλαβή από τη freebase — απλά απορροφώνται γρηγορότερα. Η ποσότητα νικοτίνης ανά ml είναι η ίδια. Σε όλες τις περιπτώσεις, μην ξεπερνάτε τα 20mg/ml (το όριο της Ε.Ε.).",
+      "Συνεχίστε στο συνεργαζόμενο κατάστημα [vapeandmore.gr](https://vapeandmore.gr/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) για διαθεσιμότητα, τιμές 2026 και πανελλαδική αποστολή 1-3 εργάσιμες. Δείτε επίσης [disposable vapes](https://vapeandmore.gr/product-category/disposable-vapes/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog), [pod systems](https://vapeandmore.gr/product-category/syskeyes-vape/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) και [υγρά αναπλήρωσης](https://vapeandmore.gr/product-category/ygra-anaplirosis/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog).",
     ],
     metaDescription:
       "Nicotine salts vs freebase νικοτίνη: αναλυτική σύγκριση χημείας, εμπειρίας και κατάλληλων συσκευών. Ποιο να επιλέξετε.",
@@ -202,6 +207,7 @@ export const blogPosts: BlogPost[] = [
       "**Υπερθέρμανση αντίστασης (chain vaping):** παράγει αλδεΰδες — δώστε λίγα δευτερόλεπτα ανάμεσα στις εισπνοές.",
       "## Συμπέρασμα",
       "Το άτμισμα ΔΕΝ είναι ακίνδυνο. Αν δεν καπνίζετε ή δεν ατμίζετε, μην ξεκινήσετε. Αν καπνίζετε, η μετάβαση στο άτμισμα είναι σύμφωνα με τις περισσότερες αρχές δημόσιας υγείας μια σημαντική μείωση κινδύνου. Συμβουλευτείτε ιατρό αν έχετε ζητήματα υγείας.",
+      "Συνεχίστε στο συνεργαζόμενο κατάστημα [vapeandmore.gr](https://vapeandmore.gr/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) για διαθεσιμότητα, τιμές 2026 και πανελλαδική αποστολή 1-3 εργάσιμες. Δείτε επίσης [disposable vapes](https://vapeandmore.gr/product-category/disposable-vapes/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog), [pod systems](https://vapeandmore.gr/product-category/syskeyes-vape/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) και [υγρά αναπλήρωσης](https://vapeandmore.gr/product-category/ygra-anaplirosis/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog).",
     ],
     metaDescription:
       "Άτμισμα και ασφάλεια: τι λένε Public Health England, Royal College of Physicians, CDC. Πραγματικοί κίνδυνοι, EVALI, σύγκριση με κάπνισμα.",
@@ -233,6 +239,7 @@ export const blogPosts: BlogPost[] = [
       "**Υψηλής ισχύος pods (40W+):** Για αρχάριο, ένα 15-20W setup είναι ιδανικό. Οι 40W+ συσκευές χρειάζονται συγκεκριμένα coils και υγρά υψηλής VG.",
       "## Συμπέρασμα",
       "Για τους περισσότερους αρχάριους η πρόταση μας είναι το **Vaporesso XROS 3**: ισορροπεί τιμή, ποιότητα κατασκευής, αυτονομία και ευκολία χρήσης καλύτερα από κάθε άλλο pod στην αγορά αυτή τη στιγμή.",
+      "Συνεχίστε στο συνεργαζόμενο κατάστημα [vapeandmore.gr](https://vapeandmore.gr/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) για διαθεσιμότητα, τιμές 2026 και πανελλαδική αποστολή 1-3 εργάσιμες. Δείτε επίσης [disposable vapes](https://vapeandmore.gr/product-category/disposable-vapes/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog), [pod systems](https://vapeandmore.gr/product-category/syskeyes-vape/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) και [υγρά αναπλήρωσης](https://vapeandmore.gr/product-category/ygra-anaplirosis/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog).",
     ],
     metaDescription:
       "Τα 5 καλύτερα pod systems για αρχάριους το 2026: Vaporesso XROS 3, Uwell Caliburn A3S, Voopoo Argus P1, Innokin Endura S1, Geekvape Aegis Q.",
@@ -269,6 +276,7 @@ export const blogPosts: BlogPost[] = [
       "Στην Ελλάδα, η πώληση προϊόντων ατμίσματος (όπως και του κανονικού καπνού) απαγορεύεται σε άτομα κάτω των **18 ετών**. Κάθε νόμιμο κατάστημα πρέπει να ζητάει επαλήθευση ηλικίας.",
       "## Τι θα αλλάξει με την TPD3;",
       "Η Ευρωπαϊκή Επιτροπή ετοιμάζει αναθεώρηση της Οδηγίας (TPD3) για το 2025-2026. Πιθανές αλλαγές: περιορισμός γεύσεων (μόνο καπνός;), αυστηρότερη φορολόγηση, πλήρης απαγόρευση disposables σε ορισμένες χώρες. Παρακολουθούμε τις εξελίξεις.",
+      "Συνεχίστε στο συνεργαζόμενο κατάστημα [vapeandmore.gr](https://vapeandmore.gr/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) για διαθεσιμότητα, τιμές 2026 και πανελλαδική αποστολή 1-3 εργάσιμες. Δείτε επίσης [disposable vapes](https://vapeandmore.gr/product-category/disposable-vapes/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog), [pod systems](https://vapeandmore.gr/product-category/syskeyes-vape/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog) και [υγρά αναπλήρωσης](https://vapeandmore.gr/product-category/ygra-anaplirosis/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog).",
     ],
     metaDescription:
       "Οδηγία TPD στην Ελλάδα: όρια χωρητικότητας, νικοτίνης, επισήμανση προϊόντων, διασυνοριακές πωλήσεις, ηλικιακά όρια. Τι ισχύει το 2026.",
