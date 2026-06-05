@@ -84,7 +84,7 @@ export const Route = createFileRoute("/proionta/$slug")({
             "@type": "BreadcrumbList",
             itemListElement: [
               { "@type": "ListItem", position: 1, name: "Αρχική", item: "/" },
-              ...product.primaryCategoryPath.map((node, i) => ({
+              ...product.primaryCategoryPath.map((node: any, i: number) => ({
                 "@type": "ListItem",
                 position: i + 2,
                 name: node.label,
@@ -138,7 +138,7 @@ function ProductPage() {
               Αρχική
             </Link>
           </li>
-          {breadcrumbs.map((node, i) => (
+          {breadcrumbs.map((node: any, i: number) => (
             <li key={node.slug} className="flex items-center gap-2">
               <span>›</span>
               {i === 0 ? (
@@ -189,7 +189,7 @@ function ProductPage() {
             </div>
             {product.images.length > 1 && (
               <div className="grid grid-cols-5 gap-2 mt-3">
-                {product.images.slice(0, 5).map((src, i) => (
+                {product.images.slice(0, 5).map((src: string, i: number) => (
                   <div
                     key={i}
                     className="aspect-square bg-surface border border-border rounded grid place-items-center overflow-hidden"
@@ -234,11 +234,11 @@ function ProductPage() {
                   Διαθέσιμες παραλλαγές
                 </h2>
                 <dl className="space-y-2 text-sm">
-                  {product.attributes.map((a) => (
+                  {product.attributes.map((a: any) => (
                     <div key={a.name}>
                       <dt className="font-bold text-foreground mb-1">{a.name}</dt>
                       <dd className="flex flex-wrap gap-1.5">
-                        {a.values.map((v) => (
+                        {a.values.map((v: string) => (
                           <span
                             key={v}
                             className="inline-flex text-xs border border-border rounded px-2 py-1 bg-surface"
@@ -276,7 +276,7 @@ function ProductPage() {
               Παρόμοια προϊόντα
             </h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {related.map((p) => (
+              {related.map((p: any) => (
                 <ProductCard key={p.slug} product={p} />
               ))}
             </div>

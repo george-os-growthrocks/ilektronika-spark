@@ -92,7 +92,7 @@ function BrandPage() {
               checked={search.instock === "1"}
               onChange={(e) =>
                 navigate({
-                  search: (s) => ({ ...s, instock: e.target.checked ? "1" : undefined, page: 1 }),
+                  search: (s: any) => ({ ...s, instock: e.target.checked ? "1" : undefined, page: 1 }),
                 })
               }
               className="accent-primary"
@@ -104,7 +104,7 @@ function BrandPage() {
             <select
               value={search.sort}
               onChange={(e) =>
-                navigate({ search: (s) => ({ ...s, sort: e.target.value as "relevance" | "price-asc" | "price-desc" | "newest", page: 1 }) })
+                navigate({ search: (s: any) => ({ ...s, sort: e.target.value as "relevance" | "price-asc" | "price-desc" | "newest", page: 1 }) })
               }
               className="border border-border rounded px-2 py-1 bg-background"
             >
@@ -127,7 +127,7 @@ function BrandPage() {
             <Link
               to="/marka/$brand"
               params={{ brand: brand.slug }}
-              search={(s) => ({ ...s, page: Math.max(1, page - 1) })}
+              search={(s: any) => ({ ...s, page: Math.max(1, page - 1) })}
               disabled={page <= 1}
               className="px-3 py-2 text-xs font-bold border border-border rounded hover:border-primary disabled:opacity-40 disabled:pointer-events-none"
             >
@@ -139,7 +139,7 @@ function BrandPage() {
             <Link
               to="/marka/$brand"
               params={{ brand: brand.slug }}
-              search={(s) => ({ ...s, page: Math.min(totalPages, page + 1) })}
+              search={(s: any) => ({ ...s, page: Math.min(totalPages, page + 1) })}
               disabled={page >= totalPages}
               className="px-3 py-2 text-xs font-bold border border-border rounded hover:border-primary disabled:opacity-40 disabled:pointer-events-none"
             >

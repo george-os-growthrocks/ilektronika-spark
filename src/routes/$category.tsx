@@ -104,7 +104,7 @@ function CategoryPage() {
           </p>
           {subs.length > 0 && (
             <div className="mt-6 flex flex-wrap gap-2">
-              {subs.map((s) => (
+              {subs.map((s: any) => (
                 <Link
                   key={s.slug}
                   to="/$category/$subcategory"
@@ -135,7 +135,7 @@ function CategoryPage() {
                 checked={search.instock === "1"}
                 onChange={(e) =>
                   navigate({
-                    search: (s) => ({ ...s, instock: e.target.checked ? "1" : undefined, page: 1 }),
+                    search: (s: any) => ({ ...s, instock: e.target.checked ? "1" : undefined, page: 1 }),
                   })
                 }
                 className="accent-primary"
@@ -163,7 +163,7 @@ function CategoryPage() {
                               ? [...selectedBrands, b.slug]
                               : selectedBrands.filter((s) => s !== b.slug);
                             navigate({
-                              search: (s) => ({
+                              search: (s: any) => ({
                                 ...s,
                                 brand: next.length === 0 ? undefined : next.length === 1 ? next[0] : next,
                                 page: 1,
@@ -195,7 +195,7 @@ function CategoryPage() {
                 value={search.sort}
                 onChange={(e) =>
                   navigate({
-                    search: (s) => ({ ...s, sort: e.target.value as "relevance" | "price-asc" | "price-desc" | "newest", page: 1 }),
+                    search: (s: any) => ({ ...s, sort: e.target.value as "relevance" | "price-asc" | "price-desc" | "newest", page: 1 }),
                   })
                 }
                 className="border border-border rounded px-2 py-1 bg-background"
@@ -225,7 +225,7 @@ function CategoryPage() {
               <Link
                 to="/$category"
                 params={{ category: category.slug }}
-                search={(s) => ({ ...s, page: Math.max(1, page - 1) })}
+                search={(s: any) => ({ ...s, page: Math.max(1, page - 1) })}
                 disabled={page <= 1}
                 className="px-3 py-2 text-xs font-bold border border-border rounded hover:border-primary disabled:opacity-40 disabled:pointer-events-none"
               >
@@ -237,7 +237,7 @@ function CategoryPage() {
               <Link
                 to="/$category"
                 params={{ category: category.slug }}
-                search={(s) => ({ ...s, page: Math.min(totalPages, page + 1) })}
+                search={(s: any) => ({ ...s, page: Math.min(totalPages, page + 1) })}
                 disabled={page >= totalPages}
                 className="px-3 py-2 text-xs font-bold border border-border rounded hover:border-primary disabled:opacity-40 disabled:pointer-events-none"
               >

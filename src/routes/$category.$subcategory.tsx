@@ -108,7 +108,7 @@ function SubcategoryPage() {
           </p>
           {subs.length > 0 && (
             <div className="mt-6 flex flex-wrap gap-2">
-              {subs.map((s) => (
+              {subs.map((s: any) => (
                 <Link
                   key={s.slug}
                   to="/$category/$subcategory"
@@ -135,7 +135,7 @@ function SubcategoryPage() {
                 checked={search.instock === "1"}
                 onChange={(e) =>
                   navigate({
-                    search: (s) => ({ ...s, instock: e.target.checked ? "1" : undefined, page: 1 }),
+                    search: (s: any) => ({ ...s, instock: e.target.checked ? "1" : undefined, page: 1 }),
                   })
                 }
                 className="accent-primary"
@@ -163,7 +163,7 @@ function SubcategoryPage() {
                               ? [...selectedBrands, b.slug]
                               : selectedBrands.filter((s) => s !== b.slug);
                             navigate({
-                              search: (s) => ({
+                              search: (s: any) => ({
                                 ...s,
                                 brand: next.length === 0 ? undefined : next.length === 1 ? next[0] : next,
                                 page: 1,
@@ -194,7 +194,7 @@ function SubcategoryPage() {
                 value={search.sort}
                 onChange={(e) =>
                   navigate({
-                    search: (s) => ({ ...s, sort: e.target.value as "relevance" | "price-asc" | "price-desc" | "newest", page: 1 }),
+                    search: (s: any) => ({ ...s, sort: e.target.value as "relevance" | "price-asc" | "price-desc" | "newest", page: 1 }),
                   })
                 }
                 className="border border-border rounded px-2 py-1 bg-background"
