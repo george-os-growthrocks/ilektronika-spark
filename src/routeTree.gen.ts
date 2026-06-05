@@ -14,6 +14,8 @@ import { Route as SxetikaRouteImport } from './routes/sxetika'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PolitikiAporritouRouteImport } from './routes/politiki-aporritou'
 import { Route as OroiXrisisRouteImport } from './routes/oroi-xrisis'
+import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
+import { Route as LlmsFullDottxtRouteImport } from './routes/llms-full[.]txt'
 import { Route as KatigoriesRouteImport } from './routes/katigories'
 import { Route as EpikoinoniaRouteImport } from './routes/epikoinonia'
 import { Route as CookiesRouteImport } from './routes/cookies'
@@ -50,6 +52,16 @@ const PolitikiAporritouRoute = PolitikiAporritouRouteImport.update({
 const OroiXrisisRoute = OroiXrisisRouteImport.update({
   id: '/oroi-xrisis',
   path: '/oroi-xrisis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
+  id: '/llms.txt',
+  path: '/llms.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlmsFullDottxtRoute = LlmsFullDottxtRouteImport.update({
+  id: '/llms-full.txt',
+  path: '/llms-full.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KatigoriesRoute = KatigoriesRouteImport.update({
@@ -122,6 +134,8 @@ export interface FileRoutesByFullPath {
   '/cookies': typeof CookiesRoute
   '/epikoinonia': typeof EpikoinoniaRoute
   '/katigories': typeof KatigoriesRoute
+  '/llms-full.txt': typeof LlmsFullDottxtRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/oroi-xrisis': typeof OroiXrisisRoute
   '/politiki-aporritou': typeof PolitikiAporritouRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -141,6 +155,8 @@ export interface FileRoutesByTo {
   '/cookies': typeof CookiesRoute
   '/epikoinonia': typeof EpikoinoniaRoute
   '/katigories': typeof KatigoriesRoute
+  '/llms-full.txt': typeof LlmsFullDottxtRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/oroi-xrisis': typeof OroiXrisisRoute
   '/politiki-aporritou': typeof PolitikiAporritouRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -161,6 +177,8 @@ export interface FileRoutesById {
   '/cookies': typeof CookiesRoute
   '/epikoinonia': typeof EpikoinoniaRoute
   '/katigories': typeof KatigoriesRoute
+  '/llms-full.txt': typeof LlmsFullDottxtRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/oroi-xrisis': typeof OroiXrisisRoute
   '/politiki-aporritou': typeof PolitikiAporritouRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -182,6 +200,8 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/epikoinonia'
     | '/katigories'
+    | '/llms-full.txt'
+    | '/llms.txt'
     | '/oroi-xrisis'
     | '/politiki-aporritou'
     | '/sitemap.xml'
@@ -201,6 +221,8 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/epikoinonia'
     | '/katigories'
+    | '/llms-full.txt'
+    | '/llms.txt'
     | '/oroi-xrisis'
     | '/politiki-aporritou'
     | '/sitemap.xml'
@@ -220,6 +242,8 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/epikoinonia'
     | '/katigories'
+    | '/llms-full.txt'
+    | '/llms.txt'
     | '/oroi-xrisis'
     | '/politiki-aporritou'
     | '/sitemap.xml'
@@ -240,6 +264,8 @@ export interface RootRouteChildren {
   CookiesRoute: typeof CookiesRoute
   EpikoinoniaRoute: typeof EpikoinoniaRoute
   KatigoriesRoute: typeof KatigoriesRoute
+  LlmsFullDottxtRoute: typeof LlmsFullDottxtRoute
+  LlmsDottxtRoute: typeof LlmsDottxtRoute
   OroiXrisisRoute: typeof OroiXrisisRoute
   PolitikiAporritouRoute: typeof PolitikiAporritouRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -284,6 +310,20 @@ declare module '@tanstack/react-router' {
       path: '/oroi-xrisis'
       fullPath: '/oroi-xrisis'
       preLoaderRoute: typeof OroiXrisisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llms.txt': {
+      id: '/llms.txt'
+      path: '/llms.txt'
+      fullPath: '/llms.txt'
+      preLoaderRoute: typeof LlmsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llms-full.txt': {
+      id: '/llms-full.txt'
+      path: '/llms-full.txt'
+      fullPath: '/llms-full.txt'
+      preLoaderRoute: typeof LlmsFullDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/katigories': {
@@ -404,6 +444,8 @@ const rootRouteChildren: RootRouteChildren = {
   CookiesRoute: CookiesRoute,
   EpikoinoniaRoute: EpikoinoniaRoute,
   KatigoriesRoute: KatigoriesRoute,
+  LlmsFullDottxtRoute: LlmsFullDottxtRoute,
+  LlmsDottxtRoute: LlmsDottxtRoute,
   OroiXrisisRoute: OroiXrisisRoute,
   PolitikiAporritouRoute: PolitikiAporritouRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
@@ -415,3 +457,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
