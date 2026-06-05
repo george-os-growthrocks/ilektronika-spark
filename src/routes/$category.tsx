@@ -108,8 +108,8 @@ function CategoryPage() {
           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">
             {category.label}
           </h1>
-          <p className="text-muted-foreground mt-2">
-            {all.length} προϊόντα · {filtered.length} εμφανίζονται με τα τρέχοντα φίλτρα
+          <p className="text-muted-foreground mt-3 max-w-3xl leading-relaxed">
+            {categoryDescription(category.slug)}
           </p>
           {subs.length > 0 && (
             <div className="mt-6 flex flex-wrap gap-2">
