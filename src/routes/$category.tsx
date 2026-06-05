@@ -8,6 +8,8 @@ import {
   subcategoriesOf,
 } from "../data/catalog";
 import { ProductCard } from "../components/ProductCard";
+import { FaqSection, faqJsonLd } from "../components/FaqSection";
+import { faqsForCategory, categoryDescription } from "../data/faqs-generated";
 
 const searchSchema = z.object({
   page: z.coerce.number().int().positive().optional().default(1),
@@ -32,19 +34,26 @@ export const Route = createFileRoute("/$category")({
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) return {};
-    const { category, all } = loaderData;
+    const { category } = loaderData;
     const title = `${category.label} | ilektronikatsigara.gr`;
-    const description = `Συλλογή ${category.label} — ${all.length} προϊόντα από Vape and More. Αυθεντικά, με ταχεία αποστολή σε όλη την Ελλάδα.`;
+    const description = categoryDescription(category.slug).slice(0, 160);
     const canonical = `https://vapeandmore.gr/product-category/${params.category}/`;
+    const faqs = faqsForCategory(category.slug);
     return {
       meta: [
         { title },
-        { name: "description", content: description.slice(0, 160) },
+        { name: "description", content: description },
         { property: "og:title", content: title },
-        { property: "og:description", content: description.slice(0, 160) },
+        { property: "og:description", content: description },
         { property: "og:url", content: canonical },
       ],
       links: [{ rel: "canonical", href: canonical }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(faqJsonLd(faqs)),
+        },
+      ],
     };
   },
   component: CategoryPage,
