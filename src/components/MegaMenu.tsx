@@ -56,7 +56,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
   useEffect(() => () => cancelClose(), []);
 
   return (
-    <nav className="mega-menu-nav items-stretch justify-end gap-0 text-xs font-bold uppercase tracking-wider">
+    <nav className="flex items-stretch justify-end gap-0 text-xs font-bold uppercase tracking-wider">
       {categories.map((c) => {
         const meta = categoryMeta(c.slug);
         const isOpen = open === c.slug;

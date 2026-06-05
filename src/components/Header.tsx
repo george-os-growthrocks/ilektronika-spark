@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import logo from "../assets/logo.webp.asset.json";
 import { topLevelCategories } from "../data/catalog";
@@ -9,6 +9,15 @@ import { MobileMenu } from "./MobileMenu";
 export function Header() {
   const tops = topLevelCategories().slice(0, 7);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [desktop, setDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1280px)");
+    const update = () => setDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   return (
     <>
@@ -31,22 +40,22 @@ export function Header() {
             />
           </Link>
 
-          {/* Mega menu — only on xl+ */}
-          <div className="header-mega-slot flex-1 min-w-0 justify-end">
-            <MegaMenu categories={tops} />
-          </div>
-
-          {/* Spacer for mobile/tablet */}
-          <div className="header-mobile-spacer flex-1" />
-
-          {/* Mobile burger on the right */}
-          <button
-            onClick={() => setMobileOpen(true)}
-            aria-label="Άνοιγμα μενού"
-            className="header-mobile-trigger p-2 -mr-2 hover:text-primary shrink-0"
-          >
-            <Menu className="h-6 w-6" />
-          </button>
+          {desktop ? (
+            <div className="flex flex-1 min-w-0 justify-end">
+              <MegaMenu categories={tops} />
+            </div>
+          ) : (
+            <>
+              <div className="flex-1" />
+              <button
+                onClick={() => setMobileOpen(true)}
+                aria-label="Άνοιγμα μενού"
+                className="inline-flex p-2 -mr-2 hover:text-primary shrink-0"
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+            </>
+          )}
         </div>
       </header>
 
