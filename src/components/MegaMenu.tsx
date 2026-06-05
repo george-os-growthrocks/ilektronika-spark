@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import {
   topLevelCategories,
+  relatedCategoriesForPillar,
   subcategoriesOf,
   productsInCategory,
   formatPrice,
@@ -60,7 +61,9 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
       {categories.map((c) => {
         const meta = categoryMeta(c.slug);
         const isOpen = open === c.slug;
-        const subs = subcategoriesOf(c.slug);
+        const directSubs = subcategoriesOf(c.slug);
+        const related = relatedCategoriesForPillar(c.slug);
+        const subs = [...directSubs, ...related];
         const featured = featuredProducts(c.slug);
 
         return (
@@ -91,7 +94,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
 
             {isOpen && subs.length > 0 && (
               <div
-                className="absolute right-0 top-full z-50 pt-3"
+                className="absolute left-1/2 top-full z-50 pt-3 -translate-x-1/2"
                 onMouseEnter={cancelClose}
                 onMouseLeave={scheduleClose}
               >
