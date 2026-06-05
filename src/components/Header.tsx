@@ -32,18 +32,18 @@ export function Header() {
           </Link>
 
           {/* Mega menu — only on xl+ */}
-          <div className="hidden xl:flex flex-1 min-w-0 justify-end">
+          <div className="header-mega-slot flex-1 min-w-0 justify-end">
             <MegaMenu categories={tops} />
           </div>
 
           {/* Spacer for mobile/tablet */}
-          <div className="flex-1 xl:hidden" />
+          <div className="header-mobile-spacer flex-1" />
 
           {/* Mobile burger on the right */}
           <button
             onClick={() => setMobileOpen(true)}
             aria-label="Άνοιγμα μενού"
-            className="xl:hidden p-2 -mr-2 hover:text-primary shrink-0"
+            className="header-mobile-trigger p-2 -mr-2 hover:text-primary shrink-0"
           >
             <Menu className="h-6 w-6" />
           </button>
