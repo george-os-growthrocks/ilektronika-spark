@@ -21,21 +21,25 @@ const searchSchema = z.object({
 
 const PER_PAGE = 24;
 
-export const Route = createFileRoute("/$category")({
+export const Route = createFileRoute("/$category/$subcategory")({
   validateSearch: searchSchema,
   loader: ({ params }) => {
-    const cat = categoryBySlug(params.category);
-    if (!cat || cat.depth !== 0) throw notFound();
-    const all = productsInCategory(cat.slug);
-    const subs = subcategoriesOf(cat.slug);
-    return { category: cat, all, subs };
+    const parent = categoryBySlug(params.category);
+    const sub = categoryBySlug(params.subcategory);
+    if (!parent || !sub) throw notFound();
+    if (sub.parentSlug !== parent.slug && sub.ancestors.every((a) => a.slug !== parent.slug)) {
+      throw notFound();
+    }
+    const all = productsInCategory(sub.slug);
+    const subs = subcategoriesOf(sub.slug);
+    return { parent, sub, all, subs };
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) return {};
-    const { category, all } = loaderData;
-    const title = `${category.label} | ilektronikatsigara.gr`;
-    const description = `Συλλογή ${category.label} — ${all.length} προϊόντα από Vape and More. Αυθεντικά, με ταχεία αποστολή σε όλη την Ελλάδα.`;
-    const canonical = `https://vapeandmore.gr/product-category/${params.category}/`;
+    const { parent, sub, all } = loaderData;
+    const title = `${sub.label} — ${parent.label} | ilektronikatsigara.gr`;
+    const description = `${sub.label}: ${all.length} προϊόντα από Vape and More. Δείτε διαθεσιμότητα και τιμές με αποστολή σε όλη την Ελλάδα.`;
+    const canonical = `https://vapeandmore.gr/product-category/${params.category}/${params.subcategory}/`;
     return {
       meta: [
         { title },
@@ -47,7 +51,7 @@ export const Route = createFileRoute("/$category")({
       links: [{ rel: "canonical", href: canonical }],
     };
   },
-  component: CategoryPage,
+  component: SubcategoryPage,
   notFoundComponent: () => (
     <div className="max-w-3xl mx-auto px-6 py-24 text-center">
       <h1 className="text-3xl font-extrabold mb-4">Η κατηγορία δεν βρέθηκε</h1>
@@ -63,8 +67,8 @@ export const Route = createFileRoute("/$category")({
   ),
 });
 
-function CategoryPage() {
-  const { category, all, subs } = Route.useLoaderData();
+function SubcategoryPage() {
+  const { parent, sub, all, subs } = Route.useLoaderData();
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
 
@@ -87,17 +91,17 @@ function CategoryPage() {
 
   return (
     <>
-      {/* Header */}
       <section className="py-10 bg-surface border-b border-border">
         <div className="max-w-7xl mx-auto px-6">
           <nav aria-label="Breadcrumbs" className="text-xs text-muted-foreground mb-4">
-            <Link to="/" className="hover:text-primary">
-              Αρχική
+            <Link to="/" className="hover:text-primary">Αρχική</Link> ›{" "}
+            <Link to="/$category" params={{ category: parent.slug }} className="hover:text-primary">
+              {parent.label}
             </Link>{" "}
-            › <span className="text-foreground">{category.label}</span>
+            › <span className="text-foreground">{sub.label}</span>
           </nav>
           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">
-            {category.label}
+            {sub.label}
           </h1>
           <p className="text-muted-foreground mt-2">
             {all.length} προϊόντα · {filtered.length} εμφανίζονται με τα τρέχοντα φίλτρα
@@ -108,13 +112,10 @@ function CategoryPage() {
                 <Link
                   key={s.slug}
                   to="/$category/$subcategory"
-                  params={{ category: category.slug, subcategory: s.slug }}
+                  params={{ category: parent.slug, subcategory: s.slug }}
                   className="text-xs font-bold uppercase tracking-widest border border-border rounded-full px-3 py-1.5 hover:border-primary hover:text-primary transition-colors bg-background"
                 >
-                  {s.label}{" "}
-                  <span className="text-muted-foreground font-mono ml-1">
-                    ({s.count})
-                  </span>
+                  {s.label} <span className="text-muted-foreground font-mono ml-1">({s.count})</span>
                 </Link>
               ))}
             </div>
@@ -123,7 +124,6 @@ function CategoryPage() {
       </section>
 
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
-        {/* Filters */}
         <aside className="space-y-6">
           <div>
             <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
@@ -183,7 +183,6 @@ function CategoryPage() {
           )}
         </aside>
 
-        {/* Products */}
         <div>
           <div className="flex items-center justify-between mb-6">
             <span className="text-xs text-muted-foreground">
@@ -218,32 +217,6 @@ function CategoryPage() {
                 <ProductCard key={p.slug} product={p} />
               ))}
             </div>
-          )}
-
-          {totalPages > 1 && (
-            <nav className="flex justify-center items-center gap-2 mt-10" aria-label="Pagination">
-              <Link
-                to="/$category"
-                params={{ category: category.slug }}
-                search={(s) => ({ ...s, page: Math.max(1, page - 1) })}
-                disabled={page <= 1}
-                className="px-3 py-2 text-xs font-bold border border-border rounded hover:border-primary disabled:opacity-40 disabled:pointer-events-none"
-              >
-                ← Προηγ.
-              </Link>
-              <span className="px-3 py-2 text-xs font-mono text-muted-foreground">
-                {page} / {totalPages}
-              </span>
-              <Link
-                to="/$category"
-                params={{ category: category.slug }}
-                search={(s) => ({ ...s, page: Math.min(totalPages, page + 1) })}
-                disabled={page >= totalPages}
-                className="px-3 py-2 text-xs font-bold border border-border rounded hover:border-primary disabled:opacity-40 disabled:pointer-events-none"
-              >
-                Επόμ. →
-              </Link>
-            </nav>
           )}
         </div>
       </div>

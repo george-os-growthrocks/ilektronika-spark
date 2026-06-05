@@ -1,30 +1,55 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { getProduct, productsByCategory } from "../data/products";
-import { getCategory } from "../data/categories";
+import {
+  brands,
+  categoryBySlug,
+  effectivePrice,
+  formatPrice,
+  productBySlug,
+  productImage,
+  productsInCategory,
+} from "../data/catalog";
+import { MerchantCard } from "../components/MerchantCard";
+import { ProductCard } from "../components/ProductCard";
+import { productAffiliateUrl, productCanonicalUrl, STORE_NAME } from "../lib/affiliate";
 
 export const Route = createFileRoute("/proionta/$slug")({
-  beforeLoad: ({ params }) => {
-    if (!getProduct(params.slug)) throw notFound();
-  },
   loader: ({ params }) => {
-    const product = getProduct(params.slug)!;
-    const category = getCategory(product.category)!;
-    const related = productsByCategory(product.category).filter((p) => p.slug !== product.slug).slice(0, 3);
-    return { product, category, related };
+    const product = productBySlug(params.slug);
+    if (!product) throw notFound();
+    const cat = product.primaryLeafSlug ? categoryBySlug(product.primaryLeafSlug) : undefined;
+    const related = product.primaryLeafSlug
+      ? productsInCategory(product.primaryLeafSlug)
+          .filter((p) => p.slug !== product.slug)
+          .slice(0, 4)
+      : [];
+    return { product, category: cat, related };
   },
   head: ({ loaderData }) => {
     if (!loaderData) return {};
-    const { product, category } = loaderData;
+    const { product } = loaderData;
+    const title =
+      product.seoTitle || `${product.name} | ilektronikatsigara.gr`;
+    const description =
+      product.seoDescription ||
+      product.shortDescription ||
+      `Δείτε τιμή, χαρακτηριστικά και διαθεσιμότητα για ${product.name}${
+        product.brand ? ` της ${product.brand}` : ""
+      }.`;
+    const canonical = productCanonicalUrl(product);
+    const price = effectivePrice(product);
+    const image = productImage(product);
+
     return {
       meta: [
-        { title: `${product.name} | ilektronikatsigara.gr` },
-        { name: "description", content: product.metaDescription },
-        { property: "og:title", content: product.name },
-        { property: "og:description", content: product.metaDescription },
-        { property: "og:url", content: `/proionta/${product.slug}` },
+        { title },
+        { name: "description", content: description.slice(0, 160) },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description.slice(0, 160) },
         { property: "og:type", content: "product" },
+        { property: "og:url", content: canonical },
+        ...(image ? [{ property: "og:image", content: image }] : []),
       ],
-      links: [{ rel: "canonical", href: `/proionta/${product.slug}` }],
+      links: [{ rel: "canonical", href: canonical }],
       scripts: [
         {
           type: "application/ld+json",
@@ -32,15 +57,24 @@ export const Route = createFileRoute("/proionta/$slug")({
             "@context": "https://schema.org",
             "@type": "Product",
             name: product.name,
-            brand: { "@type": "Brand", name: product.brand },
-            description: product.description,
-            category: category.name,
-            offers: {
-              "@type": "Offer",
-              price: product.price.toFixed(2),
-              priceCurrency: "EUR",
-              availability: "https://schema.org/InStock",
-            },
+            sku: product.sku || product.id,
+            image: product.images.slice(0, 4),
+            description,
+            brand: product.brand
+              ? { "@type": "Brand", name: product.brand }
+              : undefined,
+            offers: price != null
+              ? {
+                  "@type": "Offer",
+                  url: canonical,
+                  priceCurrency: "EUR",
+                  price: price.toFixed(2),
+                  availability: product.inStock
+                    ? "https://schema.org/InStock"
+                    : "https://schema.org/OutOfStock",
+                  seller: { "@type": "Organization", name: STORE_NAME },
+                }
+              : undefined,
           }),
         },
         {
@@ -50,8 +84,18 @@ export const Route = createFileRoute("/proionta/$slug")({
             "@type": "BreadcrumbList",
             itemListElement: [
               { "@type": "ListItem", position: 1, name: "Αρχική", item: "/" },
-              { "@type": "ListItem", position: 2, name: category.shortName, item: `/${category.slug}` },
-              { "@type": "ListItem", position: 3, name: product.name, item: `/proionta/${product.slug}` },
+              ...product.primaryCategoryPath.map((node, i) => ({
+                "@type": "ListItem",
+                position: i + 2,
+                name: node.label,
+                item: `/${node.slug}`,
+              })),
+              {
+                "@type": "ListItem",
+                position: product.primaryCategoryPath.length + 2,
+                name: product.name,
+                item: `/proionta/${product.slug}`,
+              },
             ],
           }),
         },
@@ -62,116 +106,178 @@ export const Route = createFileRoute("/proionta/$slug")({
   notFoundComponent: () => (
     <div className="max-w-3xl mx-auto px-6 py-24 text-center">
       <h1 className="text-3xl font-extrabold mb-4">Το προϊόν δεν βρέθηκε</h1>
-      <Link to="/" className="text-primary underline">Επιστροφή στην αρχική</Link>
+      <Link to="/" className="text-primary font-bold underline">
+        Επιστροφή στην αρχική
+      </Link>
+    </div>
+  ),
+  errorComponent: () => (
+    <div className="max-w-3xl mx-auto px-6 py-24 text-center">
+      <h1 className="text-3xl font-extrabold mb-4">Κάτι πήγε στραβά</h1>
+      <Link to="/" className="text-primary font-bold underline">
+        Επιστροφή στην αρχική
+      </Link>
     </div>
   ),
 });
 
 function ProductPage() {
-  const { product, category, related } = Route.useLoaderData();
+  const { product, related } = Route.useLoaderData();
+  const breadcrumbs = product.primaryCategoryPath;
 
   return (
     <>
-      <section className="pt-12 pb-8 border-b border-border">
-        <div className="max-w-7xl mx-auto px-6">
-          <nav className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-6">
-            <Link to="/" className="hover:text-primary">Αρχική</Link>
-            <span className="mx-2">/</span>
-            <Link to="/$category" params={{ category: category.slug }} className="hover:text-primary">
-              {category.shortName}
+      {/* Breadcrumbs */}
+      <nav
+        aria-label="Breadcrumbs"
+        className="max-w-7xl mx-auto px-6 pt-6 text-xs text-muted-foreground"
+      >
+        <ol className="flex flex-wrap items-center gap-2">
+          <li>
+            <Link to="/" className="hover:text-primary">
+              Αρχική
             </Link>
-            <span className="mx-2">/</span>
-            <span className="text-foreground">{product.name}</span>
-          </nav>
-        </div>
-      </section>
+          </li>
+          {breadcrumbs.map((node, i) => (
+            <li key={node.slug} className="flex items-center gap-2">
+              <span>›</span>
+              {i === 0 ? (
+                <Link
+                  to="/$category"
+                  params={{ category: node.slug }}
+                  className="hover:text-primary"
+                >
+                  {node.label}
+                </Link>
+              ) : i === 1 ? (
+                <Link
+                  to="/$category/$subcategory"
+                  params={{ category: breadcrumbs[0].slug, subcategory: node.slug }}
+                  className="hover:text-primary"
+                >
+                  {node.label}
+                </Link>
+              ) : (
+                <span>{node.label}</span>
+              )}
+            </li>
+          ))}
+          <li className="flex items-center gap-2">
+            <span>›</span>
+            <span className="text-foreground truncate max-w-[40ch]">{product.name}</span>
+          </li>
+        </ol>
+      </nav>
 
-      <section className="py-12">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12">
-          <div className="aspect-square bg-surface border border-border grid place-items-center">
-            <div className="text-center p-8">
-              <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground block mb-2">
-                {product.brand}
-              </span>
-              <span className="text-6xl">📦</span>
+      {/* Hero */}
+      <section className="py-8">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Gallery */}
+          <div className="lg:col-span-7">
+            <div className="aspect-square bg-surface border border-border rounded-md overflow-hidden grid place-items-center">
+              {product.images[0] ? (
+                <img
+                  src={product.images[0]}
+                  alt={product.name}
+                  className="w-full h-full object-contain p-6"
+                />
+              ) : (
+                <span className="text-muted-foreground font-mono text-xs uppercase">
+                  Χωρίς εικόνα
+                </span>
+              )}
             </div>
+            {product.images.length > 1 && (
+              <div className="grid grid-cols-5 gap-2 mt-3">
+                {product.images.slice(0, 5).map((src, i) => (
+                  <div
+                    key={i}
+                    className="aspect-square bg-surface border border-border rounded grid place-items-center overflow-hidden"
+                  >
+                    <img src={src} alt="" className="w-full h-full object-contain p-2" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-          <div>
-            <span className="font-mono text-xs text-primary uppercase tracking-widest block mb-2">
-              {product.brand}
-            </span>
-            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tighter mb-4">
+
+          {/* Info */}
+          <div className="lg:col-span-5 flex flex-col gap-4">
+            {product.brand && (
+              <Link
+                to="/marka/$brand"
+                params={{ brand: product.brandSlug ?? "" }}
+                className="inline-flex self-start text-[10px] font-bold uppercase tracking-widest text-primary border border-primary/30 rounded px-2 py-1 hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
+                {product.brand}
+              </Link>
+            )}
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-balance">
               {product.name}
             </h1>
-            <p className="text-lg text-muted-foreground mb-6">{product.shortDescription}</p>
-            <p className="text-4xl font-extrabold mb-6">{product.price.toFixed(2)}€</p>
+            {product.sku && (
+              <div className="text-xs text-muted-foreground font-mono">
+                Κωδικός: <span className="text-foreground">{product.sku}</span>
+              </div>
+            )}
+            {product.shortDescription && (
+              <p className="text-muted-foreground leading-relaxed">
+                {product.shortDescription}
+              </p>
+            )}
 
-            <div className="bg-surface border border-border p-4 mb-6 text-sm text-muted-foreground">
-              <strong className="text-foreground">Σημείωση:</strong> Κατάλογος μόνο — οι online παραγγελίες
-              ανοίγουν σύντομα. Για κράτηση επικοινωνήστε μαζί μας.
-            </div>
+            <MerchantCard product={product} />
 
-            <Link
-              to="/epikoinonia"
-              className="inline-flex items-center bg-primary text-primary-foreground px-8 py-4 font-bold uppercase tracking-widest text-sm hover:opacity-90 transition-opacity mb-8"
-            >
-              Επικοινωνία για κράτηση →
-            </Link>
-
-            <div className="border-t border-border pt-6">
-              <h2 className="font-bold mb-3 uppercase text-xs tracking-widest text-muted-foreground">Χαρακτηριστικά</h2>
-              <ul className="space-y-2">
-                {product.features.map((f: string, i: number) => (
-                  <li key={i} className="text-sm flex gap-2">
-                    <span className="text-primary">✓</span> {f}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {product.attributes.length > 0 && (
+              <div className="border-t border-border pt-4 mt-2">
+                <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
+                  Διαθέσιμες παραλλαγές
+                </h2>
+                <dl className="space-y-2 text-sm">
+                  {product.attributes.map((a) => (
+                    <div key={a.name}>
+                      <dt className="font-bold text-foreground mb-1">{a.name}</dt>
+                      <dd className="flex flex-wrap gap-1.5">
+                        {a.values.map((v) => (
+                          <span
+                            key={v}
+                            className="inline-flex text-xs border border-border rounded px-2 py-1 bg-surface"
+                          >
+                            {v}
+                          </span>
+                        ))}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      <section className="py-12 bg-surface border-y border-border">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12">
-          <div>
-            <h2 className="text-2xl font-extrabold tracking-tighter mb-4">Περιγραφή</h2>
-            <p className="text-muted-foreground leading-relaxed">{product.description}</p>
+      {/* Description */}
+      {product.description && (
+        <section className="py-12 bg-surface border-y border-border">
+          <div className="max-w-4xl mx-auto px-6">
+            <h2 className="text-2xl font-extrabold tracking-tight mb-4">Περιγραφή</h2>
+            <p className="text-foreground leading-relaxed whitespace-pre-line">
+              {product.description}
+            </p>
           </div>
-          <div>
-            <h2 className="text-2xl font-extrabold tracking-tighter mb-4">Προδιαγραφές</h2>
-            <dl className="space-y-2">
-              {product.specs.map((s: { label: string; value: string }, i: number) => (
-                <div key={i} className="flex justify-between py-2 border-b border-border">
-                  <dt className="font-mono text-xs uppercase tracking-widest text-muted-foreground">{s.label}</dt>
-                  <dd className="font-bold text-sm">{s.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
+      {/* Related */}
       {related.length > 0 && (
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-6">
-            <h2 className="text-2xl font-extrabold tracking-tighter mb-8">Παρόμοια Προϊόντα</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {related.map((p: typeof related[number]) => (
-                <Link
-                  key={p.slug}
-                  to="/proionta/$slug"
-                  params={{ slug: p.slug }}
-                  className="group block border border-border hover:border-primary transition-colors"
-                >
-                  <div className="aspect-square bg-surface grid place-items-center border-b border-border">
-                    <span className="font-mono text-xs uppercase text-muted-foreground">{p.brand}</span>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-bold mb-2 group-hover:text-primary transition-colors">{p.name}</h3>
-                    <p className="text-lg font-extrabold">{p.price.toFixed(2)}€</p>
-                  </div>
-                </Link>
+            <h2 className="text-2xl font-extrabold tracking-tight mb-8">
+              Παρόμοια προϊόντα
+            </h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {related.map((p) => (
+                <ProductCard key={p.slug} product={p} />
               ))}
             </div>
           </div>
@@ -180,3 +286,8 @@ function ProductPage() {
     </>
   );
 }
+
+// Keep imports used only for side-effect awareness; suppress unused warnings
+void brands;
+void productAffiliateUrl;
+void formatPrice;
