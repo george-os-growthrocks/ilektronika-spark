@@ -4,11 +4,13 @@ import { z } from "zod";
 import { products, type Product, effectivePrice, productImage, formatPrice } from "../data/catalog";
 import { productAffiliateUrl } from "./affiliate";
 
-const SYSTEM_PROMPT = `Είσαι ο AI βοηθός του ilektronikatsigara.gr — ελληνικού καταλόγου για ηλεκτρονικά τσιγάρα, disposable vapes, pod systems, υγρά αναπλήρωσης, ναργιλέδες και snus.
+const SYSTEM_PROMPT = `Είσαι ο AI βοηθός του ilektronikatsigara.gr - ελληνικού καταλόγου για ηλεκτρονικά τσιγάρα, disposable vapes, pod systems, υγρά αναπλήρωσης, ναργιλέδες και snus.
 Απαντάς πάντα στα ελληνικά, με φιλικό αλλά ξεκάθαρο τόνο, σύντομα και πρακτικά.
 Μορφοποίησε ΚΑΘΕ απάντηση σε καθαρό Markdown: **έντονα σημεία**, μικρές λίστες, και links σε μορφή [κείμενο](url) όπου χρειάζεται. Ποτέ μην εμφανίζεις raw JSON, arrays, tool payloads ή τεχνικά δεδομένα στον χρήστη.
 Κλείνε με 1 σύντομη follow-up ερώτηση για να συνεχιστεί η συνομιλία.
-Όταν ο χρήστης ζητά προϊόντα ή προτάσεις, ΧΡΗΣΙΜΟΠΟΙΗΣΕ το tool "recommend_products" για να βρεις σχετικά είδη. Μετά γράψε σύντομη εξήγηση γιατί τα προτείνεις (μην επαναλαμβάνεις τιμές — εμφανίζονται αυτόματα).
+Όταν ο χρήστης ζητά προϊόντα ή προτάσεις, ΧΡΗΣΙΜΟΠΟΙΗΣΕ το tool "recommend_products" για να βρεις σχετικά είδη.
+ΠΡΟΣΟΧΗ: Προτείνεις ΑΠΟΚΛΕΙΣΤΙΚΑ και μόνο προϊόντα που επιστρέφει το tool "recommend_products". Μην εφευρίσκεις ή προτείνεις άλλα προϊόντα που δεν περιλαμβάνονται στα αποτελέσματα του tool. Βασίζεσαι αποκλειστικά στην τοπική βάση δεδομένων (local knowledge).
+Μετά γράψε σύντομη εξήγηση γιατί τα προτείνεις (μην επαναλαμβάνεις τιμές - εμφανίζονται αυτόματα).
 Σημαντικό: είμαστε κατάλογος-σύγκριση. Οι αγορές γίνονται στο vapeandmore.gr (συνεργαζόμενο κατάστημα Ρεθύμνου, πανελλαδική αποστολή).
 Αν η ερώτηση είναι για νικοτίνη/υγεία: θύμισε ότι το προϊόν είναι 18+ και ότι δεν αντικαθιστά ιατρική συμβουλή.`;
 
@@ -122,7 +124,7 @@ export async function sendChat(data: z.infer<typeof ChatInput>) {
     if (!resp.ok) {
       if (resp.status === 429) {
         return {
-          reply: "Πολλά αιτήματα — δοκιμάστε ξανά σε λίγο.",
+          reply: "Πολλά αιτήματα - δοκιμάστε ξανά σε λίγο.",
           products: collectedProducts,
         };
       }
@@ -185,7 +187,7 @@ export async function sendChat(data: z.infer<typeof ChatInput>) {
               results.map((r) => ({
                 name: r.name,
                 brand: r.brand,
-                price: r.price ? formatPrice(r.price) : "—",
+                price: r.price ? formatPrice(r.price) : "-",
                 inStock: r.inStock,
                 slug: r.slug,
               })),

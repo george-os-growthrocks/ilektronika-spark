@@ -9,15 +9,15 @@ export function MerchantCard({ product }: { product: Product }) {
     <aside className="border-2 border-primary/30 rounded-lg p-5 bg-surface">
       <div className="flex items-center justify-between mb-4">
         <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-          Διαθέσιμο σε κατάστημα
+          ΔΙΑΘΕΣΙΜΟ ΣΕ ΚΑΤΑΣΤΗΜΑ
         </span>
         {product.inStock ? (
           <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-primary">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary" /> Σε απόθεμα
+            <span className="w-1.5 h-1.5 rounded-full bg-primary" /> ΣΕ ΑΠΟΘΕΜΑ
           </span>
         ) : (
           <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-            <span className="w-1.5 h-1.5 rounded-full bg-muted" /> Εξαντλημένο
+            <span className="w-1.5 h-1.5 rounded-full bg-muted" /> ΕΞΑΝΤΛΗΜΕΝΟ
           </span>
         )}
       </div>
@@ -63,7 +63,7 @@ export function MerchantCard({ product }: { product: Product }) {
         rel="noopener nofollow sponsored"
         className="w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-bold uppercase tracking-widest px-6 py-3.5 rounded hover:opacity-90 transition-opacity"
       >
-        Αγορά τώρα <span aria-hidden>↗</span>
+        ΑΓΟΡΑ ΤΩΡΑ <span aria-hidden>↗</span>
       </a>
 
       <p className="text-[11px] text-muted-foreground text-center mt-3 leading-snug">

@@ -48,11 +48,11 @@ export default function PrivacyPage() {
           <h2 className="text-xl font-extrabold">2. Τι δεδομένα συλλέγουμε</h2>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              Στοιχεία παραγγελίας (όνομα, διεύθυνση, τηλέφωνο, email) — μόνο κατά το checkout στο
+              Στοιχεία παραγγελίας (όνομα, διεύθυνση, τηλέφωνο, email) - μόνο κατά το checkout στο
               vapeandmore.gr.
             </li>
             <li>
-              Δεδομένα πλοήγησης (cookies, IP, browser) — βλέπε{" "}
+              Δεδομένα πλοήγησης (cookies, IP, browser) - βλέπε{" "}
               <Link href="/cookies" className="text-primary underline">
                 Πολιτική Cookies
               </Link>

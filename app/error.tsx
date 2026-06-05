@@ -25,7 +25,7 @@ export default function Error({
             onClick={() => reset()}
             className="bg-primary text-primary-foreground px-4 py-2 text-sm font-bold uppercase tracking-widest"
           >
-            Δοκιμή ξανά
+            ΔΟΚΙΜΗ ΞΑΝΑ
           </button>
           <a href="/" className="border border-border px-4 py-2 text-sm font-medium">
             Αρχική

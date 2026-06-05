@@ -14,7 +14,7 @@ export default function AboutPage() {
     <section className="py-16 max-w-3xl mx-auto px-6">
       <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">Σχετικά με εμάς</h1>
       <p className="text-lg text-muted-foreground mb-10">
-        Ένας ελληνόφωνος, καλά οργανωμένος κατάλογος για όλο το vape & ναργιλέ — σε συνεργασία με
+        Ένας ελληνόφωνος, καλά οργανωμένος κατάλογος για όλο το vape & ναργιλέ - σε συνεργασία με
         ένα από τα πιο αξιόπιστα φυσικά καταστήματα της Ελλάδας.
       </p>
       <div className="space-y-8 text-foreground/90">
@@ -36,7 +36,7 @@ export default function AboutPage() {
           </p>
         </section>
         <section>
-          <h2 className="text-2xl font-extrabold mb-2">Ο συνεργάτης μας — Vape and More</h2>
+          <h2 className="text-2xl font-extrabold mb-2">Ο συνεργάτης μας - Vape and More</h2>
           <p>
             Η Vape and More λειτουργεί φυσικό κατάστημα στη <strong>Αρκαδίου 82 στο Ρέθυμνο</strong>{" "}
             και πραγματοποιεί πανελλαδικές αποστολές. Αυθεντικά προϊόντα από επίσημους εισαγωγείς,
@@ -48,7 +48,7 @@ export default function AboutPage() {
           <p>
             Το vapeandmore.gr είναι το e-shop. Το ilektronikatsigara.gr είναι ο{" "}
             <strong>καθαρά ενημερωτικός</strong> κατάλογος με AI βοηθό, οδηγούς, FAQ και
-            SEO-friendly δομή — ώστε όποιος ψάχνει στα ελληνικά &quot;ηλεκτρονικό τσιγάρο&quot; να
+            SEO-friendly δομή - ώστε όποιος ψάχνει στα ελληνικά &quot;ηλεκτρονικό τσιγάρο&quot; να
             βρίσκει αμέσως το σωστό προϊόν, σε σωστή τιμή, σε αξιόπιστο κατάστημα.
           </p>
         </section>

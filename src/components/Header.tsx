@@ -25,9 +25,9 @@ export function Header() {
     <>
       {/* Top announcement bar */}
       <div className="bg-gradient-to-r from-primary via-secondary to-primary text-primary-foreground text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-center py-1.5 px-3 truncate">
-        <span className="sm:hidden">🚚 Δωρεάν αποστολή 30€+ · Αυθεντικά</span>
+        <span className="sm:hidden">🚚 ΔΩΡΕΑΝ ΑΠΟΣΤΟΛΗ 30€+ · ΑΥΘΕΝΤΙΚΑ</span>
         <span className="hidden sm:inline">
-          🚚 Δωρεάν αποστολή άνω των 30€ · Παράδοση 1-3 εργάσιμες · Αυθεντικά προϊόντα
+          🚚 ΔΩΡΕΑΝ ΑΠΟΣΤΟΛΗ ΑΝΩ ΤΩΝ 30€ · ΠΑΡΑΔΟΣΗ 1-3 ΕΡΓΑΣΙΜΕΣ · ΑΥΘΕΝΤΙΚΑ ΠΡΟΪΟΝΤΑ
         </span>
       </div>
 
@@ -57,7 +57,7 @@ export function Header() {
               <div className="w-px h-8 bg-border/60" />
             </div>
 
-            {/* Navigation — fills remaining space */}
+            {/* Navigation - fills remaining space */}
             <div className="flex-1 flex items-stretch justify-center">
               <MegaMenu categories={tops} />
             </div>

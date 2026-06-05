@@ -15,6 +15,7 @@ import {
   type Category,
 } from "../data/catalog";
 import { categoryMeta, type BadgeKind } from "../data/category-meta";
+import { toGreekUppercase } from "@/lib/utils";
 
 const BADGE_COLORS: Record<BadgeKind, string> = {
   HOT: "bg-red-500 text-white",
@@ -111,7 +112,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
                 {/* Subcategories column */}
                 <div className="col-span-4">
                   <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">
-                    Υποκατηγορίες
+                    ΥΠΟΚΑΤΗΓΟΡΙΕΣ
                   </div>
                   <ul className="grid grid-cols-2 gap-x-4 gap-y-1 max-h-80 overflow-y-auto pr-2">
                     {openSubs.slice(0, 24).map((s) => (
@@ -139,7 +140,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
                 {/* Featured products column */}
                 <div className="col-span-8 border-l border-border/60 pl-8">
                   <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4 flex items-center justify-between">
-                    <span>Δημοφιλή Προϊόντα</span>
+                    <span>ΔΗΜΟΦΙΛΗ ΠΡΟΪΟΝΤΑ</span>
                     <Link
                       href={`/${open}`}
                       className="text-primary hover:underline normal-case text-xs font-bold"
@@ -190,7 +191,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
 
   return (
     <>
-      <nav ref={navRef} className="relative flex items-stretch justify-center gap-0 text-xs font-bold uppercase tracking-wider">
+      <nav ref={navRef} className="relative flex items-stretch justify-center gap-0 text-xs font-bold tracking-wider">
         {categories.map((c) => {
           const meta = categoryMeta(c.slug);
           const isOpen = open === c.slug;
@@ -214,7 +215,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
                   isOpen ? "text-primary" : "hover:text-primary"
                 }`}
               >
-                {c.label}
+                {toGreekUppercase(c.label)}
                 {meta.badge && <Badge kind={meta.badge} />}
                 {hasSubs && (
                   <ChevronDown
@@ -234,7 +235,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
           href="/katigories"
           className="flex items-center px-3 hover:text-primary transition-colors whitespace-nowrap text-muted-foreground"
         >
-          Όλες →
+          ΟΛΕΣ →
         </Link>
       </nav>
 

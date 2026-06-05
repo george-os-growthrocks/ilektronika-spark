@@ -4,7 +4,7 @@ export function MerchantBlock() {
   return (
     <aside className="mt-12 border border-border rounded-lg p-6 bg-surface">
       <div className="text-xs uppercase tracking-widest text-muted-foreground font-bold mb-2">
-        Συνεργαζόμενο κατάστημα
+        ΣΥΝΕΡΓΑΖΟΜΕΝΟ ΚΑΤΑΣΤΗΜΑ
       </div>
       <div className="font-extrabold text-lg">Vape and More</div>
       <div className="text-sm text-foreground/80 mt-1">Αρκαδίου 82, 74100 Ρέθυμνο, GR</div>
@@ -41,13 +41,13 @@ export function LegalCta() {
         rel="noopener noreferrer sponsored"
         className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 font-extrabold uppercase tracking-widest text-sm rounded hover:opacity-90"
       >
-        Αγοράστε στο vapeandmore.gr →
+        ΑΓΟΡΑΣΤΕ ΣΤΟ vapeandmore.gr →
       </a>
       <Link
         href="/epikoinonia"
         className="inline-flex items-center gap-2 border border-border px-5 py-3 font-bold uppercase tracking-widest text-sm rounded hover:border-primary hover:text-primary"
       >
-        Επικοινωνία
+        ΕΠΙΚΟΙΝΩΝΙΑ
       </Link>
     </div>
   );

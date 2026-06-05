@@ -26,7 +26,7 @@ interface Msg {
 const WELCOME: Msg = {
   role: "assistant",
   content:
-    "Γεια! 👋 Είμαι ο AI βοηθός του ilektronikatsigara.gr. Πες μου τι ψάχνεις — disposable, pod, υγρό, ναργιλέ — και θα σου προτείνω αυθεντικές επιλογές με άμεση διαθεσιμότητα στο vapeandmore.gr.",
+    "Γεια! 👋 Είμαι ο AI βοηθός του ilektronikatsigara.gr. Πες μου τι ψάχνεις - disposable, pod, υγρό, ναργιλέ - και θα σου προτείνω αυθεντικές επιλογές με άμεση διαθεσιμότητα στο vapeandmore.gr.",
 };
 
 const PRESETS = [
@@ -129,7 +129,7 @@ export function ChatWidget() {
 
   return (
     <>
-      {/* Floating bubble — hidden while chat is open */}
+      {/* Floating bubble - hidden while chat is open */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
@@ -234,7 +234,7 @@ export function ChatWidget() {
                               rel="noopener noreferrer sponsored"
                               className="text-[10px] font-extrabold uppercase tracking-widest bg-primary text-primary-foreground px-2.5 py-1 rounded inline-flex items-center gap-1 hover:opacity-90"
                             >
-                              Αγορά <ExternalLink className="h-3 w-3" />
+                              ΑΓΟΡΑ <ExternalLink className="h-3 w-3" />
                             </a>
                           </div>
                         </div>
@@ -264,7 +264,7 @@ export function ChatWidget() {
             {showPresets && (
               <div className="pt-2 space-y-1.5">
                 <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold px-1">
-                  Δοκίμασε
+                  ΔΟΚΙΜΑΣΕ
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {PRESETS.map((p) => (
@@ -315,7 +315,7 @@ export function ChatWidget() {
               </button>
             </form>
             <div className="text-[10px] text-muted-foreground text-center px-3 pb-2 leading-tight">
-              AI βοηθός — μπορεί να κάνει λάθη. <span className="font-bold">18+</span>. Αγορές στο{" "}
+              AI βοηθός - μπορεί να κάνει λάθη. <span className="font-bold">18+</span>. Αγορές στο{" "}
               <a
                 href="https://vapeandmore.gr"
                 target="_blank"

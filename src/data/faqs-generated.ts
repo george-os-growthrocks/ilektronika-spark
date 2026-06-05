@@ -12,7 +12,7 @@ export interface FAQItem {
   a: string;
 }
 
-/** Generic FAQs that apply to every category — affiliate / shipping / safety. */
+/** Generic FAQs that apply to every category - affiliate / shipping / safety. */
 const GENERIC_FAQS: FAQItem[] = [
   {
     q: "Πώς αγοράζω από το ilektronikatsigara.gr;",
@@ -24,7 +24,7 @@ const GENERIC_FAQS: FAQItem[] = [
   },
   {
     q: "Είναι αυθεντικά τα προϊόντα;",
-    a: "Ναι. Όλα τα προϊόντα προέρχονται από επίσημους διανομείς και κατασκευαστές, με κωδικό αυθεντικότητας scratch QR όπου παρέχεται. Εγγυώμαστε 100% αυθεντικά είδη — όχι clones, όχι παράλληλες εισαγωγές αμφιβόλου προέλευσης.",
+    a: "Ναι. Όλα τα προϊόντα προέρχονται από επίσημους διανομείς και κατασκευαστές, με κωδικό αυθεντικότητας scratch QR όπου παρέχεται. Εγγυώμαστε 100% αυθεντικά είδη - όχι clones, όχι παράλληλες εισαγωγές αμφιβόλου προέλευσης.",
   },
   {
     q: "Επιτρέπεται η αγορά σε ανηλίκους;",
@@ -50,7 +50,7 @@ function buildCategoryFaqs(category: Category, products: Product[]): FAQItem[] {
 
   items.push({
     q: `Πόσα προϊόντα ${labelLower} διαθέτετε;`,
-    a: `Στην κατηγορία «${label}» θα βρείτε ${products.length} προϊόντα — από αυτά, ${inStock} είναι άμεσα διαθέσιμα. Ο catalog ανανεώνεται καθημερινά με νέες κυκλοφορίες και προσφορές.`,
+    a: `Στην κατηγορία «${label}» θα βρείτε ${products.length} προϊόντα - από αυτά, ${inStock} είναι άμεσα διαθέσιμα. Ο catalog ανανεώνεται καθημερινά με νέες κυκλοφορίες και προσφορές.`,
   });
 
   if (brandNames) {
@@ -95,7 +95,7 @@ function buildCategoryFaqs(category: Category, products: Product[]): FAQItem[] {
   } else if (slug.includes("syskey") || slug.includes("atmopo")) {
     items.push({
       q: "Pod system ή box mod για αρχάριους;",
-      a: "Για αρχάριους συνιστούμε pod system (Vaporesso XROS 4, Uwell Caliburn G3, Voopoo Drag X2 PnP) — εύκολο στη χρήση, καλή γεύση, μεγάλη αυτονομία. Τα box mods είναι για όσους θέλουν πειραματισμό με ισχύ και sub-ohm setups.",
+      a: "Για αρχάριους συνιστούμε pod system (Vaporesso XROS 4, Uwell Caliburn G3, Voopoo Drag X2 PnP) - εύκολο στη χρήση, καλή γεύση, μεγάλη αυτονομία. Τα box mods είναι για όσους θέλουν πειραματισμό με ισχύ και sub-ohm setups.",
     });
   } else if (slug.includes("nargil")) {
     items.push({
@@ -139,7 +139,7 @@ export function faqsForProduct(product: Product): FAQItem[] {
 
   items.push({
     q: `Πόσο γρήγορα μπορώ να παραλάβω το ${product.name};`,
-    a: `Παράδοση 1-3 εργάσιμες σε όλη την Ελλάδα μέσω vapeandmore.gr. ${product.inStock ? "Το προϊόν είναι άμεσα διαθέσιμο." : "Αυτή τη στιγμή είναι σε αναμονή — επικοινωνήστε με το κατάστημα για ETA."}`,
+    a: `Παράδοση 1-3 εργάσιμες σε όλη την Ελλάδα μέσω vapeandmore.gr. ${product.inStock ? "Το προϊόν είναι άμεσα διαθέσιμο." : "Αυτή τη στιγμή είναι σε αναμονή - επικοινωνήστε με το κατάστημα για ETA."}`,
   });
 
   if (product.attributes.length > 0) {
@@ -187,6 +187,6 @@ export function categoryDescription(slug: string): string {
     : "";
   const base =
     meta.intro ??
-    `Πλήρης συλλογή ${cat.label.toLowerCase()} στο ilektronikatsigara.gr — αυθεντικά προϊόντα, ανταγωνιστικές τιμές και πανελλαδική αποστολή μέσω vapeandmore.gr.`;
+    `Πλήρης συλλογή ${cat.label.toLowerCase()} στο ilektronikatsigara.gr - αυθεντικά προϊόντα, ανταγωνιστικές τιμές και πανελλαδική αποστολή μέσω vapeandmore.gr.`;
   return `${base} Διαθέτουμε ${products.length} προϊόντα${inStock < products.length ? ` (${inStock} άμεσα διαθέσιμα)` : ""}.${brandStr}`;
 }

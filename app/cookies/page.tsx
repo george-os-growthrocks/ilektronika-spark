@@ -32,14 +32,14 @@ export default function CookiesPage() {
           <h2 className="text-xl font-extrabold">Κατηγορίες cookies</h2>
           <ul className="list-disc pl-5 space-y-2">
             <li>
-              <strong>Απολύτως απαραίτητα</strong> — επαλήθευση 18+, αποθήκευση συνομιλίας AI
+              <strong>Απολύτως απαραίτητα</strong> - επαλήθευση 18+, αποθήκευση συνομιλίας AI
               βοηθού.
             </li>
             <li>
-              <strong>Στατιστικά</strong> — ανώνυμη μέτρηση επισκεψιμότητας.
+              <strong>Στατιστικά</strong> - ανώνυμη μέτρηση επισκεψιμότητας.
             </li>
             <li>
-              <strong>Affiliate</strong> — UTM παράμετροι (utm_source=ilektronikatsigara) για
+              <strong>Affiliate</strong> - UTM παράμετροι (utm_source=ilektronikatsigara) για
               απόδοση παραγγελιών.
             </li>
           </ul>

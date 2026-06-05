@@ -50,7 +50,7 @@ export default function ContactPage() {
           className="border border-border rounded-lg p-6 hover:border-primary transition-colors block"
         >
           <span className="font-mono text-xs uppercase tracking-widest text-primary block mb-2">
-            📞 Τηλέφωνο
+            📞 ΤΗΛΕΦΩΝΟ
           </span>
           <p className="font-extrabold text-xl">2831 181 046</p>
           <p className="text-sm text-muted-foreground mt-1">Δευ-Σαβ 10:00-21:00</p>
@@ -60,14 +60,14 @@ export default function ContactPage() {
           className="border border-border rounded-lg p-6 hover:border-primary transition-colors block"
         >
           <span className="font-mono text-xs uppercase tracking-widest text-primary block mb-2">
-            ✉️ Email
+            ✉️ EMAIL
           </span>
           <p className="font-extrabold text-lg break-all">info@vapeandmore.gr</p>
           <p className="text-sm text-muted-foreground mt-1">Απάντηση εντός 24 ωρών</p>
         </a>
         <div className="border border-border rounded-lg p-6 sm:col-span-2">
           <span className="font-mono text-xs uppercase tracking-widest text-primary block mb-2">
-            📍 Φυσικό κατάστημα
+            📍 ΦΥΣΙΚΟ ΚΑΤΑΣΤΗΜΑ
           </span>
           <p className="font-extrabold text-lg">Αρκαδίου 82, 74100 Ρέθυμνο</p>
           <a

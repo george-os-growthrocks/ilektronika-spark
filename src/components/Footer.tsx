@@ -27,13 +27,13 @@ export function Footer() {
             <div className="flex items-center gap-3 mt-6">
               <div className="px-3 py-1 bg-foreground text-background text-xs font-bold">18+</div>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
-                Αυστηρά για ενήλικες
+                ΑΥΣΤΗΡΑ ΓΙΑ ΕΝΗΛΙΚΕΣ
               </p>
             </div>
           </div>
           <div className="flex flex-col gap-2.5 text-sm">
             <span className="font-bold uppercase tracking-widest text-[10px] text-muted-foreground mb-1">
-              Κατάστημα
+              ΚΑΤΑΣΤΗΜΑ
             </span>
             <Link href="/disposables" className="hover:text-primary">
               Disposables
@@ -59,7 +59,7 @@ export function Footer() {
           </div>
           <div className="flex flex-col gap-2.5 text-sm">
             <span className="font-bold uppercase tracking-widest text-[10px] text-muted-foreground mb-1">
-              Πληροφορίες
+              ΠΛΗΡΟΦΟΡΙΕΣ
             </span>
             <Link href="/sxetika" className="hover:text-primary">
               Σχετικά με εμάς
@@ -110,8 +110,8 @@ export function Footer() {
 
       <div className="bg-foreground text-background py-3 text-center px-6">
         <p className="text-xs md:text-sm font-bold tracking-tight uppercase">
-          ⚠️ Προειδοποίηση: Περιέχει νικοτίνη — εξαιρετικά εθιστική ουσία. Όχι για ανηλίκους & μη
-          καπνιστές.
+          ⚠️ ΠΡΟΕΙΔΟΠΟΙΗΣΗ: ΠΕΡΙΕΧΕΙ ΝΙΚΟΤΙΝΗ - ΕΞΑΙΡΕΤΙΚΑ ΕΘΙΣΤΙΚΗ ΟΥΣΙΑ. ΟΧΙ ΓΙΑ ΑΝΗΛΙΚΟΥΣ & ΜΗ
+          ΚΑΠΝΙΣΤΕΣ.
         </p>
       </div>
     </footer>

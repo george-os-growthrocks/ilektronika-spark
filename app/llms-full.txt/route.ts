@@ -8,16 +8,16 @@ export async function GET() {
     .map((c) => {
       const subs = subcategoriesOf(c.slug);
       const subList = subs.length
-        ? subs.map((s) => `  - [${s.label}](/${c.slug}/${s.slug}) — ${s.count}`).join("\n")
+        ? subs.map((s) => ` - [${s.label}](/${c.slug}/${s.slug}) - ${s.count}`).join("\n")
         : "";
-      return `### ${c.label} (/${c.slug}) — ${c.count} προϊόντα\n${subList}`;
+      return `### ${c.label} (/${c.slug}) - ${c.count} προϊόντα\n${subList}`;
     })
     .join("\n\n");
 
   const topBrands = [...brands]
     .sort((a, b) => b.count - a.count)
     .slice(0, 40)
-    .map((b) => `- [${b.label}](/marka/${b.slug}) — ${b.count}`)
+    .map((b) => `- [${b.label}](/marka/${b.slug}) - ${b.count}`)
     .join("\n");
 
   const featuredProducts = products
@@ -25,7 +25,7 @@ export async function GET() {
     .slice(0, 60)
     .map(
       (p) =>
-        `- [${p.name}](/proionta/${p.slug})${p.brand ? ` — ${p.brand}` : ""}${p.price ? ` — ${p.price.toFixed(2)}€` : ""}`,
+        `- [${p.name}](/proionta/${p.slug})${p.brand ? ` - ${p.brand}` : ""}${p.price ? ` - ${p.price.toFixed(2)}€` : ""}`,
     )
     .join("\n");
 
@@ -36,7 +36,7 @@ export async function GET() {
     )
     .join("\n");
 
-  const body = `# ilektronikatsigara.gr — Πλήρης οδηγός για LLMs
+  const body = `# ilektronikatsigara.gr - Πλήρης οδηγός για LLMs
 
 Ελληνικός κατάλογος για ηλεκτρονικά τσιγάρα και αξεσουάρ. Συνεργαζόμαστε με το vapeandmore.gr (Ρέθυμνο, πανελλαδική αποστολή 1-3 εργάσιμες, δωρεάν από 30€).
 

@@ -8,6 +8,7 @@ import { ProductCard } from "./ProductCard";
 import { FaqSection } from "./FaqSection";
 import { faqsForCategory } from "@/data/faqs-generated";
 import { buildListingQuery, type ListingSearchParams } from "@/lib/listing-search";
+import { toGreekUppercase } from "@/lib/utils";
 
 const PER_PAGE = 24;
 
@@ -63,9 +64,9 @@ export function CategoryPageClient({
                 <Link
                   key={s.slug}
                   href={`/${category.slug}/${s.slug}`}
-                  className="inline-flex min-h-9 items-center text-xs font-bold uppercase tracking-widest border border-border rounded-full px-3 py-1.5 hover:border-primary hover:text-primary transition-colors bg-background"
+                  className="inline-flex min-h-9 items-center text-xs font-bold tracking-widest border border-border rounded-full px-3 py-1.5 hover:border-primary hover:text-primary transition-colors bg-background"
                 >
-                  {s.label}{" "}
+                  {toGreekUppercase(s.label)}{" "}
                   <span className="text-muted-foreground font-mono ml-1">({s.count})</span>
                 </Link>
               ))}
@@ -78,7 +79,7 @@ export function CategoryPageClient({
         <aside className="space-y-6">
           <div>
             <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
-              Διαθεσιμότητα
+              ΔΙΑΘΕΣΙΜΟΤΗΤΑ
             </h2>
             <label className="flex items-center gap-2 text-sm cursor-pointer">
               <input
@@ -94,7 +95,7 @@ export function CategoryPageClient({
           {brandList.length > 0 && (
             <div>
               <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
-                Μάρκα
+                ΜΑΡΚΑ
               </h2>
               <ul className="space-y-1.5">
                 {brandList.map((b) => {

@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { blogPosts } from "@/data/blog";
 import { generalFaqs } from "@/data/faqs";
 import { JsonLd } from "@/components/JsonLd";
+import { toGreekUppercase } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "ilektronikatsigara.gr | Ηλεκτρονικά Τσιγάρα, Disposables, Υγρά & Vape",
@@ -40,13 +41,13 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
           <div className="md:col-span-7 animate-fade-up">
             <span className="font-mono text-xs text-primary mb-4 block uppercase tracking-widest">
-              Powered by Vape and More · Ρέθυμνο
+              POWERED BY VAPE AND MORE · ΡΕΘΥΜΝΟ
             </span>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[0.95] mb-6 text-balance">
               Ο πλήρης κατάλογος για <span className="text-primary">ηλεκτρονικά τσιγάρα</span>.
             </h1>
             <p className="max-w-[55ch] text-lg text-muted-foreground mb-8 leading-relaxed">
-              {products.length} προϊόντα — disposable vapes, pod systems, υγρά αναπλήρωσης,
+              {products.length} προϊόντα - disposable vapes, pod systems, υγρά αναπλήρωσης,
               ναργιλέδες, καπνοί και αξεσουάρ. Επιλέγετε εδώ, αγοράζετε από το επίσημο κατάστημα{" "}
               <strong className="text-foreground">vapeandmore.gr</strong>.
             </p>
@@ -55,13 +56,13 @@ export default function HomePage() {
                 href="/katigories"
                 className="inline-flex items-center bg-primary text-primary-foreground px-6 py-3 font-bold uppercase tracking-widest text-sm rounded hover:opacity-90 transition-opacity"
               >
-                Όλες οι κατηγορίες →
+                ΟΛΕΣ ΟΙ ΚΑΤΗΓΟΡΙΕΣ →
               </Link>
               <Link
                 href="/anazitisi"
                 className="inline-flex items-center border border-foreground text-foreground px-6 py-3 font-bold uppercase tracking-widest text-sm rounded hover:bg-foreground hover:text-background transition-colors"
               >
-                Αναζήτηση
+                ΑΝΑΖΗΤΗΣΗ
               </Link>
             </div>
           </div>
@@ -94,7 +95,7 @@ export default function HomePage() {
               href="/katigories"
               className="text-xs font-bold uppercase tracking-widest text-primary"
             >
-              Δείτε όλες →
+              ΔΕΙΤΕ ΟΛΕΣ →
             </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -134,7 +135,7 @@ export default function HomePage() {
           <div className="flex items-end justify-between mb-8">
             <h2 className="text-2xl md:text-4xl font-extrabold tracking-tight">Οδηγοί & Άρθρα</h2>
             <Link href="/blog" className="text-xs font-bold uppercase tracking-widest text-primary">
-              Όλα →
+              ΟΛΑ →
             </Link>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
@@ -144,8 +145,8 @@ export default function HomePage() {
                 href={`/blog/${post.slug}`}
                 className="block bg-background border border-border rounded p-6 hover:border-primary transition-colors group"
               >
-                <span className="text-[10px] font-mono uppercase tracking-widest text-primary block mb-2">
-                  {post.category} · {post.readingTime} λεπτά
+                <span className="text-[10px] font-mono tracking-widest text-primary block mb-2">
+                  {toGreekUppercase(post.category)} · {toGreekUppercase(post.readingTime + " λεπτά")}
                 </span>
                 <h3 className="text-xl font-extrabold tracking-tight mb-3 group-hover:text-primary transition-colors">
                   {post.title}

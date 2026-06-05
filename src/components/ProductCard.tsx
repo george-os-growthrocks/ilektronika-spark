@@ -21,17 +21,17 @@ export function ProductCard({ product }: { product: Product }) {
           />
         ) : (
           <div className="absolute inset-0 grid place-items-center text-muted-foreground text-xs uppercase tracking-widest">
-            {product.brand ?? "—"}
+            {product.brand ?? "-"}
           </div>
         )}
         {!product.inStock && (
           <span className="absolute top-2 left-2 bg-muted text-muted-foreground text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded">
-            Εξαντλημένο
+            ΕΞΑΝΤΛΗΜΕΝΟ
           </span>
         )}
         {hasSale && (
           <span className="absolute top-2 right-2 bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded">
-            Προσφορά
+            ΠΡΟΣΦΟΡΑ
           </span>
         )}
       </Link>
@@ -63,7 +63,7 @@ export function ProductCard({ product }: { product: Product }) {
           rel="noopener nofollow sponsored"
           className="mt-1 inline-flex items-center justify-center gap-1 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest px-3 py-2 rounded hover:opacity-90 transition-opacity"
         >
-          Αγορά τώρα <span aria-hidden>↗</span>
+          ΑΓΟΡΑ ΤΩΡΑ <span aria-hidden>↗</span>
         </a>
       </div>
     </article>

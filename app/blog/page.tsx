@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { blogPosts } from "@/data/blog";
 import { productBySlug, productImage, formatPrice, effectivePrice } from "@/data/catalog";
+import { toGreekUppercase } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Blog Άτμισης | Οδηγοί & Νέα Ηλεκτρονικού Τσιγάρου | ilektronikatsigara.gr",
@@ -50,13 +51,13 @@ export default function BlogIndexPage() {
                   className="block border border-border bg-card rounded-xl hover:border-primary/50 hover:shadow-lg shadow-black/[0.02] transition-all p-6 md:p-8 group"
                 >
                   <div className="flex flex-wrap items-center gap-3 mb-4">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-primary bg-primary/5 px-2 py-0.5 rounded font-bold">
-                      {post.category}
+                    <span className="text-[10px] font-mono tracking-widest text-primary bg-primary/5 px-2 py-0.5 rounded font-bold">
+                      {toGreekUppercase(post.category)}
                     </span>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
-                      · {post.readingTime} λεπτά
+                    <span className="text-[10px] font-mono tracking-widest text-muted-foreground">
+                      · {toGreekUppercase(post.readingTime + " λεπτά")}
                     </span>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                    <span className="text-[10px] font-mono tracking-widest text-muted-foreground">
                       · {post.publishedAt}
                     </span>
                   </div>
@@ -67,7 +68,7 @@ export default function BlogIndexPage() {
                     {post.excerpt}
                   </p>
                   <span className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-primary group-hover:translate-x-1 transition-transform">
-                    Διαβάστε το άρθρο <span className="text-sm">→</span>
+                    ΔΙΑΒΑΣΤΕ ΤΟ ΑΡΘΡΟ <span className="text-sm">→</span>
                   </span>
                 </Link>
               ))}
@@ -130,7 +131,7 @@ export default function BlogIndexPage() {
                           rel="noopener noreferrer sponsored"
                           className="text-[10px] font-bold uppercase text-muted-foreground hover:text-primary"
                         >
-                          Αγορά →
+                          ΑΓΟΡΑ →
                         </a>
                       </div>
                     </div>

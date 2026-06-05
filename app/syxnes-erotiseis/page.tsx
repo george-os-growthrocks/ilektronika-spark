@@ -32,7 +32,7 @@ export default function FaqPage() {
           Συχνές Ερωτήσεις
         </h1>
         <p className="text-lg text-muted-foreground mb-12">
-          Όλα όσα ρωτάνε συχνά οι πελάτες μας — από τη σωστή επιλογή νικοτίνης μέχρι τη νομοθεσία.
+          Όλα όσα ρωτάνε συχνά οι πελάτες μας - από τη σωστή επιλογή νικοτίνης μέχρι τη νομοθεσία.
         </p>
         <div className="space-y-3 mb-12">
           {generalFaqs.map((f, i) => (

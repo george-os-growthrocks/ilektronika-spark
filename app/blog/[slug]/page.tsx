@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { blogPosts, getPost } from "@/data/blog";
 import { JsonLd } from "@/components/JsonLd";
 import { productBySlug, productImage, formatPrice, effectivePrice } from "@/data/catalog";
+import { toGreekUppercase } from "@/lib/utils";
 
 export const dynamicParams = true;
 
@@ -20,8 +21,8 @@ export async function generateMetadata({
   const post = getPost(slug);
   if (!post) return {};
   
-  const title = post.title.replace(/\s*—\s*/g, " | ");
-  const description = post.metaDescription.replace(/\s*—\s*/g, " | ");
+  const title = post.title.replace(/\s* - \s*/g, " | ");
+  const description = post.metaDescription.replace(/\s* - \s*/g, " | ");
   
   return {
     title,
@@ -70,18 +71,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {/* Breadcrumbs */}
         <nav className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-6">
           <Link href="/" className="hover:text-primary">
-            Αρχική
+            ΑΡΧΙΚΗ
           </Link>
           <span className="mx-2">/</span>
           <Link href="/blog" className="hover:text-primary">
-            Blog
+            BLOG
           </Link>
         </nav>
 
         {/* Title & Metadata */}
         <div className="mb-10">
-          <span className="font-mono text-xs text-primary uppercase tracking-widest block mb-2 font-bold">
-            {post.category} · {post.readingTime} λεπτά · {post.publishedAt}
+          <span className="font-mono text-xs text-primary tracking-widest block mb-2 font-bold">
+            {toGreekUppercase(post.category)} · {toGreekUppercase(post.readingTime + " λεπτά")} · {post.publishedAt}
           </span>
           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-6 text-balance">
             {post.title}
@@ -157,7 +158,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                             rel="noopener noreferrer sponsored"
                             className="bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider px-5 py-2.5 rounded hover:opacity-90 transition-opacity"
                           >
-                            Αγορα στο Vape and More →
+                            ΑΓΟΡΑ ΣΤΟ Vape and More →
                           </a>
                         </div>
                       </div>
@@ -188,7 +189,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   href={`/${post.promotedCategory.slug}`}
                   className="w-full text-center block bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider py-2.5 rounded hover:opacity-90 transition-opacity"
                 >
-                  Δείτε Ολόκληρη την Κατηγορία →
+                  ΔΕΙΤΕ ΟΛΟΚΛΗΡΗ ΤΗΝ ΚΑΤΗΓΟΡΙΑ →
                 </Link>
               </div>
             )}
@@ -229,7 +230,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                             rel="noopener noreferrer sponsored"
                             className="text-[10px] font-bold uppercase text-muted-foreground hover:text-primary"
                           >
-                            Αγορά →
+                            ΑΓΟΡΑ →
                           </a>
                         </div>
                       </div>
@@ -269,8 +270,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               href={`/blog/${p.slug}`}
               className="block border border-border rounded-xl p-6 bg-card hover:border-primary/50 hover:shadow-md transition-all"
             >
-              <span className="text-[10px] font-mono uppercase tracking-widest text-primary bg-primary/5 px-2 py-0.5 rounded font-bold">
-                {p.category}
+              <span className="text-[10px] font-mono tracking-widest text-primary bg-primary/5 px-2 py-0.5 rounded font-bold">
+                {toGreekUppercase(p.category)}
               </span>
               <h3 className="font-bold mt-3 text-base leading-snug line-clamp-2 hover:text-primary transition-colors">
                 {p.title}

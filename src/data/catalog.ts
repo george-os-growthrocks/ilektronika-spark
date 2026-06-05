@@ -169,7 +169,7 @@ export function brandBySlug(slug: string): Brand | undefined {
 // ---------- Display helpers ----------
 
 export function formatPrice(n: number | null | undefined): string {
-  if (n == null) return "—";
+  if (n == null) return "-";
   return `${n.toFixed(2).replace(".", ",")}€`;
 }
 

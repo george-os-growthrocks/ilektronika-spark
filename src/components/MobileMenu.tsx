@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { X, ChevronRight } from "lucide-react";
 import { pillarCategories, relatedCategoriesForPillar, subcategoriesOf } from "../data/catalog";
 import { categoryMeta, type BadgeKind } from "../data/category-meta";
+import { toGreekUppercase } from "@/lib/utils";
 
 const LOGO_SRC = "/logo.png";
 
@@ -130,7 +131,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
               className="flex items-center gap-2 px-4 py-3 text-sm font-bold border-b border-border w-full text-left bg-surface"
             >
               <ChevronRight className="h-4 w-4 rotate-180" />
-              <span className="uppercase tracking-widest text-xs">Πίσω · {activeLabel}</span>
+              <span className="tracking-widest text-xs">{toGreekUppercase("Πίσω · " + activeLabel)}</span>
             </button>
             <Link
               href={`/${activeCat}`}
@@ -167,7 +168,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
 
       <div className="grid grid-cols-3 border-t border-border shrink-0 text-[10px] font-bold uppercase tracking-widest">
         <Link href="/blog" onClick={onClose} className="py-3 text-center hover:bg-surface">
-          Blog
+          BLOG
         </Link>
         <Link
           href="/syxnes-erotiseis"
@@ -181,7 +182,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
           onClick={onClose}
           className="py-3 text-center hover:bg-surface border-l border-border"
         >
-          Επικ/νία
+          ΕΠΙΚ/ΝΙΑ
         </Link>
       </div>
     </div>

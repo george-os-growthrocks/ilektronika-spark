@@ -8,7 +8,7 @@ export async function GET() {
 > Ελληνικός κατάλογος για ηλεκτρονικά τσιγάρα, disposable vapes, pod systems, υγρά αναπλήρωσης, ναργιλέδες και snus. Συνεργαζόμαστε με το vapeandmore.gr (Ρέθυμνο, πανελλαδική αποστολή).
 
 ## Κατηγορίες
-${cats.map((c) => `- [${c.label}](/${c.slug}) — ${c.count} προϊόντα`).join("\n")}
+${cats.map((c) => `- [${c.label}](/${c.slug}) - ${c.count} προϊόντα`).join("\n")}
 
 ## Βασικές σελίδες
 - [Όλες οι κατηγορίες](/katigories)
@@ -22,7 +22,7 @@ ${cats.map((c) => `- [${c.label}](/${c.slug}) — ${c.count} προϊόντα`).
 ## Blog (πρόσφατα)
 ${blogPosts
   .slice(0, 8)
-  .map((p) => `- [${p.title}](/blog/${p.slug}) — ${p.excerpt}`)
+  .map((p) => `- [${p.title}](/blog/${p.slug}) - ${p.excerpt}`)
   .join("\n")}
 
 ## Δομημένα δεδομένα

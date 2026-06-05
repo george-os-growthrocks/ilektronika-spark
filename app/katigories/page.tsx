@@ -30,7 +30,7 @@ export default function CategoriesHubPage() {
         <div className="max-w-7xl mx-auto px-6">
           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">Όλες οι κατηγορίες</h1>
           <p className="text-muted-foreground mt-2 max-w-2xl">
-            Περιηγηθείτε σε ολόκληρο τον κατάλογο της Vape and More — από ηλεκτρονικά τσιγάρα μέχρι
+            Περιηγηθείτε σε ολόκληρο τον κατάλογο της Vape and More - από ηλεκτρονικά τσιγάρα μέχρι
             αξεσουάρ ναργιλέ.
           </p>
         </div>

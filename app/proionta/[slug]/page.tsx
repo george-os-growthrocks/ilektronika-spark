@@ -15,6 +15,7 @@ import { faqsForProduct } from "@/data/faqs-generated";
 import { productCanonicalUrl, STORE_NAME } from "@/lib/affiliate";
 import { JsonLd } from "@/components/JsonLd";
 import { productImage } from "@/data/catalog";
+import { toGreekUppercase } from "@/lib/utils";
 
 export const dynamicParams = true;
 
@@ -32,13 +33,13 @@ export async function generateMetadata({
   if (!product) return {};
   
   let title = product.seoTitle || `${product.name} | Τιμή & Αγορά Online`;
-  title = title.replace(/\s*—\s*/g, " | ");
+  title = title.replace(/\s* - \s*/g, " | ");
   
   let description =
     product.seoDescription ||
     product.shortDescription ||
     `Αγοράστε ${product.name}${product.brand ? ` της ${product.brand}` : ""} online. Δείτε τιμή, χαρακτηριστικά, διαθεσιμότητα και παραγγείλτε από το Vape and More.`;
-  description = description.replace(/\s*—\s*/g, " | ");
+  description = description.replace(/\s* - \s*/g, " | ");
   
   const canonical = productCanonicalUrl(product);
   const image = productImage(product);
@@ -168,7 +169,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 />
               ) : (
                 <span className="text-muted-foreground font-mono text-xs uppercase">
-                  Χωρίς εικόνα
+                  ΧΩΡΙΣ ΕΙΚΟΝΑ
                 </span>
               )}
             </div>
@@ -192,7 +193,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 href={`/marka/${product.brandSlug}`}
                 className="inline-flex self-start text-[10px] font-bold uppercase tracking-widest text-primary border border-primary/30 rounded px-2 py-1 hover:bg-primary hover:text-primary-foreground transition-colors"
               >
-                {product.brand}
+                {toGreekUppercase(product.brand)}
               </Link>
             )}
             <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-balance">
@@ -210,7 +211,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {product.attributes.length > 0 && (
               <div className="border-t border-border pt-4 mt-2">
                 <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
-                  Διαθέσιμες παραλλαγές
+                  ΔΙΑΘΕΣΙΜΕΣ ΠΑΡΑΛΛΑΓΕΣ
                 </h2>
                 <dl className="space-y-2 text-sm">
                   {product.attributes.map((a) => (

@@ -52,7 +52,7 @@ export function AgeGate() {
             onClick={accept}
             className="flex-1 bg-primary text-primary-foreground px-6 py-3 font-bold uppercase tracking-widest text-sm hover:opacity-90 transition-opacity"
           >
-            Ναι, είμαι 18+
+            ΝΑΙ, ΕΙΜΑΙ 18+
           </button>
           <button
             onClick={reject}
