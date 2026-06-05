@@ -56,7 +56,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
   useEffect(() => () => cancelClose(), []);
 
   return (
-    <nav className="hidden lg:flex items-stretch gap-1 text-xs font-bold uppercase tracking-wider">
+    <nav className="hidden xl:flex items-stretch justify-end gap-0 text-xs font-bold uppercase tracking-wider">
       {categories.map((c) => {
         const meta = categoryMeta(c.slug);
         const isOpen = open === c.slug;
@@ -76,7 +76,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
             <Link
               to="/$category"
               params={{ category: c.slug }}
-              className={`flex items-center gap-1 px-3 hover:text-primary transition-colors whitespace-nowrap ${
+              className={`flex h-full items-center gap-1 px-2.5 2xl:px-3 hover:text-primary transition-colors whitespace-nowrap ${
                 isOpen ? "text-primary" : ""
               }`}
             >
@@ -91,11 +91,11 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
 
             {isOpen && subs.length > 0 && (
               <div
-                className="absolute left-0 top-full pt-3 z-50"
+                className="absolute left-1/2 top-full z-50 pt-3 -translate-x-1/2"
                 onMouseEnter={cancelClose}
                 onMouseLeave={scheduleClose}
               >
-                <div className="bg-background border border-border shadow-2xl rounded-md w-[720px] max-w-[90vw] grid grid-cols-12 gap-6 p-6">
+                <div className="bg-background border border-border shadow-2xl rounded-md w-[760px] max-w-[92vw] grid grid-cols-12 gap-6 p-6">
                   {/* Subcategories */}
                   <div className="col-span-5">
                     <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">
