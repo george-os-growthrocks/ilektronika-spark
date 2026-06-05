@@ -94,7 +94,7 @@ function CategoryPage() {
             Προϊόντα ({products.length})
           </h2>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((p) => (
+            {products.map((p: typeof products[number]) => (
               <Link
                 key={p.slug}
                 to="/proionta/$slug"
@@ -129,7 +129,7 @@ function CategoryPage() {
             Οδηγός Αγοράς — {category.shortName}
           </h2>
           <ul className="space-y-4">
-            {category.buyingGuide.map((tip, i) => (
+            {category.buyingGuide.map((tip: string, i: number) => (
               <li key={i} className="flex gap-4">
                 <span className="font-mono text-xs text-primary font-bold mt-1">0{i + 1}</span>
                 <span className="text-foreground leading-relaxed">{tip}</span>
@@ -146,7 +146,7 @@ function CategoryPage() {
             Συχνές Ερωτήσεις — {category.shortName}
           </h2>
           <div className="space-y-3">
-            {category.faqs.map((f, i) => (
+            {category.faqs.map((f: { q: string; a: string }, i: number) => (
               <details key={i} className="border border-border p-6 group">
                 <summary className="font-bold cursor-pointer flex justify-between items-center list-none">
                   <span className="pr-4">{f.q}</span>

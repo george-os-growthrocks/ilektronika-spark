@@ -69,7 +69,7 @@ function PostPage() {
         <p className="text-xl text-muted-foreground mb-12 leading-relaxed">{post.excerpt}</p>
 
         <div className="prose-content space-y-5 text-foreground leading-relaxed">
-          {post.content.map((para, i) => {
+          {post.content.map((para: string, i: number) => {
             if (para.startsWith("## ")) {
               return (
                 <h2 key={i} className="text-2xl md:text-3xl font-extrabold tracking-tighter mt-10 mb-4">
@@ -81,7 +81,7 @@ function PostPage() {
             const parts = para.split(/(\*\*[^*]+\*\*)/g);
             return (
               <p key={i}>
-                {parts.map((part, j) =>
+                {parts.map((part: string, j: number) =>
                   part.startsWith("**") && part.endsWith("**") ? (
                     <strong key={j}>{part.slice(2, -2)}</strong>
                   ) : (
