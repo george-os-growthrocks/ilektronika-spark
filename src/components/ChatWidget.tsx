@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@tanstack/react-router";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Sparkles, X, Send, Loader2, ExternalLink, RotateCcw } from "lucide-react";
 import { sendChat } from "../lib/chat.functions";
 import { formatPrice } from "../data/catalog";
@@ -32,6 +34,36 @@ const PRESETS = [
   "Ψάχνω υγρό με μέντα",
   "Φτηνός ναργιλές για αρχή",
 ];
+
+const FOLLOW_UPS = ["Θέλω πιο οικονομικό", "Δείξε μου διαθέσιμα", "Σύγκρινε τις επιλογές"];
+
+function ChatMarkdown({ content }: { content: string }) {
+  return (
+    <div className="chat-markdown">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          a: ({ href, children }) => (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="font-bold underline decoration-primary/40 underline-offset-2 hover:text-primary"
+            >
+              {children}
+            </a>
+          ),
+          strong: ({ children }) => <strong className="font-extrabold text-foreground">{children}</strong>,
+          ul: ({ children }) => <ul className="my-2 list-disc space-y-1 pl-4">{children}</ul>,
+          ol: ({ children }) => <ol className="my-2 list-decimal space-y-1 pl-4">{children}</ol>,
+          p: ({ children }) => <p className="my-1 first:mt-0 last:mb-0">{children}</p>,
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+}
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -150,13 +182,13 @@ export function ChatWidget() {
             {messages.map((m, i) => (
               <div key={i}>
                 <div
-                  className={`text-[15px] sm:text-sm leading-relaxed whitespace-pre-wrap rounded-2xl px-4 py-2.5 max-w-[90%] ${
+                  className={`text-[15px] sm:text-sm leading-relaxed rounded-2xl px-4 py-2.5 max-w-[90%] ${
                     m.role === "user"
                       ? "bg-primary text-primary-foreground ml-auto rounded-br-sm"
                       : "bg-surface text-foreground rounded-bl-sm"
                   }`}
                 >
-                  {m.content}
+                  {m.role === "assistant" ? <ChatMarkdown content={m.content} /> : m.content}
                 </div>
                 {m.products && m.products.length > 0 && (
                   <div className="mt-2 space-y-2">
@@ -207,6 +239,19 @@ export function ChatWidget() {
                           </div>
                         </div>
                       </div>
+                    ))}
+                  </div>
+                )}
+                {m.role === "assistant" && i === messages.length - 1 && !showPresets && !loading && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {FOLLOW_UPS.map((prompt) => (
+                      <button
+                        key={prompt}
+                        onClick={() => void submitText(prompt)}
+                        className="text-[11px] border border-border rounded-full px-3 py-1.5 hover:border-primary hover:text-primary transition-colors bg-background"
+                      >
+                        {prompt}
+                      </button>
                     ))}
                   </div>
                 )}

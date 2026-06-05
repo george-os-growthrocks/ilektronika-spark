@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { X, Search, ChevronRight, MessageCircle } from "lucide-react";
+import { X, ChevronRight } from "lucide-react";
 import { topLevelCategories, subcategoriesOf } from "../data/catalog";
 import { categoryMeta, type BadgeKind } from "../data/category-meta";
 import logo from "../assets/logo.webp.asset.json";
@@ -49,18 +49,6 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
         >
           <X className="h-6 w-6" />
         </button>
-      </div>
-
-      {/* Search */}
-      <div className="px-4 py-3 border-b border-border shrink-0">
-        <Link
-          to="/anazitisi"
-          onClick={onClose}
-          className="flex items-center gap-3 bg-surface border border-border rounded-md px-4 py-3 text-sm text-muted-foreground"
-        >
-          <Search className="h-4 w-4" />
-          Αναζήτηση προϊόντων…
-        </Link>
       </div>
 
       {/* Body — sliding view */}
@@ -181,7 +169,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
       </div>
 
       {/* Bottom utility bar */}
-      <div className="grid grid-cols-4 border-t border-border shrink-0 text-[10px] font-bold uppercase tracking-widest">
+      <div className="grid grid-cols-3 border-t border-border shrink-0 text-[10px] font-bold uppercase tracking-widest">
         <Link to="/blog" onClick={onClose} className="py-3 text-center hover:bg-surface">
           Blog
         </Link>
@@ -199,16 +187,6 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
         >
           Επικ/νία
         </Link>
-        <button
-          onClick={() => {
-            onClose();
-            window.dispatchEvent(new CustomEvent("open-chat"));
-          }}
-          className="py-3 text-center hover:bg-surface border-l border-border flex items-center justify-center gap-1.5"
-        >
-          <MessageCircle className="h-3.5 w-3.5" />
-          AI Chat
-        </button>
       </div>
     </div>
   );

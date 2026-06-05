@@ -97,7 +97,7 @@ function CategoryPage() {
   return (
     <>
       {/* Header */}
-      <section className="py-10 bg-surface border-b border-border">
+      <section className="relative py-10 bg-surface border-b border-border">
         <div className="max-w-7xl mx-auto px-6">
           <nav aria-label="Breadcrumbs" className="text-xs text-muted-foreground mb-4">
             <Link to="/" className="hover:text-primary">
@@ -112,13 +112,13 @@ function CategoryPage() {
             {categoryDescription(category.slug)}
           </p>
           {subs.length > 0 && (
-            <div className="mt-6 flex flex-wrap gap-2">
+            <nav aria-label="Υποκατηγορίες" className="relative z-10 mt-6 flex flex-wrap gap-x-2 gap-y-2">
               {subs.map((s: any) => (
                 <Link
                   key={s.slug}
                   to="/$category/$subcategory"
                   params={{ category: category.slug, subcategory: s.slug }}
-                  className="text-xs font-bold uppercase tracking-widest border border-border rounded-full px-3 py-1.5 hover:border-primary hover:text-primary transition-colors bg-background"
+                  className="inline-flex min-h-9 items-center text-xs font-bold uppercase tracking-widest border border-border rounded-full px-3 py-1.5 hover:border-primary hover:text-primary transition-colors bg-background"
                 >
                   {s.label}{" "}
                   <span className="text-muted-foreground font-mono ml-1">
@@ -126,7 +126,7 @@ function CategoryPage() {
                   </span>
                 </Link>
               ))}
-            </div>
+            </nav>
           )}
         </div>
       </section>
