@@ -1,7 +1,7 @@
 import { categories, products } from "@/data/catalog";
 import { blogPosts } from "@/data/blog";
 
-const BASE_URL = "";
+const BASE_URL = "https://ilektronikatsigara.gr";
 
 export async function GET() {
   const staticPaths = [
