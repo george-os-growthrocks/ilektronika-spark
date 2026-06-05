@@ -161,7 +161,7 @@ function SubcategoryPage() {
                           onChange={(e) => {
                             const next = e.target.checked
                               ? [...selectedBrands, b.slug]
-                              : selectedBrands.filter((s) => s !== b.slug);
+                              : selectedBrands.filter((s: string) => s !== b.slug);
                             navigate({
                               search: (s: any) => ({
                                 ...s,
