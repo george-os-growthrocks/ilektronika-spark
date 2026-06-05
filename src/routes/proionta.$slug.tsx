@@ -224,9 +224,7 @@ function ProductPage() {
               </div>
             )}
             {product.shortDescription && (
-              <p className="text-muted-foreground leading-relaxed">
-                {product.shortDescription}
-              </p>
+              <RichText text={product.shortDescription} className="text-muted-foreground" />
             )}
 
             <MerchantCard product={product} />
