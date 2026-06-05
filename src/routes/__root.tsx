@@ -18,6 +18,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { AgeGate } from "../components/AgeGate";
+import { ChatWidget } from "../components/ChatWidget";
 
 function NotFoundComponent() {
   return (
@@ -140,6 +141,7 @@ function RootComponent() {
       </main>
       <Footer />
       <AgeGate />
+      <ChatWidget />
     </QueryClientProvider>
   );
 }
