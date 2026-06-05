@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 
 export function MerchantBlock() {
   return (
@@ -9,9 +9,13 @@ export function MerchantBlock() {
       <div className="font-extrabold text-lg">Vape and More</div>
       <div className="text-sm text-foreground/80 mt-1">Αρκαδίου 82, 74100 Ρέθυμνο, GR</div>
       <div className="text-sm mt-3 space-x-3">
-        <a href="tel:+302831181046" className="text-primary underline font-bold">2831 181 046</a>
+        <a href="tel:+302831181046" className="text-primary underline font-bold">
+          2831 181 046
+        </a>
         <span className="text-muted-foreground">·</span>
-        <a href="mailto:info@vapeandmore.gr" className="text-primary underline font-bold">info@vapeandmore.gr</a>
+        <a href="mailto:info@vapeandmore.gr" className="text-primary underline font-bold">
+          info@vapeandmore.gr
+        </a>
       </div>
       <div className="text-sm mt-2">
         Κατάστημα:{" "}
@@ -40,7 +44,7 @@ export function LegalCta() {
         Αγοράστε στο vapeandmore.gr →
       </a>
       <Link
-        to="/epikoinonia"
+        href="/epikoinonia"
         className="inline-flex items-center gap-2 border border-border px-5 py-3 font-bold uppercase tracking-widest text-sm rounded hover:border-primary hover:text-primary"
       >
         Επικοινωνία

@@ -17,7 +17,7 @@ export const CATEGORY_META: Record<string, CategoryMeta> = {
     intro:
       "Η μεγαλύτερη συλλογή υγρών αναπλήρωσης (e-liquids) στην Ελλάδα — από κορυφαία brands όπως Vampire Vape, Halo, Dinner Lady και Nasty Juice. Freebase, nicotine salts και shortfills σε όλες τις γεύσεις: φρούτα, επιδόρπια, καπνά και μέντα.",
   },
-  "disposables": {
+  disposables: {
     badge: "HOT",
     tagline: "Έτοιμα προς χρήση",
     intro:
@@ -29,18 +29,18 @@ export const CATEGORY_META: Record<string, CategoryMeta> = {
     intro:
       "Πλήρης σειρά συσκευών vape — pod systems για αρχάριους, box mods για προχωρημένους, και κιτ MTL/DTL για κάθε στυλ ατμίσματος. Vaporesso, Uwell, Voopoo, GeekVape, SMOK.",
   },
-  "antistaseis": {
+  antistaseis: {
     badge: "DEAL",
     tagline: "Όλες οι coil heads",
     intro:
       "Ανταλλακτικές αντιστάσεις (coils) για όλες τις δημοφιλείς συσκευές vape. Mesh, ceramic, και classic σε όλες τις ωμικές αντιστάσεις. Άμεση διαθεσιμότητα.",
   },
-  "atmopoiites": {
+  atmopoiites: {
     tagline: "Tanks & atomizers",
     intro:
       "Ατμοποιητές, sub-ohm tanks, MTL tanks, RDA και RTA atomizers από τα πιο αναγνωρισμένα brands της αγοράς.",
   },
-  "nargiledes": {
+  nargiledes: {
     badge: "TOP",
     tagline: "Παραδοσιακοί & μοντέρνοι",
     intro:
@@ -61,16 +61,15 @@ export const CATEGORY_META: Record<string, CategoryMeta> = {
     intro:
       "Κεφαλές και μπολ για ναργιλέ — phunnel, vortex, classic — από κεραμικό, πηλό και silicone.",
   },
-  "snus": {
+  snus: {
     badge: "NEW",
     tagline: "Σκανδιναβικός snus",
     intro:
       "Νικοτινικά pouches και παραδοσιακά snus από Velo, Zyn, Pablo, Killa και Siberia. Χωρίς καπνό, χωρίς οσμή.",
   },
-  "poyra": {
+  poyra: {
     tagline: "Cigars & cigarillos",
-    intro:
-      "Premium πούρα και cigarillos από Κούβα, Δομινικανή, Νικαράγουα και Ονδούρα.",
+    intro: "Premium πούρα και cigarillos από Κούβα, Δομινικανή, Νικαράγουα και Ονδούρα.",
   },
   "antallaktika-vape": { tagline: "Pods, glass, drip tips" },
   "axesoyar-vape": { tagline: "Cases, καλώδια, batteries" },
@@ -78,7 +77,7 @@ export const CATEGORY_META: Record<string, CategoryMeta> = {
   "karvoynakia-nargile": { tagline: "Coconut & natural" },
   "ygrantires-poyron": { tagline: "Humidors" },
   "anaptires-poyron": { tagline: "Soft flame & torch" },
-  "cbd": { badge: "NEW", tagline: "CBD προϊόντα" },
+  cbd: { badge: "NEW", tagline: "CBD προϊόντα" },
   "ilektronika-tsigara": { tagline: "Heat-not-burn" },
   "protes-yles": { tagline: "DIY νικοτίνη & βάσεις" },
 };

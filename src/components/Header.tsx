@@ -1,70 +1,103 @@
-import { Link } from "@tanstack/react-router";
+"use client";
+
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu } from "lucide-react";
-import logo from "../assets/logo.webp.asset.json";
+import { Menu, Search } from "lucide-react";
 import { pillarCategories } from "../data/catalog";
 import { MegaMenu } from "./MegaMenu";
 import { MobileMenu } from "./MobileMenu";
 
+const LOGO_SRC = "/logo.png";
+
 export function Header() {
   const tops = pillarCategories();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [desktop, setDesktop] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const getViewportWidth = () =>
-      Math.min(
-        window.innerWidth || Number.POSITIVE_INFINITY,
-        document.documentElement.clientWidth || Number.POSITIVE_INFINITY,
-        window.visualViewport?.width || Number.POSITIVE_INFINITY,
-      );
-    const update = () => setDesktop(getViewportWidth() >= 1280);
-    update();
-    window.addEventListener("resize", update);
-    window.visualViewport?.addEventListener("resize", update);
-    return () => {
-      window.removeEventListener("resize", update);
-      window.visualViewport?.removeEventListener("resize", update);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <>
-      {/* Promo strip */}
-      <div className="bg-foreground text-background text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-center py-1.5 px-3 truncate">
+      {/* Top announcement bar */}
+      <div className="bg-gradient-to-r from-primary via-secondary to-primary text-primary-foreground text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-center py-1.5 px-3 truncate">
         <span className="sm:hidden">🚚 Δωρεάν αποστολή 30€+ · Αυθεντικά</span>
         <span className="hidden sm:inline">
           🚚 Δωρεάν αποστολή άνω των 30€ · Παράδοση 1-3 εργάσιμες · Αυθεντικά προϊόντα
         </span>
       </div>
 
-      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-md border-b border-border">
-        <div className="relative max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 h-14 sm:h-16 lg:h-20 flex items-center gap-3 lg:gap-5">
-          {/* Logo */}
-          <Link to="/" className="flex items-center shrink-0" aria-label="Αρχική">
-            <img
-              src={logo.url}
-              alt="ilektronikatsigara.gr"
-              className="h-7 sm:h-8 lg:h-10 w-auto"
-            />
-          </Link>
+      {/* Main header */}
+      <header
+        className={`sticky top-0 z-40 border-b transition-all duration-300 ${
+          scrolled
+            ? "bg-background/80 backdrop-blur-xl border-border shadow-lg shadow-black/[0.03]"
+            : "bg-background border-border/50"
+        }`}
+        style={{ overflow: "visible" }}
+      >
+        <div className="relative w-full px-4 sm:px-6 lg:px-8" style={{ overflow: "visible" }}>
+          {/* Desktop layout */}
+          <div className="hidden lg:flex items-stretch h-[72px] gap-4">
+            {/* Logo */}
+            <Link href="/" className="flex items-center shrink-0 group" aria-label="Αρχική">
+              <img
+                src={LOGO_SRC}
+                alt="ilektronikatsigara.gr"
+                className="h-9 lg:h-10 w-auto transition-transform duration-300 group-hover:scale-[1.03]"
+              />
+            </Link>
 
-          {desktop ? (
-            <div className="flex flex-1 min-w-0 justify-end">
+            {/* Separator */}
+            <div className="flex items-center shrink-0">
+              <div className="w-px h-8 bg-border/60" />
+            </div>
+
+            {/* Navigation — fills remaining space */}
+            <div className="flex-1 flex items-stretch justify-center">
               <MegaMenu categories={tops} />
             </div>
-          ) : (
-            <>
-              <div className="flex-1" />
-              <button
-                onClick={() => setMobileOpen(true)}
-                aria-label="Άνοιγμα μενού"
-                className="absolute right-3 top-1/2 -translate-y-1/2 z-10 inline-flex h-11 w-11 items-center justify-center border border-border bg-background text-foreground hover:text-primary shrink-0"
+
+            {/* Right actions */}
+            <div className="flex items-center gap-2 shrink-0">
+              <Link
+                href="/anazitisi"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+                aria-label="Αναζήτηση"
               >
-                <Menu className="h-6 w-6" />
-              </button>
-            </>
-          )}
+                <Search className="h-[18px] w-[18px]" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Mobile layout */}
+          <div className="flex lg:hidden items-center h-14 sm:h-16 gap-3">
+            <Link href="/" className="flex items-center shrink-0" aria-label="Αρχική">
+              <img src={LOGO_SRC} alt="ilektronikatsigara.gr" className="h-7 sm:h-8 w-auto" />
+            </Link>
+
+            <div className="flex-1" />
+
+            <Link
+              href="/anazitisi"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground hover:text-primary"
+              aria-label="Αναζήτηση"
+            >
+              <Search className="h-5 w-5" />
+            </Link>
+
+            <button
+              onClick={() => setMobileOpen(true)}
+              aria-label="Άνοιγμα μενού"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground hover:text-primary hover:border-primary transition-colors shrink-0"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -72,3 +105,4 @@ export function Header() {
     </>
   );
 }
+

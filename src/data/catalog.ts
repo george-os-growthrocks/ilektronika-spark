@@ -127,8 +127,19 @@ const PILLAR_SLUGS = [
 ];
 
 const PILLAR_RELATED: Record<string, string[]> = {
-  "syskeyes-vape": ["antallaktika-vape", "axesoyar-vape", "ilektronika-tsigara", "cbd", "protes-yles"],
-  nargiledes: ["geyseis-kai-kapnoi-nargile", "axesoyar-nargile", "mpol-kefales", "karvoynakia-nargile"],
+  "syskeyes-vape": [
+    "antallaktika-vape",
+    "axesoyar-vape",
+    "ilektronika-tsigara",
+    "cbd",
+    "protes-yles",
+  ],
+  nargiledes: [
+    "geyseis-kai-kapnoi-nargile",
+    "axesoyar-nargile",
+    "mpol-kefales",
+    "karvoynakia-nargile",
+  ],
   poyra: ["axesoyar-poyron", "ygrantires-poyron", "anaptires-poyron"],
 };
 
@@ -143,9 +154,7 @@ export function relatedCategoriesForPillar(pillarSlug: string): Category[] {
 }
 
 export function subcategoriesOf(parentSlug: string): Category[] {
-  return categories
-    .filter((c) => c.parentSlug === parentSlug)
-    .sort((a, b) => b.count - a.count);
+  return categories.filter((c) => c.parentSlug === parentSlug).sort((a, b) => b.count - a.count);
 }
 
 let _brandBySlug: Map<string, Brand> | null = null;
@@ -209,10 +218,14 @@ export function applyFilters(list: Product[], f: CatalogFilters): Product[] {
   }
   switch (f.sort) {
     case "price-asc":
-      out = [...out].sort((a, b) => (effectivePrice(a) ?? Infinity) - (effectivePrice(b) ?? Infinity));
+      out = [...out].sort(
+        (a, b) => (effectivePrice(a) ?? Infinity) - (effectivePrice(b) ?? Infinity),
+      );
       break;
     case "price-desc":
-      out = [...out].sort((a, b) => (effectivePrice(b) ?? -Infinity) - (effectivePrice(a) ?? -Infinity));
+      out = [...out].sort(
+        (a, b) => (effectivePrice(b) ?? -Infinity) - (effectivePrice(a) ?? -Infinity),
+      );
       break;
     case "newest":
       out = [...out].sort((a, b) => Number(b.id) - Number(a.id));
@@ -224,7 +237,9 @@ export function applyFilters(list: Product[], f: CatalogFilters): Product[] {
   return out;
 }
 
-export function brandsInProducts(list: Product[]): { slug: string; label: string; count: number }[] {
+export function brandsInProducts(
+  list: Product[],
+): { slug: string; label: string; count: number }[] {
   const counts = new Map<string, { slug: string; label: string; count: number }>();
   for (const p of list) {
     if (!p.brandSlug || !p.brand) continue;

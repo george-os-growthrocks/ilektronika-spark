@@ -30,7 +30,11 @@ export function MerchantCard({ product }: { product: Product }) {
         className="flex items-center gap-3 mb-4 group"
       >
         <div className="w-16 h-16 grid place-items-center bg-background rounded border border-border shrink-0">
-          <img src={logo.url} alt={STORE_NAME} className="max-w-[52px] max-h-[52px] object-contain" />
+          <img
+            src={logo.url}
+            alt={STORE_NAME}
+            className="max-w-[52px] max-h-[52px] object-contain"
+          />
         </div>
         <div className="min-w-0">
           <div className="font-bold text-foreground group-hover:text-primary transition-colors truncate">
@@ -64,8 +68,9 @@ export function MerchantCard({ product }: { product: Product }) {
       </a>
 
       <p className="text-[11px] text-muted-foreground text-center mt-3 leading-snug">
-        Θα μεταφερθείτε στο επίσημο κατάστημα <strong className="text-foreground">vapeandmore.gr</strong> για
-        να ολοκληρώσετε την παραγγελία σας με ασφάλεια.
+        Θα μεταφερθείτε στο επίσημο κατάστημα{" "}
+        <strong className="text-foreground">vapeandmore.gr</strong> για να ολοκληρώσετε την
+        παραγγελία σας με ασφάλεια.
       </p>
     </aside>
   );

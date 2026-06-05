@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import type { Product } from "@/data/catalog";
 import { effectivePrice, formatPrice, productImage } from "@/data/catalog";
 import { productAffiliateUrl } from "@/lib/affiliate";
@@ -9,8 +9,7 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="group relative flex flex-col bg-card border border-border rounded-md overflow-hidden hover:border-primary hover:shadow-lg transition-all">
       <Link
-        to="/proionta/$slug"
-        params={{ slug: product.slug }}
+        href={`/proionta/${product.slug}`}
         className="block aspect-[4/5] bg-surface relative overflow-hidden"
       >
         {img ? (
@@ -43,8 +42,7 @@ export function ProductCard({ product }: { product: Product }) {
           </span>
         )}
         <Link
-          to="/proionta/$slug"
-          params={{ slug: product.slug }}
+          href={`/proionta/${product.slug}`}
           className="font-semibold text-sm leading-snug line-clamp-2 hover:text-primary transition-colors"
         >
           {product.name}

@@ -163,7 +163,9 @@ export function faqsForProduct(product: Product): FAQItem[] {
   if (product.primaryTopSlug) {
     const catFaqs = faqsForCategory(product.primaryTopSlug);
     // Take 2 that aren't about counts
-    const extras = catFaqs.filter((f) => !f.q.includes("Πόσα") && !f.q.includes("Σε ποιο εύρος")).slice(0, 2);
+    const extras = catFaqs
+      .filter((f) => !f.q.includes("Πόσα") && !f.q.includes("Σε ποιο εύρος"))
+      .slice(0, 2);
     items.push(...extras);
   } else {
     items.push(...GENERIC_FAQS.slice(0, 2));

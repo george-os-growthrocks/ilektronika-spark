@@ -5,6 +5,7 @@
 Root cause: at certain widths the right-side buttons (AI / Search / 18+) push outside the header box because the layout uses an oversized flex row. They visually float over the category hero below, which is what makes the chips "uncklickable" — the chips ARE `<Link>`s, but the AI / Search buttons sit on top and intercept clicks.
 
 Fix (no redesign, just sizing):
+
 - Header gets `overflow-hidden` on the inner row so nothing escapes the bar.
 - Right-side action cluster gets `min-w-0` + `flex-shrink-0` on each button, smaller paddings on `<lg`, and the `18+` chip moves into the mobile menu (hidden until `lg`).
 - Mega-menu container gets `min-w-0 overflow-hidden` and the visible categories drop to a max of 5 on `xl` (smaller breakpoint reverts to burger).
@@ -15,6 +16,7 @@ Fix (no redesign, just sizing):
 Root cause: 414 of 1070 products have literal backslash-n sequences (`\n`) inside `description` because the original WP feed embedded them as text instead of real newlines. `whitespace-pre-line` only honors real `\n`, so the visible string stays "`Vaporesso Luxe XR 5ml DTL Pod Δεξαμενή \n \n \n Η ...`".
 
 Fix in two places:
+
 - One-time clean-up pass on `src/data/products.generated.json`:
   - Replace literal `\n` with real newlines.
   - Collapse 3+ blank lines down to 2.
@@ -25,12 +27,14 @@ Fix in two places:
 ## 3. Category / subcategory chips look run-together and "not clickable"
 
 Two separate problems:
+
 - The "not clickable" half is fixed by #1 (header was sitting on top of them).
 - The "no spacing" half: chips already use `flex flex-wrap gap-2`, but on `/$category/$subcategory.tsx` the gap collapses when chips wrap onto the same line because there's no vertical breathing room. Bump to `gap-x-2 gap-y-2`, add `inline-flex items-center` on each chip, and ensure the count badge has its own `ml-1` (already there). Visual confirmation after the header fix.
 
 ## 4. AI Chat — bigger, edge-to-edge mobile, presets, clear, disclaimer
 
 Rewrite `src/components/ChatWidget.tsx` with:
+
 - Mobile (`<sm`): truly full-screen — `inset-0`, no border-radius, sticky header & input bars, the floating bubble hides while open.
 - Desktop: 420 × 640 panel anchored bottom-right, rounded, shadow.
 - Header bar: title + "Νέα συνομιλία" (clear/reset) button + close.
@@ -50,6 +54,7 @@ Rewrite `src/components/ChatWidget.tsx` with:
 Scrape the 5 vapeandmore.gr legal URLs the user provided using **Firecrawl** (markdown format). Firecrawl is currently not connected — I'll ask to connect it during build, then run the scrape.
 
 Per page:
+
 - Rewrite into our own concise Greek copy (NOT a verbatim copy — that would be duplicate content) summarising the policy and **always** linking back to the original vapeandmore.gr page as the authoritative source.
 - Include the real merchant block on every legal page footer + on `/epikoinonia` + `/sxetika`:
   > Vape and More — Αρκαδίου 82, Ρέθυμνο, GR
@@ -68,6 +73,7 @@ Per page:
 ## 6. Verification
 
 After edits:
+
 - Reload `/antistaseis` and `/antistaseis/ergostasiakes-antistaseis` and click a subcategory chip — must navigate.
 - Open a product like `vaporesso-luxe-xr-5ml-dtl-pod-dexameni` and confirm description renders as paragraphs, no visible `\n`.
 - Open chat on mobile viewport (375px) — must be edge-to-edge, preset chips visible, "Νέα συνομιλία" works.

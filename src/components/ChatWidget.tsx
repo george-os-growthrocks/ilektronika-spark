@@ -1,10 +1,11 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
-import { useServerFn } from "@tanstack/react-start";
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Sparkles, X, Send, Loader2, ExternalLink, RotateCcw } from "lucide-react";
-import { sendChat } from "../lib/chat.functions";
+import { sendChat } from "../lib/chat";
 import { formatPrice } from "../data/catalog";
 
 interface Msg {
@@ -53,7 +54,9 @@ function ChatMarkdown({ content }: { content: string }) {
               {children}
             </a>
           ),
-          strong: ({ children }) => <strong className="font-extrabold text-foreground">{children}</strong>,
+          strong: ({ children }) => (
+            <strong className="font-extrabold text-foreground">{children}</strong>
+          ),
           ul: ({ children }) => <ul className="my-2 list-disc space-y-1 pl-4">{children}</ul>,
           ol: ({ children }) => <ol className="my-2 list-decimal space-y-1 pl-4">{children}</ol>,
           p: ({ children }) => <p className="my-1 first:mt-0 last:mb-0">{children}</p>,
@@ -70,7 +73,6 @@ export function ChatWidget() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([WELCOME]);
-  const send = useServerFn(sendChat);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -100,8 +102,8 @@ export function ChatWidget() {
     setMessages(next);
     setLoading(true);
     try {
-      const result = await send({
-        data: { messages: next.map((m) => ({ role: m.role, content: m.content })) },
+      const result = await sendChat({
+        messages: next.map((m) => ({ role: m.role, content: m.content })),
       });
       setMessages((prev) => [
         ...prev,
@@ -198,8 +200,7 @@ export function ChatWidget() {
                         className="border border-border rounded-xl p-2 flex gap-3 bg-background hover:border-primary transition-colors"
                       >
                         <Link
-                          to="/proionta/$slug"
-                          params={{ slug: p.slug }}
+                          href={`/proionta/${p.slug}`}
                           onClick={() => setOpen(false)}
                           className="shrink-0"
                         >
@@ -212,8 +213,7 @@ export function ChatWidget() {
                         </Link>
                         <div className="flex-1 min-w-0 flex flex-col">
                           <Link
-                            to="/proionta/$slug"
-                            params={{ slug: p.slug }}
+                            href={`/proionta/${p.slug}`}
                             onClick={() => setOpen(false)}
                             className="block text-xs font-bold leading-tight line-clamp-2 hover:text-primary"
                           >
@@ -242,19 +242,22 @@ export function ChatWidget() {
                     ))}
                   </div>
                 )}
-                {m.role === "assistant" && i === messages.length - 1 && !showPresets && !loading && (
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {FOLLOW_UPS.map((prompt) => (
-                      <button
-                        key={prompt}
-                        onClick={() => void submitText(prompt)}
-                        className="text-[11px] border border-border rounded-full px-3 py-1.5 hover:border-primary hover:text-primary transition-colors bg-background"
-                      >
-                        {prompt}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                {m.role === "assistant" &&
+                  i === messages.length - 1 &&
+                  !showPresets &&
+                  !loading && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {FOLLOW_UPS.map((prompt) => (
+                        <button
+                          key={prompt}
+                          onClick={() => void submitText(prompt)}
+                          className="text-[11px] border border-border rounded-full px-3 py-1.5 hover:border-primary hover:text-primary transition-colors bg-background"
+                        >
+                          {prompt}
+                        </button>
+                      ))}
+                    </div>
+                  )}
               </div>
             ))}
 

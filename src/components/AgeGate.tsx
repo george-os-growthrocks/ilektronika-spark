@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "ageVerified-v1";
@@ -33,10 +35,10 @@ export function AgeGate() {
     <div className="fixed inset-0 z-[100] bg-foreground/95 backdrop-blur-sm flex items-center justify-center p-6">
       <div className="max-w-md w-full bg-background text-foreground p-8 border border-border">
         <div className="mb-6">
-          <div className="inline-block px-3 py-1 bg-foreground text-background text-xs font-bold mb-4">18+</div>
-          <h2 className="text-2xl font-extrabold tracking-tight mb-3">
-            Επαλήθευση Ηλικίας
-          </h2>
+          <div className="inline-block px-3 py-1 bg-foreground text-background text-xs font-bold mb-4">
+            18+
+          </div>
+          <h2 className="text-2xl font-extrabold tracking-tight mb-3">Επαλήθευση Ηλικίας</h2>
           <p className="text-sm text-muted-foreground leading-relaxed mb-3">
             Η ιστοσελίδα αυτή περιέχει πληροφορίες για προϊόντα νικοτίνης, τα οποία προορίζονται
             αποκλειστικά για ενήλικες άνω των 18 ετών.
