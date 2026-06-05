@@ -1,10 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { categories } from "../data/categories";
-import { products } from "../data/products";
+import { categories, products } from "../data/catalog";
 import { blogPosts } from "../data/blog";
 
-// TODO: replace with your project URL once a project name or custom domain is set.
 const BASE_URL = "";
 
 export const Route = createFileRoute("/sitemap.xml")({
@@ -12,22 +10,30 @@ export const Route = createFileRoute("/sitemap.xml")({
     handlers: {
       GET: async () => {
         const staticPaths = [
-          { path: "/", priority: "1.0", changefreq: "weekly" },
-          { path: "/blog", priority: "0.9", changefreq: "weekly" },
-          { path: "/syxnes-erotiseis", priority: "0.8", changefreq: "monthly" },
-          { path: "/sxetika", priority: "0.6", changefreq: "yearly" },
-          { path: "/epikoinonia", priority: "0.6", changefreq: "yearly" },
-          { path: "/apostoles-epistrofes", priority: "0.5", changefreq: "yearly" },
-          { path: "/oroi-xrisis", priority: "0.3", changefreq: "yearly" },
-          { path: "/politiki-aporritou", priority: "0.3", changefreq: "yearly" },
-          { path: "/cookies", priority: "0.3", changefreq: "yearly" },
+          { path: "/", priority: "1.0", changefreq: "weekly" as const },
+          { path: "/katigories", priority: "0.9", changefreq: "weekly" as const },
+          { path: "/anazitisi", priority: "0.5", changefreq: "monthly" as const },
+          { path: "/blog", priority: "0.8", changefreq: "weekly" as const },
+          { path: "/syxnes-erotiseis", priority: "0.7", changefreq: "monthly" as const },
+          { path: "/sxetika", priority: "0.5", changefreq: "yearly" as const },
+          { path: "/epikoinonia", priority: "0.5", changefreq: "yearly" as const },
+          { path: "/apostoles-epistrofes", priority: "0.4", changefreq: "yearly" as const },
+          { path: "/oroi-xrisis", priority: "0.3", changefreq: "yearly" as const },
+          { path: "/politiki-aporritou", priority: "0.3", changefreq: "yearly" as const },
+          { path: "/cookies", priority: "0.3", changefreq: "yearly" as const },
         ];
 
-        const categoryPaths = categories.map((c) => ({
-          path: `/${c.slug}`,
-          priority: "0.9",
-          changefreq: "weekly" as const,
-        }));
+        const categoryPaths = categories
+          .filter((c) => c.depth === 0)
+          .map((c) => ({ path: `/${c.slug}`, priority: "0.9", changefreq: "weekly" as const }));
+
+        const subcategoryPaths = categories
+          .filter((c) => c.depth === 1 && c.parentSlug)
+          .map((c) => ({
+            path: `/${c.parentSlug}/${c.slug}`,
+            priority: "0.8",
+            changefreq: "weekly" as const,
+          }));
 
         const productPaths = products.map((p) => ({
           path: `/proionta/${p.slug}`,
@@ -37,12 +43,18 @@ export const Route = createFileRoute("/sitemap.xml")({
 
         const blogPaths = blogPosts.map((p) => ({
           path: `/blog/${p.slug}`,
-          priority: "0.7",
+          priority: "0.6",
           changefreq: "monthly" as const,
           lastmod: p.publishedAt,
         }));
 
-        const entries = [...staticPaths, ...categoryPaths, ...productPaths, ...blogPaths];
+        const entries = [
+          ...staticPaths,
+          ...categoryPaths,
+          ...subcategoryPaths,
+          ...productPaths,
+          ...blogPaths,
+        ];
 
         const urls = entries
           .map((e) =>
