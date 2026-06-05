@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { getProduct, productsByCategory } from "../../data/products";
-import { getCategory } from "../../data/categories";
+import { getProduct, productsByCategory } from "../data/products";
+import { getCategory } from "../data/categories";
 
 export const Route = createFileRoute("/proionta/$slug")({
   beforeLoad: ({ params }) => {
