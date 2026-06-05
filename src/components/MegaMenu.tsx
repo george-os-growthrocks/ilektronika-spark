@@ -106,9 +106,8 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
                     <ul className="space-y-1.5 max-h-80 overflow-y-auto pr-2">
                       {subs.slice(0, 14).map((s) => (
                         <li key={s.slug}>
-                          <Link
-                            to="/$category/$subcategory"
-                            params={{ category: c.slug, subcategory: s.slug }}
+                          <a
+                            href={s.depth === 0 ? `/${s.slug}` : `/${c.slug}/${s.slug}`}
                             className="flex items-center justify-between gap-2 text-xs font-semibold normal-case tracking-normal text-foreground hover:text-primary py-1"
                             onClick={() => setOpen(null)}
                           >
@@ -116,7 +115,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
                             <span className="text-[10px] text-muted-foreground font-mono">
                               {s.count}
                             </span>
-                          </Link>
+                          </a>
                         </li>
                       ))}
                     </ul>
