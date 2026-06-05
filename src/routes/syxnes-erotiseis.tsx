@@ -1,11 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { generalFaqs } from "../data/faqs";
-import { categories } from "../data/categories";
-
-const allFaqs = [
-  ...generalFaqs,
-  ...categories.flatMap((c) => c.faqs.map((f) => ({ ...f, _cat: c.shortName }))),
-];
 
 export const Route = createFileRoute("/syxnes-erotiseis")({
   head: () => ({
@@ -26,7 +20,7 @@ export const Route = createFileRoute("/syxnes-erotiseis")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: allFaqs.map((f) => ({
+          mainEntity: generalFaqs.map((f) => ({
             "@type": "Question",
             name: f.q,
             acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -52,7 +46,6 @@ function FaqPage() {
           Όλα όσα ρωτάνε συχνά οι πελάτες μας — από τη σωστή επιλογή νικοτίνης μέχρι τη νομοθεσία.
         </p>
 
-        <h2 className="text-2xl font-extrabold tracking-tighter mb-6">Γενικές Ερωτήσεις</h2>
         <div className="space-y-3 mb-12">
           {generalFaqs.map((f, i) => (
             <details key={i} className="border border-border p-6 group">
@@ -64,23 +57,6 @@ function FaqPage() {
             </details>
           ))}
         </div>
-
-        {categories.map((cat) => (
-          <div key={cat.slug} className="mb-12">
-            <h2 className="text-2xl font-extrabold tracking-tighter mb-6">{cat.shortName}</h2>
-            <div className="space-y-3">
-              {cat.faqs.map((f, i) => (
-                <details key={i} className="border border-border p-6 group">
-                  <summary className="font-bold cursor-pointer flex justify-between items-center list-none">
-                    <span className="pr-4">{f.q}</span>
-                    <span className="text-primary text-xl group-open:rotate-45 transition-transform">+</span>
-                  </summary>
-                  <p className="mt-4 text-muted-foreground text-sm leading-relaxed">{f.a}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        ))}
       </div>
     </section>
   );
