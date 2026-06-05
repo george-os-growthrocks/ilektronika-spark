@@ -2,12 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import logo from "../assets/logo.webp.asset.json";
-import { topLevelCategories } from "../data/catalog";
+import { pillarCategories } from "../data/catalog";
 import { MegaMenu } from "./MegaMenu";
 import { MobileMenu } from "./MobileMenu";
 
 export function Header() {
-  const tops = topLevelCategories().slice(0, 7);
+  const tops = pillarCategories();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktop, setDesktop] = useState(false);
 

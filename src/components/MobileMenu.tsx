@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { X, ChevronRight } from "lucide-react";
-import { topLevelCategories, subcategoriesOf } from "../data/catalog";
+import { pillarCategories, relatedCategoriesForPillar, subcategoriesOf } from "../data/catalog";
 import { categoryMeta, type BadgeKind } from "../data/category-meta";
 import logo from "../assets/logo.webp.asset.json";
 
@@ -30,8 +30,8 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
 
   if (!open) return null;
 
-  const tops = topLevelCategories();
-  const subs = activeCat ? subcategoriesOf(activeCat) : [];
+  const tops = pillarCategories();
+  const subs = activeCat ? [...subcategoriesOf(activeCat), ...relatedCategoriesForPillar(activeCat)] : [];
   const activeMeta = activeCat ? categoryMeta(activeCat) : null;
   const activeLabel = activeCat ? tops.find((t) => t.slug === activeCat)?.label : "";
 
@@ -83,7 +83,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
             <ul>
               {tops.map((c) => {
                 const meta = categoryMeta(c.slug);
-                const hasSubs = subcategoriesOf(c.slug).length > 0;
+                const hasSubs = subcategoriesOf(c.slug).length > 0 || relatedCategoriesForPillar(c.slug).length > 0;
                 return (
                   <li key={c.slug} className="border-b border-border">
                     <div className="flex items-stretch">
