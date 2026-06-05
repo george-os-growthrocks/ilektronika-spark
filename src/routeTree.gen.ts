@@ -24,6 +24,7 @@ import { Route as ApostolesEpistrofesRouteImport } from './routes/apostoles-epis
 import { Route as AnazitisiRouteImport } from './routes/anazitisi'
 import { Route as CategoryRouteImport } from './routes/$category'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ProiontaSlugRouteImport } from './routes/proionta.$slug'
 import { Route as MarkaBrandRouteImport } from './routes/marka.$brand'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -104,6 +105,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
+} as any)
 const ProiontaSlugRoute = ProiontaSlugRouteImport.update({
   id: '/proionta/$slug',
   path: '/proionta/$slug',
@@ -145,13 +151,13 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/marka/$brand': typeof MarkaBrandRoute
   '/proionta/$slug': typeof ProiontaSlugRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$category': typeof CategoryRouteWithChildren
   '/anazitisi': typeof AnazitisiRoute
   '/apostoles-epistrofes': typeof ApostolesEpistrofesRoute
-  '/blog': typeof BlogRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/epikoinonia': typeof EpikoinoniaRoute
   '/katigories': typeof KatigoriesRoute
@@ -166,6 +172,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/marka/$brand': typeof MarkaBrandRoute
   '/proionta/$slug': typeof ProiontaSlugRoute
+  '/blog': typeof BlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -188,6 +195,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/marka/$brand': typeof MarkaBrandRoute
   '/proionta/$slug': typeof ProiontaSlugRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -211,13 +219,13 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/marka/$brand'
     | '/proionta/$slug'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$category'
     | '/anazitisi'
     | '/apostoles-epistrofes'
-    | '/blog'
     | '/cookies'
     | '/epikoinonia'
     | '/katigories'
@@ -232,6 +240,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/marka/$brand'
     | '/proionta/$slug'
+    | '/blog'
   id:
     | '__root__'
     | '/'
@@ -253,6 +262,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/marka/$brand'
     | '/proionta/$slug'
+    | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -382,6 +392,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/proionta/$slug': {
       id: '/proionta/$slug'
       path: '/proionta/$slug'
@@ -427,10 +444,12 @@ const CategoryRouteWithChildren = CategoryRoute._addFileChildren(
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 const BlogRouteChildren: BlogRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)

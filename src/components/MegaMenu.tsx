@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import {
-  topLevelCategories,
+  relatedCategoriesForPillar,
   subcategoriesOf,
   productsInCategory,
   formatPrice,
@@ -60,7 +60,9 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
       {categories.map((c) => {
         const meta = categoryMeta(c.slug);
         const isOpen = open === c.slug;
-        const subs = subcategoriesOf(c.slug);
+        const directSubs = subcategoriesOf(c.slug);
+        const related = relatedCategoriesForPillar(c.slug);
+        const subs = [...directSubs, ...related];
         const featured = featuredProducts(c.slug);
 
         return (
@@ -91,7 +93,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
 
             {isOpen && subs.length > 0 && (
               <div
-                className="absolute right-0 top-full z-50 pt-3"
+                className="absolute left-1/2 top-full z-50 pt-3 -translate-x-1/2"
                 onMouseEnter={cancelClose}
                 onMouseLeave={scheduleClose}
               >
@@ -104,9 +106,8 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
                     <ul className="space-y-1.5 max-h-80 overflow-y-auto pr-2">
                       {subs.slice(0, 14).map((s) => (
                         <li key={s.slug}>
-                          <Link
-                            to="/$category/$subcategory"
-                            params={{ category: c.slug, subcategory: s.slug }}
+                          <a
+                            href={s.depth === 0 ? `/${s.slug}` : `/${c.slug}/${s.slug}`}
                             className="flex items-center justify-between gap-2 text-xs font-semibold normal-case tracking-normal text-foreground hover:text-primary py-1"
                             onClick={() => setOpen(null)}
                           >
@@ -114,7 +115,7 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
                             <span className="text-[10px] text-muted-foreground font-mono">
                               {s.count}
                             </span>
-                          </Link>
+                          </a>
                         </li>
                       ))}
                     </ul>

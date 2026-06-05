@@ -114,17 +114,16 @@ function CategoryPage() {
           {subs.length > 0 && (
             <nav aria-label="Υποκατηγορίες" className="relative z-10 mt-6 flex flex-wrap gap-x-2 gap-y-2">
               {subs.map((s: any) => (
-                <Link
+                <a
                   key={s.slug}
-                  to="/$category/$subcategory"
-                  params={{ category: category.slug, subcategory: s.slug }}
+                  href={`/${category.slug}/${s.slug}`}
                   className="inline-flex min-h-9 items-center text-xs font-bold uppercase tracking-widest border border-border rounded-full px-3 py-1.5 hover:border-primary hover:text-primary transition-colors bg-background"
                 >
                   {s.label}{" "}
                   <span className="text-muted-foreground font-mono ml-1">
                     ({s.count})
                   </span>
-                </Link>
+                </a>
               ))}
             </nav>
           )}

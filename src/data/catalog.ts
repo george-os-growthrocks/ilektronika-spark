@@ -116,6 +116,32 @@ export function topLevelCategories(): Category[] {
   return categories.filter((c) => c.depth === 0).sort((a, b) => b.count - a.count);
 }
 
+const PILLAR_SLUGS = [
+  "ygra-anaplirosis",
+  "disposables",
+  "syskeyes-vape",
+  "antistaseis",
+  "atmopoiites",
+  "nargiledes",
+  "poyra",
+];
+
+const PILLAR_RELATED: Record<string, string[]> = {
+  "syskeyes-vape": ["antallaktika-vape", "axesoyar-vape", "ilektronika-tsigara", "cbd", "protes-yles"],
+  nargiledes: ["geyseis-kai-kapnoi-nargile", "axesoyar-nargile", "mpol-kefales", "karvoynakia-nargile"],
+  poyra: ["axesoyar-poyron", "ygrantires-poyron", "anaptires-poyron"],
+};
+
+export function pillarCategories(): Category[] {
+  return PILLAR_SLUGS.map((slug) => categoryBySlug(slug)).filter((c): c is Category => Boolean(c));
+}
+
+export function relatedCategoriesForPillar(pillarSlug: string): Category[] {
+  return (PILLAR_RELATED[pillarSlug] ?? [])
+    .map((slug) => categoryBySlug(slug))
+    .filter((c): c is Category => Boolean(c));
+}
+
 export function subcategoriesOf(parentSlug: string): Category[] {
   return categories
     .filter((c) => c.parentSlug === parentSlug)
