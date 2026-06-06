@@ -38,17 +38,17 @@ export async function generateMetadata({
   let description =
     product.seoDescription ||
     product.shortDescription ||
-    `Αγοράστε ${product.name}${product.brand ? ` της ${product.brand}` : ""} online. Δείτε τιμή, χαρακτηριστικά, διαθεσιμότητα και παραγγείλτε από το Vape and More.`;
+    `${product.name} | Τιμή, χαρακτηριστικά & άμεση αποστολή από το Vape and More.`;
   description = description.replace(/\s* - \s*/g, " | ");
-  
+
   const canonical = productCanonicalUrl(product);
   const image = productImage(product);
   return {
     title,
-    description: description.slice(0, 160),
+    description: description.slice(0, 105),
     openGraph: {
       title,
-      description: description.slice(0, 160),
+      description: description.slice(0, 105),
       type: "website",
       url: canonical,
       ...(image ? { images: [image] } : {}),

@@ -4,7 +4,7 @@ import { MerchantBlock, LegalCta } from "@/components/LegalBlocks";
 const SOURCE = "https://vapeandmore.gr/cookies/";
 
 export const metadata: Metadata = {
-  title: "Πολιτική Cookies | ilektronikatsigara.gr",
+  title: "Πολιτική Cookies",
   description:
     "Μάθετε ποια cookies χρησιμοποιούμε στο ilektronikatsigara.gr και στο συνεργαζόμενο κατάστημα vapeandmore.gr για τη σωστή διαχείριση συγκαταθέσεων.",
   openGraph: { url: "/cookies" },

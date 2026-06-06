@@ -5,7 +5,7 @@ import { productBySlug, productImage, formatPrice, effectivePrice } from "@/data
 import { toGreekUppercase } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Blog Άτμισης | Οδηγοί & Νέα Ηλεκτρονικού Τσιγάρου | ilektronikatsigara.gr",
+  title: "Blog Άτμισης | Οδηγοί & Νέα",
   description:
     "Ενημερωθείτε με reviews, οδηγούς χρήσης και επιστημονικά νέα για ηλεκτρονικά τσιγάρα, disposables και υγρά αναπλήρωσης από το Vape and More.",
   openGraph: {

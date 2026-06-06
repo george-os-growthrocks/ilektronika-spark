@@ -6,7 +6,7 @@ const SOURCE =
   "https://vapeandmore.gr/%cf%80%ce%bf%ce%bb%ce%b9%cf%84%ce%b9%ce%ba%ce%b7-%ce%b1%cf%80%ce%bf%cf%81%cf%81%ce%b7%cf%84%ce%bf%cf%85/";
 
 export const metadata: Metadata = {
-  title: "Πολιτική Απορρήτου | GDPR Συμμόρφωση | ilektronikatsigara.gr",
+  title: "Πολιτική Απορρήτου | GDPR",
   description:
     "Μάθετε πώς διαχειριζόμαστε τα προσωπικά σας δεδομένα στο ilektronikatsigara.gr και στο συνεργαζόμενο κατάστημα vapeandmore.gr σύμφωνα με τον κανονισμό GDPR.",
   openGraph: { url: "/politiki-aporritou" },

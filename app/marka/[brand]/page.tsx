@@ -20,14 +20,14 @@ export async function generateMetadata({
   const brand = brandBySlug(slug);
   if (!brand) return {};
   const all = productsByBrand(brand.slug);
-  const title = `${brand.label} | ${all.length} Προϊόντα Vape & Αξεσουάρ | ilektronikatsigara.gr`;
-  const description = `Βρείτε όλα τα αυθεντικά προϊόντα της μάρκας ${brand.label} στο Vape and More. Δείτε τιμές, διαθεσιμότητα για ${all.length} προϊόντα και αγοράστε online.`;
+  const title = `${brand.label} | Προϊόντα Vape & Αξεσουάρ`;
+  const description = `Όλα τα προϊόντα ${brand.label} στο Vape and More. Τιμές, διαθεσιμότητα & online αγορά με άμεση αποστολή.`;
   return {
     title,
-    description: description.slice(0, 160),
+    description: description.slice(0, 105),
     openGraph: {
       title,
-      description: description.slice(0, 160),
+      description: description.slice(0, 105),
       url: `/marka/${brand.slug}`,
     },
     alternates: { canonical: `https://ilektronikatsigara.gr/marka/${brand.slug}` },

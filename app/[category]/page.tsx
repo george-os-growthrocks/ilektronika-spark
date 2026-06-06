@@ -21,13 +21,13 @@ export async function generateMetadata({
   const { category: slug } = await params;
   const category = categoryBySlug(slug);
   if (!category || category.depth !== 0) return {};
-  const title = `${category.label} | Τιμές & Αγορά Online | ilektronikatsigara.gr`;
-  const description = `Βρείτε αυθεντικά ${category.label.toLowerCase()} στο Vape and More. Δείτε τιμές, διαθεσιμότητα και αγοράστε online με άμεση αποστολή 1-3 ημέρες.`;
+  const title = `${category.label} | Τιμές & Αγορά Online`;
+  const description = `Βρείτε ${category.label.toLowerCase()} στο Vape and More. Τιμές, διαθεσιμότητα & άμεση αποστολή 1-3 ημέρες.`;
   const canonical = `https://ilektronikatsigara.gr/${slug}`;
   return {
     title,
-    description: description.slice(0, 160),
-    openGraph: { title, description: description.slice(0, 160), url: canonical },
+    description: description.slice(0, 105),
+    openGraph: { title, description: description.slice(0, 105), url: canonical },
     alternates: { canonical },
   };
 }

@@ -3,7 +3,7 @@ import { MerchantBlock, LegalCta } from "@/components/LegalBlocks";
 import { JsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Επικοινωνία | Vape and More | ilektronikatsigara.gr",
+  title: "Επικοινωνία | Vape and More",
   description:
     "Επικοινωνήστε με το συνεργαζόμενο κατάστημα Vape and More στο Ρέθυμνο. Τηλέφωνο 2831 181 046, email info@vapeandmore.gr, διεύθυνση Αρκαδίου 82.",
   openGraph: { url: "/epikoinonia" },

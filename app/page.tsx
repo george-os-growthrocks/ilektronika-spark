@@ -7,7 +7,7 @@ import { generalFaqs } from "@/data/faqs";
 import { toGreekUppercase } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "ilektronikatsigara.gr | Ηλεκτρονικά Τσιγάρα, Disposables, Υγρά & Vape",
+  title: { absolute: "ilektronikatsigara.gr | Ηλεκτρονικά Τσιγάρα, Disposables, Υγρά & Vape" },
   description:
     "Βρείτε κορυφαία ηλεκτρονικά τσιγάρα, υγρά αναπλήρωσης, disposables και ναργιλέδες στο Vape and More. Δείτε τιμές, διαθεσιμότητα και αγοράστε online.",
   openGraph: {

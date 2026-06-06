@@ -23,15 +23,15 @@ export async function generateMetadata({
   const sub = categoryBySlug(subcategory);
   if (!parent || !sub) return {};
   const all = productsInCategory(sub.slug);
-  const title = `${sub.label} | ${parent.label} | ilektronikatsigara.gr`;
-  const description = `Βρείτε ${sub.label.toLowerCase()} (${parent.label.toLowerCase()}) στο Vape and More. Δείτε ${all.length} αυθεντικά προϊόντα, τιμές, διαθεσιμότητα και αγοράστε online.`;
+  const title = `${sub.label} | ${parent.label}`;
+  const description = `Βρείτε ${sub.label.toLowerCase()} στο Vape and More. ${all.length} προϊόντα με τιμές, διαθεσιμότητα & άμεση αποστολή.`;
   const canonical = `https://ilektronikatsigara.gr/${category}/${subcategory}`;
   return {
     title,
-    description: description.slice(0, 160),
+    description: description.slice(0, 105),
     openGraph: {
       title,
-      description: description.slice(0, 160),
+      description: description.slice(0, 105),
       url: canonical,
     },
     alternates: { canonical },

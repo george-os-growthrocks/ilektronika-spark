@@ -3,7 +3,7 @@ import { generalFaqs } from "@/data/faqs";
 import { JsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Συχνές Ερωτήσεις για το Άτμισμα | FAQ | ilektronikatsigara.gr",
+  title: "Συχνές Ερωτήσεις | FAQ Ατμίσματος",
   description:
     "Βρείτε απαντήσεις σε όλες τις συχνές ερωτήσεις για ηλεκτρονικά τσιγάρα, disposable vapes, νικοτίνη, υγρά, ναργιλέδες και νομοθεσία στην Ελλάδα.",
   openGraph: { title: "FAQ | ilektronikatsigara.gr", url: "/syxnes-erotiseis" },
