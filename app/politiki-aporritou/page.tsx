@@ -25,7 +25,7 @@ export default function PrivacyPage() {
         <a
           href="https://vapeandmore.gr"
           target="_blank"
-          rel="noopener noreferrer sponsored"
+          rel="noopener noreferrer"
           className="text-primary underline"
         >
           vapeandmore.gr

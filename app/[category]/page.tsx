@@ -26,8 +26,8 @@ export async function generateMetadata({
   const canonical = `https://ilektronikatsigara.gr/${slug}`;
   return {
     title,
-    description: description.slice(0, 105),
-    openGraph: { title, description: description.slice(0, 105), url: canonical },
+    description: description.slice(0, 160),
+    openGraph: { title, description: description.slice(0, 160), url: canonical },
     alternates: { canonical },
   };
 }

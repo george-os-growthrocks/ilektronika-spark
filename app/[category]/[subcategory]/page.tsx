@@ -28,10 +28,10 @@ export async function generateMetadata({
   const canonical = `https://ilektronikatsigara.gr/${category}/${subcategory}`;
   return {
     title,
-    description: description.slice(0, 105),
+    description: description.slice(0, 160),
     openGraph: {
       title,
-      description: description.slice(0, 105),
+      description: description.slice(0, 160),
       url: canonical,
     },
     alternates: { canonical },

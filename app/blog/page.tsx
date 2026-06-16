@@ -89,7 +89,7 @@ export default function BlogIndexPage() {
               <a
                 href="https://vapeandmore.gr/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog-sidebar"
                 target="_blank"
-                rel="noopener noreferrer sponsored"
+                rel="noopener noreferrer"
                 className="w-full text-center block bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider py-2.5 rounded hover:opacity-90 transition-opacity"
               >
                 ΕΠΙΣΚΕΨΗ ΣΤΟ E-SHOP →
@@ -128,7 +128,7 @@ export default function BlogIndexPage() {
                         <a
                           href={`https://vapeandmore.gr/product/${p.slug}/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog-sidebar-product`}
                           target="_blank"
-                          rel="noopener noreferrer sponsored"
+                          rel="noopener noreferrer"
                           className="text-[10px] font-bold uppercase text-muted-foreground hover:text-primary"
                         >
                           ΑΓΟΡΑ →

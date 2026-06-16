@@ -59,14 +59,43 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         data={{
           "@context": "https://schema.org",
           "@type": "Article",
+          mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": `https://ilektronikatsigara.gr/blog/${post.slug}`,
+          },
           headline: post.title,
           description: post.metaDescription,
+          image: "https://ilektronikatsigara.gr/og-image.png",
           datePublished: post.publishedAt,
+          dateModified: post.publishedAt,
           author: { "@type": "Organization", name: "ilektronikatsigara.gr" },
-          publisher: { "@type": "Organization", name: "ilektronikatsigara.gr" },
+          publisher: { 
+            "@type": "Organization", 
+            name: "ilektronikatsigara.gr",
+            logo: {
+              "@type": "ImageObject",
+              "url": "https://ilektronikatsigara.gr/logo.png"
+            }
+          },
           inLanguage: "el",
         }}
       />
+      {post.faqs && post.faqs.length > 0 && (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: post.faqs.map((faq) => ({
+              "@type": "Question",
+              name: faq.q,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.a,
+              },
+            })),
+          }}
+        />
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumbs */}
         <nav className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-6">
@@ -110,16 +139,48 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     </h2>
                   );
                 } else {
-                  const parts = para.split(/(\*\*[^*]+\*\*)/g);
+                  const parts = para.split(/(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g);
                   elements.push(
                     <p key={`p-${i}`} className="leading-relaxed">
-                      {parts.map((part, j) =>
-                        part.startsWith("**") && part.endsWith("**") ? (
-                          <strong key={j} className="font-extrabold text-foreground">{part.slice(2, -2)}</strong>
-                        ) : (
-                          <span key={j}>{part}</span>
-                        ),
-                      )}
+                      {parts.map((part, j) => {
+                        if (part.startsWith("**") && part.endsWith("**")) {
+                          return (
+                            <strong key={j} className="font-extrabold text-foreground">
+                              {part.slice(2, -2)}
+                            </strong>
+                          );
+                        } else if (part.startsWith("[") && part.endsWith(")")) {
+                          const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+                          if (match) {
+                            const [, linkText, url] = match;
+                            const isInternal = url.startsWith("/");
+                            if (isInternal) {
+                              return (
+                                <Link
+                                  key={j}
+                                  href={url}
+                                  className="text-primary hover:underline font-semibold"
+                                >
+                                  {linkText}
+                                </Link>
+                              );
+                            } else {
+                              return (
+                                <a
+                                  key={j}
+                                  href={url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-primary hover:underline font-semibold"
+                                >
+                                  {linkText}
+                                </a>
+                              );
+                            }
+                          }
+                        }
+                        return <span key={j}>{part}</span>;
+                      })}
                     </p>
                   );
                 }
@@ -155,7 +216,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                           <a
                             href={`https://vapeandmore.gr/product/${inlineAdProduct.slug}/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog-inline-ad`}
                             target="_blank"
-                            rel="noopener noreferrer sponsored"
+                            rel="noopener noreferrer"
                             className="bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider px-5 py-2.5 rounded hover:opacity-90 transition-opacity"
                           >
                             ΑΓΟΡΑ ΣΤΟ Vape and More →
@@ -168,6 +229,27 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
                 return elements;
               })}
+
+              {/* FAQs Section */}
+              {post.faqs && post.faqs.length > 0 && (
+                <div className="mt-12 pt-10 border-t border-border">
+                  <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-6 text-foreground">
+                    Συχνές Ερωτήσεις (FAQ)
+                  </h2>
+                  <div className="space-y-4">
+                    {post.faqs.map((faq, idx) => (
+                      <div key={idx} className="bg-surface border border-border rounded-xl p-5">
+                        <h3 className="font-bold text-foreground text-base mb-2">
+                          {faq.q}
+                        </h3>
+                        <p className="text-muted-foreground text-sm leading-relaxed">
+                          {faq.a}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -227,7 +309,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                           <a
                             href={`https://vapeandmore.gr/product/${p.slug}/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=blog-sidebar-ad`}
                             target="_blank"
-                            rel="noopener noreferrer sponsored"
+                            rel="noopener noreferrer"
                             className="text-[10px] font-bold uppercase text-muted-foreground hover:text-primary"
                           >
                             ΑΓΟΡΑ →

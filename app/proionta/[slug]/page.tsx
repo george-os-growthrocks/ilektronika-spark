@@ -45,10 +45,10 @@ export async function generateMetadata({
   const image = productImage(product);
   return {
     title,
-    description: description.slice(0, 105),
+    description: description.slice(0, 160),
     openGraph: {
       title,
-      description: description.slice(0, 105),
+      description: description.slice(0, 160),
       type: "website",
       url: canonical,
       ...(image ? { images: [image] } : {}),

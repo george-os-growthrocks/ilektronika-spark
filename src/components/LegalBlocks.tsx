@@ -38,7 +38,7 @@ export function LegalCta() {
       <a
         href="https://vapeandmore.gr"
         target="_blank"
-        rel="noopener sponsored"
+        rel="noopener"
         className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 font-extrabold uppercase tracking-widest text-sm rounded hover:opacity-90"
       >
         ΑΓΟΡΑΣΤΕ ΣΤΟ vapeandmore.gr →

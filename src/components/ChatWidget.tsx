@@ -48,7 +48,7 @@ function ChatMarkdown({ content }: { content: string }) {
             <a
               href={href}
               target="_blank"
-              rel="noopener noreferrer sponsored"
+              rel="noopener noreferrer"
               className="font-bold underline decoration-primary/40 underline-offset-2 hover:text-primary"
             >
               {children}
@@ -231,7 +231,7 @@ export function ChatWidget() {
                             <a
                               href={p.affiliateUrl}
                               target="_blank"
-                              rel="noopener sponsored"
+                              rel="noopener"
                               className="text-[10px] font-extrabold uppercase tracking-widest bg-primary text-primary-foreground px-2.5 py-1 rounded inline-flex items-center gap-1 hover:opacity-90"
                             >
                               ΑΓΟΡΑ <ExternalLink className="h-3 w-3" />
