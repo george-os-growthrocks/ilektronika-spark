@@ -58,10 +58,13 @@ ${blogList}
 
 ## Πολιτικές
 - Αγορές μέσω του συνεργάτη μας: https://vapeandmore.gr
-- 18+ μόνο. Προϊόντα νικοτίνης TPD-compliant.
+- Affiliate: λαμβάνουμε προμήθεια από referral links· η τιμή πελάτη δεν αλλάζει.
+- 18+ μόνο. Προϊόντα νικοτίνης TPD-compliant. Όχι ιατρικοί ισχυρισμοί.
 - Πανελλαδική αποστολή 1-3 εργάσιμες, δωρεάν από 30€.
 - Επιστροφές: 14 ημέρες σε σφραγισμένη συσκευασία.
 - Πιστοποιήσεις & συμβατότητα: αυθεντικά προϊόντα από εξουσιοδοτημένους διανομείς.
+- NAP: Vape and More, Αρκαδίου 82, 74100 Ρέθυμνο, +30 2831 181046, info@vapeandmore.gr
+- Citations: https://www.fagi.gr/rethymno/eshops/vapeandmore/ · https://www.bestprice.gr/m/15927/vapeandmore.html
 
 ## Sitemap
 ${BASE_URL}/sitemap.xml

@@ -42,6 +42,51 @@ export default function AboutPage() {
             και πραγματοποιεί πανελλαδικές αποστολές. Αυθεντικά προϊόντα από επίσημους εισαγωγείς,
             τεχνική υποστήριξη από vapers, και ένα από τα πιο πλήρη stock στο νησί.
           </p>
+          <ul className="mt-4 space-y-2 text-sm">
+            <li>
+              E-shop:{" "}
+              <a
+                href="https://vapeandmore.gr/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=about"
+                target="_blank"
+                rel="noopener"
+                className="text-primary underline font-bold"
+              >
+                vapeandmore.gr
+              </a>
+            </li>
+            <li>
+              Τοπικός κατάλογος:{" "}
+              <a
+                href="https://www.fagi.gr/rethymno/eshops/vapeandmore/"
+                target="_blank"
+                rel="noopener"
+                className="text-primary underline"
+              >
+                Fagi.gr · Vape and More Ρέθυμνο
+              </a>
+            </li>
+            <li>
+              Σύγκριση τιμών:{" "}
+              <a
+                href="https://www.bestprice.gr/m/15927/vapeandmore.html"
+                target="_blank"
+                rel="noopener"
+                className="text-primary underline"
+              >
+                BestPrice · VapeandMore
+              </a>
+            </li>
+            <li>
+              Τηλέφωνο:{" "}
+              <a href="tel:+302831181046" className="text-primary underline">
+                2831 181 046
+              </a>{" "}
+              · Email:{" "}
+              <a href="mailto:info@vapeandmore.gr" className="text-primary underline">
+                info@vapeandmore.gr
+              </a>
+            </li>
+          </ul>
         </section>
         <section>
           <h2 className="text-2xl font-extrabold mb-2">Γιατί δύο sites;</h2>

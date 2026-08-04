@@ -1,9 +1,16 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/data/catalog";
 import { effectivePrice, formatPrice, productImage } from "@/data/catalog";
 import { productAffiliateUrl } from "@/lib/affiliate";
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({
+  product,
+  priority = false,
+}: {
+  product: Product;
+  priority?: boolean;
+}) {
   const img = productImage(product);
   const hasSale = product.salePrice != null && product.price != null;
   return (
@@ -13,11 +20,13 @@ export function ProductCard({ product }: { product: Product }) {
         className="block aspect-[4/5] bg-surface relative overflow-hidden"
       >
         {img ? (
-          <img
+          <Image
             src={img}
             alt={product.name}
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-500"
+            fill
+            priority={priority}
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+            className="object-contain p-3 group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="absolute inset-0 grid place-items-center text-muted-foreground text-xs uppercase tracking-widest">

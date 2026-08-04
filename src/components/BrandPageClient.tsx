@@ -12,10 +12,12 @@ export function BrandPageClient({
   brand,
   all,
   search,
+  intro,
 }: {
   brand: Brand;
   all: Product[];
   search: ListingSearchParams;
+  intro?: string;
 }) {
   const router = useRouter();
   const basePath = `/marka/${brand.slug}`;
@@ -43,8 +45,13 @@ export function BrandPageClient({
             </Link>{" "}
             › <span className="text-foreground">Μάρκα: {brand.label}</span>
           </nav>
-          <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">{brand.label}</h1>
+          <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">
+            {brand.label} · Προϊόντα Vape
+          </h1>
           <p className="text-muted-foreground mt-2">{all.length} προϊόντα</p>
+          {intro && (
+            <p className="text-muted-foreground mt-4 max-w-3xl leading-relaxed">{intro}</p>
+          )}
         </div>
       </section>
 

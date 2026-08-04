@@ -17,13 +17,16 @@ export function SubcategoryPageClient({
   all,
   subs,
   search,
+  h1,
 }: {
   parent: Category;
   sub: Category;
   all: Product[];
   subs: Category[];
   search: ListingSearchParams;
+  h1?: string;
 }) {
+  const heading = h1 || sub.label;
   const router = useRouter();
   const basePath = `/${parent.slug}/${sub.slug}`;
 
@@ -56,7 +59,7 @@ export function SubcategoryPageClient({
             </Link>{" "}
             › <span className="text-foreground">{sub.label}</span>
           </nav>
-          <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">{sub.label}</h1>
+          <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">{heading}</h1>
           <p className="text-muted-foreground mt-3 max-w-3xl leading-relaxed">
             {categoryDescription(sub.slug)}
           </p>
@@ -83,9 +86,9 @@ export function SubcategoryPageClient({
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
         <aside className="space-y-6">
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
+            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
               ΔΙΑΘΕΣΙΜΟΤΗΤΑ
-            </h2>
+            </p>
             <label className="flex items-center gap-2 text-sm cursor-pointer">
               <input
                 type="checkbox"
@@ -99,9 +102,9 @@ export function SubcategoryPageClient({
 
           {brandList.length > 0 && (
             <div>
-              <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
+              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
                 ΜΑΡΚΑ
-              </h2>
+              </p>
               <ul className="space-y-1.5">
                 {brandList.map((b) => {
                   const active = search.brand.includes(b.slug);

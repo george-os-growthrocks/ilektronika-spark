@@ -9,6 +9,7 @@ import { FaqSection } from "./FaqSection";
 import { faqsForCategory } from "@/data/faqs-generated";
 import { buildListingQuery, type ListingSearchParams } from "@/lib/listing-search";
 import { toGreekUppercase } from "@/lib/utils";
+import { categoryH1 } from "@/data/category-meta";
 
 const PER_PAGE = 24;
 
@@ -23,6 +24,7 @@ export function CategoryPageClient({
   subs: Category[];
   search: ListingSearchParams;
 }) {
+  const h1 = categoryH1(category.slug, category.label);
   const router = useRouter();
   const basePath = `/${category.slug}`;
 
@@ -51,7 +53,7 @@ export function CategoryPageClient({
             </Link>{" "}
             › <span className="text-foreground">{category.label}</span>
           </nav>
-          <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">{category.label}</h1>
+          <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">{h1}</h1>
           <p className="text-muted-foreground mt-3 max-w-3xl leading-relaxed">
             {categoryDescription(category.slug)}
           </p>
@@ -78,9 +80,9 @@ export function CategoryPageClient({
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
         <aside className="space-y-6">
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
+            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
               ΔΙΑΘΕΣΙΜΟΤΗΤΑ
-            </h2>
+            </p>
             <label className="flex items-center gap-2 text-sm cursor-pointer">
               <input
                 type="checkbox"
@@ -94,9 +96,9 @@ export function CategoryPageClient({
 
           {brandList.length > 0 && (
             <div>
-              <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
+              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
                 ΜΑΡΚΑ
-              </h2>
+              </p>
               <ul className="space-y-1.5">
                 {brandList.map((b) => {
                   const active = search.brand.includes(b.slug);

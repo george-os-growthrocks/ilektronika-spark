@@ -5,6 +5,8 @@ import { blogPosts, getPost } from "@/data/blog";
 import { JsonLd } from "@/components/JsonLd";
 import { productBySlug, productImage, formatPrice, effectivePrice } from "@/data/catalog";
 import { toGreekUppercase } from "@/lib/utils";
+import { authorPersonJsonLd, SITE_AUTHOR } from "@/data/authors";
+import { breadcrumbListJsonLd, SITE_URL } from "@/lib/seo";
 
 export const dynamicParams = true;
 
@@ -45,13 +47,17 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   if (!post) notFound();
 
   const others = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
-  
+
   // Resolve promoted products from slugs
   const promotedProducts = (post.promotedProducts ?? [])
     .map((slug) => productBySlug(slug))
     .filter((p): p is NonNullable<typeof p> => p !== undefined);
 
   const inlineAdProduct = promotedProducts[0];
+
+  const howToSteps = post.content
+    .filter((line) => /^\d+\.\s/.test(line))
+    .map((line) => line.replace(/^\d+\.\s*/, ""));
 
   return (
     <article className="py-12 md:py-16">
@@ -61,24 +67,31 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           "@type": "Article",
           mainEntityOfPage: {
             "@type": "WebPage",
-            "@id": `https://ilektronikatsigara.gr/blog/${post.slug}`,
+            "@id": `${SITE_URL}/blog/${post.slug}`,
           },
           headline: post.title,
           description: post.metaDescription,
-          image: "https://ilektronikatsigara.gr/og-image.png",
+          image: `${SITE_URL}/og-image.png`,
           datePublished: post.publishedAt,
           dateModified: post.publishedAt,
-          author: { "@type": "Organization", name: "ilektronikatsigara.gr" },
-          publisher: { 
-            "@type": "Organization", 
+          author: authorPersonJsonLd(),
+          publisher: {
+            "@type": "Organization",
             name: "ilektronikatsigara.gr",
             logo: {
               "@type": "ImageObject",
-              "url": "https://ilektronikatsigara.gr/logo.png"
-            }
+              url: `${SITE_URL}/logo.png`,
+            },
           },
           inLanguage: "el",
         }}
+      />
+      <JsonLd
+        data={breadcrumbListJsonLd([
+          { name: "Αρχική", item: `${SITE_URL}/` },
+          { name: "Blog", item: `${SITE_URL}/blog` },
+          { name: post.title, item: `${SITE_URL}/blog/${post.slug}` },
+        ])}
       />
       {post.faqs && post.faqs.length > 0 && (
         <JsonLd
@@ -92,6 +105,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 "@type": "Answer",
                 text: faq.a,
               },
+            })),
+          }}
+        />
+      )}
+      {howToSteps.length >= 3 && (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            name: post.title,
+            description: post.metaDescription,
+            step: howToSteps.map((text, i) => ({
+              "@type": "HowToStep",
+              position: i + 1,
+              text,
             })),
           }}
         />
@@ -116,9 +144,19 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-6 text-balance">
             {post.title}
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-4xl">
-            {post.excerpt}
+          <p className="text-sm text-muted-foreground mb-4">
+            Από{" "}
+            <Link href="/sxetika" className="text-primary hover:underline">
+              {SITE_AUTHOR.name}
+            </Link>
           </p>
+          {/* AEO: concise direct answer block */}
+          <div className="rounded-md border border-border bg-surface p-5 mb-6 max-w-4xl">
+            <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">
+              Σύντομη απάντηση
+            </p>
+            <p className="text-base md:text-lg text-foreground leading-relaxed">{post.excerpt}</p>
+          </div>
         </div>
 
         {/* Main Grid: Content + Sidebar */}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -9,13 +10,21 @@ import {
 } from "@/data/catalog";
 import { MerchantCard } from "@/components/MerchantCard";
 import { ProductCard } from "@/components/ProductCard";
-import { FaqSection } from "@/components/FaqSection";
+import { FaqSection, faqJsonLd } from "@/components/FaqSection";
 import { RichText } from "@/components/RichText";
 import { faqsForProduct } from "@/data/faqs-generated";
 import { productCanonicalUrl, STORE_NAME } from "@/lib/affiliate";
 import { JsonLd } from "@/components/JsonLd";
 import { productImage } from "@/data/catalog";
 import { toGreekUppercase } from "@/lib/utils";
+import {
+  breadcrumbListJsonLd,
+  productBodyEnrichment,
+  productBreadcrumbCrumbs,
+  productSeoDescription,
+  productSeoTitle,
+} from "@/lib/seo";
+import { RelatedGuides } from "@/components/RelatedGuides";
 
 export const dynamicParams = true;
 
@@ -31,29 +40,35 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = productBySlug(slug);
   if (!product) return {};
-  
-  let title = product.seoTitle || `${product.name} | Τιμή & Αγορά Online`;
-  title = title.replace(/\s* - \s*/g, " | ");
-  
-  let description =
-    product.seoDescription ||
-    product.shortDescription ||
-    `${product.name} | Τιμή, χαρακτηριστικά & άμεση αποστολή από το Vape and More.`;
-  description = description.replace(/\s* - \s*/g, " | ");
 
+  const title = productSeoTitle(product);
+  const description = productSeoDescription(product);
   const canonical = productCanonicalUrl(product);
   const image = productImage(product);
+
   return {
     title,
-    description: description.slice(0, 160),
+    description,
     openGraph: {
       title,
-      description: description.slice(0, 160),
+      description,
       type: "website",
       url: canonical,
-      ...(image ? { images: [image] } : {}),
+      images: image
+        ? [{ url: image, width: 800, height: 800, alt: product.name }]
+        : [{ url: "/og-image.png", width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: image ? [image] : ["/og-image.png"],
     },
     alternates: { canonical },
+    other: {
+      "product:brand": product.brand ?? "",
+      "og:type": "product",
+    },
   };
 }
 
@@ -71,10 +86,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const breadcrumbs = product.primaryCategoryPath;
   const canonical = productCanonicalUrl(product);
   const price = effectivePrice(product);
-  const description =
-    product.seoDescription ||
-    product.shortDescription ||
-    `Δείτε τιμή, χαρακτηριστικά και διαθεσιμότητα για ${product.name}.`;
+  const description = productSeoDescription(product);
+  const faqs = faqsForProduct(product);
+  const hasRichBody =
+    Boolean(product.description?.trim()) || Boolean(product.shortDescription?.trim());
+  const enrichment = !hasRichBody || (product.description?.trim().length ?? 0) < 80
+    ? productBodyEnrichment(product)
+    : null;
 
   return (
     <>
@@ -103,26 +121,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         }}
       />
       <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Αρχική", item: "https://ilektronikatsigara.gr/" },
-            ...product.primaryCategoryPath.map((node, i) => ({
-              "@type": "ListItem",
-              position: i + 2,
-              name: node.label,
-              item: `https://ilektronikatsigara.gr/${node.slug}`,
-            })),
-            {
-              "@type": "ListItem",
-              position: product.primaryCategoryPath.length + 2,
-              name: product.name,
-              item: `https://ilektronikatsigara.gr/proionta/${product.slug}`,
-            },
-          ],
-        }}
+        data={breadcrumbListJsonLd(
+          productBreadcrumbCrumbs(product.primaryCategoryPath, product.name, product.slug),
+        )}
       />
+      {faqs.length > 0 && <JsonLd data={faqJsonLd(faqs)} />}
 
       <nav
         aria-label="Breadcrumbs"
@@ -160,15 +163,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-7">
-            <div className="aspect-square bg-surface border border-border rounded-md overflow-hidden grid place-items-center">
+            <div className="relative aspect-square bg-surface border border-border rounded-md overflow-hidden">
               {product.images[0] ? (
-                <img
+                <Image
                   src={product.images[0]}
                   alt={product.name}
-                  className="w-full h-full object-contain p-6"
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 58vw"
+                  className="object-contain p-6"
                 />
               ) : (
-                <span className="text-muted-foreground font-mono text-xs uppercase">
+                <span className="absolute inset-0 grid place-items-center text-muted-foreground font-mono text-xs uppercase">
                   ΧΩΡΙΣ ΕΙΚΟΝΑ
                 </span>
               )}
@@ -178,9 +184,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 {product.images.slice(0, 5).map((src, i) => (
                   <div
                     key={i}
-                    className="aspect-square bg-surface border border-border rounded grid place-items-center overflow-hidden"
+                    className="relative aspect-square bg-surface border border-border rounded overflow-hidden"
                   >
-                    <img src={src} alt="" className="w-full h-full object-contain p-2" />
+                    <Image
+                      src={src}
+                      alt=""
+                      fill
+                      sizes="120px"
+                      className="object-contain p-2"
+                    />
                   </div>
                 ))}
               </div>
@@ -236,11 +248,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </div>
       </section>
 
-      {product.description && (
+      {(product.description || enrichment) && (
         <section className="py-12 bg-surface border-y border-border">
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-2xl font-extrabold tracking-tight mb-4">Περιγραφή</h2>
-            <RichText text={product.description} />
+            {product.description ? (
+              <RichText text={product.description} />
+            ) : (
+              <p className="text-muted-foreground leading-relaxed">{enrichment}</p>
+            )}
+            {product.description && enrichment && product.description.trim().length < 120 && (
+              <p className="text-muted-foreground leading-relaxed mt-4">{enrichment}</p>
+            )}
           </div>
         </section>
       )}
@@ -258,7 +277,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </section>
       )}
 
-      <FaqSection faqs={faqsForProduct(product)} />
+      <FaqSection faqs={faqs} />
+      {product.primaryTopSlug && (
+        <RelatedGuides
+          categorySlug={product.primaryTopSlug}
+          title="Διαβάστε επίσης"
+        />
+      )}
     </>
   );
 }

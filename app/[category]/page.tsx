@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { categories, categoryBySlug, productsInCategory, subcategoriesOf } from "@/data/catalog";
-import { categoryDescription, faqsForCategory } from "@/data/faqs-generated";
+import { faqsForCategory } from "@/data/faqs-generated";
 import { faqJsonLd } from "@/components/FaqSection";
 import { JsonLd } from "@/components/JsonLd";
 import { CategoryPageClient } from "@/components/CategoryPageClient";
+import { RelatedGuides } from "@/components/RelatedGuides";
 import { parseListingSearch } from "@/lib/listing-search";
+import {
+  categorySeoDescription,
+  categorySeoTitle,
+} from "@/data/category-meta";
+import { breadcrumbListJsonLd, SITE_URL } from "@/lib/seo";
 
 export const dynamicParams = true;
 
@@ -21,13 +27,25 @@ export async function generateMetadata({
   const { category: slug } = await params;
   const category = categoryBySlug(slug);
   if (!category || category.depth !== 0) return {};
-  const title = `${category.label} | Τιμές & Αγορά Online`;
-  const description = `Βρείτε ${category.label.toLowerCase()} στο Vape and More. Τιμές, διαθεσιμότητα & άμεση αποστολή 1-3 ημέρες.`;
-  const canonical = `https://ilektronikatsigara.gr/${slug}`;
+  const all = productsInCategory(category.slug);
+  const title = categorySeoTitle(slug, category.label);
+  const description = categorySeoDescription(slug, category.label, all.length);
+  const canonical = `${SITE_URL}/${slug}`;
   return {
     title,
-    description: description.slice(0, 160),
-    openGraph: { title, description: description.slice(0, 160), url: canonical },
+    description,
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og-image.png"],
+    },
     alternates: { canonical },
   };
 }
@@ -47,26 +65,34 @@ export default async function CategoryPage({
   const subs = subcategoriesOf(cat.slug);
   const search = parseListingSearch(await searchParams);
   const faqs = faqsForCategory(cat.slug);
+  const pageUrl = `${SITE_URL}/${cat.slug}`;
 
   const itemListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": cat.label,
-    "url": `https://ilektronikatsigara.gr/${cat.slug}`,
-    "numberOfItems": all.length,
-    "itemListElement": all.slice(0, 20).map((p, index) => ({
+    name: cat.label,
+    url: pageUrl,
+    numberOfItems: all.length,
+    itemListElement: all.slice(0, 20).map((p, index) => ({
       "@type": "ListItem",
-      "position": index + 1,
-      "url": `https://ilektronikatsigara.gr/proionta/${p.slug}`,
-      "name": p.name
-    }))
+      position: index + 1,
+      url: `${SITE_URL}/proionta/${p.slug}`,
+      name: p.name,
+    })),
   };
 
   return (
     <>
       <JsonLd data={faqJsonLd(faqs)} />
       <JsonLd data={itemListSchema} />
+      <JsonLd
+        data={breadcrumbListJsonLd([
+          { name: "Αρχική", item: `${SITE_URL}/` },
+          { name: cat.label, item: pageUrl },
+        ])}
+      />
       <CategoryPageClient category={cat} all={all} subs={subs} search={search} />
+      <RelatedGuides categorySlug={cat.slug} />
     </>
   );
 }

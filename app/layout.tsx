@@ -105,8 +105,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "url": "https://ilektronikatsigara.gr/logo.png"
                 },
                 "sameAs": [
-                  "https://vapeandmore.gr"
-                ]
+                  "https://vapeandmore.gr",
+                  "https://www.fagi.gr/rethymno/eshops/vapeandmore/",
+                  "https://www.bestprice.gr/m/15927/vapeandmore.html"
+                ],
+                "parentOrganization": {
+                  "@id": "https://vapeandmore.gr/#localbusiness"
+                }
               },
               {
                 "@type": "LocalBusiness",
@@ -116,6 +121,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 "telephone": "+302831181046",
                 "email": "info@vapeandmore.gr",
                 "url": "https://vapeandmore.gr",
+                "sameAs": [
+                  "https://ilektronikatsigara.gr",
+                  "https://www.fagi.gr/rethymno/eshops/vapeandmore/",
+                  "https://www.bestprice.gr/m/15927/vapeandmore.html"
+                ],
                 "address": {
                   "@type": "PostalAddress",
                   "streetAddress": "Αρκαδίου 82",
@@ -140,6 +150,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   ],
                   "opens": "10:00",
                   "closes": "21:00"
+                },
+                "priceRange": "€€",
+                "areaServed": {
+                  "@type": "Country",
+                  "name": "Greece"
                 }
               }
             ]

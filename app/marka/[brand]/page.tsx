@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { brandBySlug, brands, productsByBrand } from "@/data/catalog";
 import { BrandPageClient } from "@/components/BrandPageClient";
+import { RelatedGuides } from "@/components/RelatedGuides";
 import { parseListingSearch } from "@/lib/listing-search";
 import { JsonLd } from "@/components/JsonLd";
+import { brandMeta } from "@/data/brand-meta";
+import { breadcrumbListJsonLd, SITE_URL } from "@/lib/seo";
 
 export const dynamicParams = true;
 
@@ -19,18 +22,30 @@ export async function generateMetadata({
   const { brand: slug } = await params;
   const brand = brandBySlug(slug);
   if (!brand) return {};
+  const meta = brandMeta(slug);
   const all = productsByBrand(brand.slug);
-  const title = `${brand.label} | Προϊόντα Vape & Αξεσουάρ`;
-  const description = `Όλα τα προϊόντα ${brand.label} στο Vape and More. Τιμές, διαθεσιμότητα & online αγορά με άμεση αποστολή.`;
+  const title = meta.seoTitle || `${brand.label} | Προϊόντα Vape & Αξεσουάρ`;
+  const description = (
+    meta.seoDescription ||
+    `Όλα τα προϊόντα ${brand.label} στο Vape and More. ${all.length} προϊόντα με τιμές, διαθεσιμότητα & online αγορά.`
+  ).slice(0, 160);
+  const canonical = `${SITE_URL}/marka/${brand.slug}`;
   return {
     title,
-    description: description.slice(0, 105),
+    description,
     openGraph: {
       title,
-      description: description.slice(0, 105),
-      url: `/marka/${brand.slug}`,
+      description,
+      url: canonical,
+      images: [{ url: "/og-image.png", width: 1200, height: 630 }],
     },
-    alternates: { canonical: `https://ilektronikatsigara.gr/marka/${brand.slug}` },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og-image.png"],
+    },
+    alternates: { canonical },
   };
 }
 
@@ -47,25 +62,34 @@ export default async function BrandPage({
 
   const all = productsByBrand(brand.slug);
   const search = parseListingSearch(await searchParams);
+  const meta = brandMeta(slug);
+  const pageUrl = `${SITE_URL}/marka/${brand.slug}`;
 
   const itemListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": `Προϊόντα ${brand.label}`,
-    "url": `https://ilektronikatsigara.gr/marka/${brand.slug}`,
-    "numberOfItems": all.length,
-    "itemListElement": all.slice(0, 20).map((p, index) => ({
+    name: `Προϊόντα ${brand.label}`,
+    url: pageUrl,
+    numberOfItems: all.length,
+    itemListElement: all.slice(0, 20).map((p, index) => ({
       "@type": "ListItem",
-      "position": index + 1,
-      "url": `https://ilektronikatsigara.gr/proionta/${p.slug}`,
-      "name": p.name
-    }))
+      position: index + 1,
+      url: `${SITE_URL}/proionta/${p.slug}`,
+      name: p.name,
+    })),
   };
 
   return (
     <>
       <JsonLd data={itemListSchema} />
-      <BrandPageClient brand={brand} all={all} search={search} />
+      <JsonLd
+        data={breadcrumbListJsonLd([
+          { name: "Αρχική", item: `${SITE_URL}/` },
+          { name: brand.label, item: pageUrl },
+        ])}
+      />
+      <BrandPageClient brand={brand} all={all} search={search} intro={meta.intro} />
+      <RelatedGuides guideSlugs={meta.relatedGuides} />
     </>
   );
 }

@@ -1,20 +1,34 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { products, topLevelCategories } from "@/data/catalog";
 import { ProductCard } from "@/components/ProductCard";
 import { blogPosts } from "@/data/blog";
 import { generalFaqs } from "@/data/faqs";
 import { toGreekUppercase } from "@/lib/utils";
+import { JsonLd } from "@/components/JsonLd";
+import { faqJsonLd } from "@/components/FaqSection";
 
 export const metadata: Metadata = {
-  title: { absolute: "ilektronikatsigara.gr | Ηλεκτρονικά Τσιγάρα, Disposables, Υγρά & Vape" },
+  title: {
+    absolute:
+      "Ηλεκτρονικά Τσιγάρα Ελλάδα | Disposables, Υγρά & Vape · ilektronikatsigara.gr",
+  },
   description:
-    "Βρείτε κορυφαία ηλεκτρονικά τσιγάρα, υγρά αναπλήρωσης, disposables και ναργιλέδες στο Vape and More. Δείτε τιμές, διαθεσιμότητα και αγοράστε online.",
+    "Κατάλογος 1000+ ηλεκτρονικών τσιγάρων, υγρών αναπλήρωσης, disposables και ναργιλέδων. Τιμές & αγορά online μέσω Vape and More · Ρέθυμνο, αποστολή σε όλη την Ελλάδα. 18+.",
   openGraph: {
-    title: "ilektronikatsigara.gr | Premium Vaping Hub στην Ελλάδα",
+    title: "Ηλεκτρονικά Τσιγάρα · Πλήρης Κατάλογος Ελλάδα | ilektronikatsigara.gr",
     description:
-      "Πλήρης κατάλογος για ηλεκτρονικά τσιγάρα, υγρά και αξεσουάρ. Αγοράστε online με άμεση αποστολή.",
+      "1000+ προϊόντα ατμίσματος: disposables, pod systems, υγρά, ναργιλέδες. Επιλέγετε εδώ, αγοράζετε από Vape and More.",
     url: "/",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ηλεκτρονικά Τσιγάρα Ελλάδα | ilektronikatsigara.gr",
+    description:
+      "1000+ προϊόντα ατμίσματος με τιμές και άμεση αποστολή από Vape and More.",
+    images: ["/og-image.png"],
   },
   alternates: { canonical: "/" },
 };
@@ -27,6 +41,8 @@ export default function HomePage() {
 
   return (
     <>
+      <JsonLd data={faqJsonLd(faqTeaser)} />
+
       <section className="pt-16 pb-20">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
           <div className="md:col-span-7 animate-fade-up">
@@ -39,7 +55,7 @@ export default function HomePage() {
             <p className="max-w-[55ch] text-lg text-muted-foreground mb-8 leading-relaxed">
               {products.length} προϊόντα - disposable vapes, pod systems, υγρά αναπλήρωσης,
               ναργιλέδες, καπνοί και αξεσουάρ. Επιλέγετε εδώ, αγοράζετε από το επίσημο κατάστημα{" "}
-              <strong className="text-foreground">vapeandmore.gr</strong>.
+              <strong className="text-foreground">vapeandmore.gr</strong>. Μόνο για ενήλικες 18+.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
@@ -57,18 +73,20 @@ export default function HomePage() {
             </div>
           </div>
           <div className="md:col-span-5 grid grid-cols-2 gap-3">
-            {featured.slice(0, 4).map((p) => (
+            {featured.slice(0, 4).map((p, i) => (
               <Link
                 key={p.slug}
                 href={`/proionta/${p.slug}`}
-                className="aspect-square bg-surface border border-border rounded grid place-items-center overflow-hidden hover:border-primary transition-colors"
+                className="relative aspect-square bg-surface border border-border rounded overflow-hidden hover:border-primary transition-colors"
               >
                 {p.images[0] && (
-                  <img
+                  <Image
                     src={p.images[0]}
                     alt={p.name}
-                    className="w-full h-full object-contain p-3"
-                    loading="lazy"
+                    fill
+                    priority={i < 2}
+                    sizes="(max-width: 768px) 45vw, 20vw"
+                    className="object-contain p-3"
                   />
                 )}
               </Link>
@@ -113,8 +131,8 @@ export default function HomePage() {
             Δημοφιλή προϊόντα
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {featured.map((p) => (
-              <ProductCard key={p.slug} product={p} />
+            {featured.map((p, i) => (
+              <ProductCard key={p.slug} product={p} priority={i < 4} />
             ))}
           </div>
         </div>
@@ -165,6 +183,14 @@ export default function HomePage() {
                 <p className="mt-3 text-muted-foreground text-sm leading-relaxed">{f.a}</p>
               </details>
             ))}
+          </div>
+          <div className="text-center mt-8">
+            <Link
+              href="/syxnes-erotiseis"
+              className="text-xs font-bold uppercase tracking-widest text-primary"
+            >
+              ΟΛΕΣ ΟΙ ΕΡΩΤΗΣΕΙΣ →
+            </Link>
           </div>
         </div>
       </section>

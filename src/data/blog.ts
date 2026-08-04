@@ -1,30 +1,16 @@
-export interface BlogPost {
-  slug: string;
-  title: string;
-  excerpt: string;
-  category: string;
-  publishedAt: string;
-  readingTime: number;
-  content: string[]; // paragraphs / markdown-like blocks
-  metaDescription: string;
-  keywords: string[];
-  promotedProducts?: string[]; // Slugs of specific products to display as ads
-  promotedCategory?: {
-    label: string;
-    slug: string;
-    description: string;
-  };
-  faqs?: { q: string; a: string }[];
-}
+import { clusterPosts } from "./blog-clusters";
+import type { BlogPost } from "./blog-types";
 
-export const blogPosts: BlogPost[] = [
+export type { BlogPost } from "./blog-types";
+
+const corePosts: BlogPost[] = [
   {
     slug: "odigos-arxarion-vape-2026",
     title: "Οδηγός Αρχαρίων: Πώς να Ξεκινήσετε το Άτμισμα Σωστά το 2026",
     excerpt:
       "Όλα όσα πρέπει να ξέρετε πριν αγοράσετε το πρώτο σας ηλεκτρονικό τσιγάρο: τύποι συσκευών, επιλογή νικοτίνης, MTL vs DTL και πρακτικές συμβουλές.",
     category: "Οδηγοί",
-    publishedAt: "2026-09-15",
+    publishedAt: "2026-05-12",
     readingTime: 12,
     promotedProducts: [
       "voopoo-argus-g2-mini-plus-3ml-pod-kit",
@@ -97,7 +83,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Η διαφορά ανάμεσα στο Mouth-to-Lung (τσιγαρίσιο) και το Direct-to-Lung (πνευμονικό) άτμισμα είναι θεμελιώδης. Αναλύουμε τις διαφορές τους.",
     category: "Οδηγοί",
-    publishedAt: "2026-09-22",
+    publishedAt: "2026-05-26",
     readingTime: 10,
     promotedProducts: [
       "voopoo-argus-g2-mini-plus-3ml-pod-kit",
@@ -161,7 +147,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Διαλέξαμε τις 10 πιο δημοφιλείς και αξιόλογες γεύσεις disposable vapes που κυκλοφορούν στην ελληνική αγορά αυτή τη στιγμή.",
     category: "Reviews",
-    publishedAt: "2026-10-03",
+    publishedAt: "2026-06-09",
     readingTime: 11,
     promotedProducts: [
       "cookies-wand-disposable-vape-600-puffs-20mg-ml-strawberry-watermelon",
@@ -232,7 +218,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Βήμα προς βήμα οδηγός καθαρισμού για να διατηρήσετε τη μέγιστη απόδοση γεύσης και την υγιεινή του ναργιλέ σας.",
     category: "Οδηγοί",
-    publishedAt: "2026-08-12",
+    publishedAt: "2026-06-23",
     readingTime: 10,
     promotedProducts: [
       "kapnos-nargile-o-s-tobacco-queen-of-the-desert-200gr-9440",
@@ -294,7 +280,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Η διαφορά ανάμεσα στις δύο μορφές νικοτίνης αλλάζει εντελώς την εμπειρία ατμίσματος. Αναλύουμε ποια μορφή ταιριάζει στις ανάγκες σας.",
     category: "Επιστήμη",
-    publishedAt: "2026-07-28",
+    publishedAt: "2026-07-07",
     readingTime: 10,
     promotedProducts: [
       "drifter-hyper-sweet-blueberry-ice-5ml-60ml",
@@ -359,7 +345,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Συγκεντρώσαμε τα πιο πρόσφατα επιστημονικά δεδομένα και μελέτες για να σας δώσουμε μια ξεκάθαρη εικόνα για την ασφάλεια του ηλεκτρονικού τσιγάρου.",
     category: "Επιστήμη",
-    publishedAt: "2026-10-18",
+    publishedAt: "2026-07-21",
     readingTime: 12,
     promotedProducts: [
       "voopoo-argus-g2-mini-plus-3ml-pod-kit",
@@ -421,7 +407,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Συγκρίνουμε τα κορυφαία pod systems για όσους ξεκινούν τώρα το άτμισμα, με βάση την ευκολία χρήσης, την απόδοση γεύσης και την αυτονομία.",
     category: "Reviews",
-    publishedAt: "2026-09-30",
+    publishedAt: "2026-08-01",
     readingTime: 11,
     promotedProducts: [
       "voopoo-argus-g2-mini-plus-3ml-pod-kit",
@@ -481,7 +467,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Η ευρωπαϊκή νομοθεσία TPD καθορίζει αυστηρά τι επιτρέπεται να πωλείται στα προϊόντα ατμίσματος. Δείτε πώς επηρεάζει τις αγορές σας.",
     category: "Νομοθεσία",
-    publishedAt: "2026-06-10",
+    publishedAt: "2026-04-28",
     readingTime: 10,
     promotedProducts: [
       "cookies-wand-disposable-vape-600-puffs-20mg-ml-strawberry-watermelon",
@@ -534,5 +520,9 @@ export const blogPosts: BlogPost[] = [
     ],
   },
 ];
+
+export const blogPosts: BlogPost[] = [...corePosts, ...clusterPosts].sort((a, b) =>
+  a.publishedAt < b.publishedAt ? 1 : a.publishedAt > b.publishedAt ? -1 : 0,
+);
 
 export const getPost = (slug: string) => blogPosts.find((p) => p.slug === slug);
