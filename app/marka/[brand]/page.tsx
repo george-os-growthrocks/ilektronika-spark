@@ -1,12 +1,23 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { brandBySlug, brands, productsByBrand } from "@/data/catalog";
-import { BrandPageClient } from "@/components/BrandPageClient";
+import {
+  applyFilters,
+  brandBySlug,
+  brands,
+  paginate,
+  productsByBrand,
+  toCard,
+} from "@/data/catalog";
+import { brandMeta } from "@/data/brand-meta";
+import { JsonLd } from "@/components/JsonLd";
+import { ListingShell } from "@/components/listing/ListingShell";
 import { RelatedGuides } from "@/components/RelatedGuides";
 import { parseListingSearch } from "@/lib/listing-search";
-import { JsonLd } from "@/components/JsonLd";
-import { brandMeta } from "@/data/brand-meta";
-import { breadcrumbListJsonLd, SITE_URL } from "@/lib/seo";
+import { isBrandIndexable, NOINDEX_FOLLOW } from "@/lib/indexing";
+import { breadcrumbListJsonLd, OG_IMAGE, OG_IMAGE_META, SITE_URL } from "@/lib/seo";
+
+type Params = Promise<{ brand: string }>;
+type Search = Promise<Record<string, string | string[] | undefined>>;
 
 export const dynamicParams = true;
 
@@ -16,36 +27,34 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
-  params: Promise<{ brand: string }>;
+  params: Params;
+  searchParams: Search;
 }): Promise<Metadata> {
   const { brand: slug } = await params;
   const brand = brandBySlug(slug);
   if (!brand) return {};
+  const search = parseListingSearch(await searchParams);
   const meta = brandMeta(slug);
   const all = productsByBrand(brand.slug);
-  const title = meta.seoTitle || `${brand.label} | Προϊόντα Vape & Αξεσουάρ`;
+  const baseTitle = meta.seoTitle || `${brand.label} | Προϊόντα Vape & Τιμές`;
+  const paged = search.page > 1;
+  const title = paged ? `${baseTitle} · Σελίδα ${search.page}` : baseTitle;
   const description = (
     meta.seoDescription ||
-    `Όλα τα προϊόντα ${brand.label} στο Vape and More. ${all.length} προϊόντα με τιμές, διαθεσιμότητα & online αγορά.`
+    `Όλα τα προϊόντα ${brand.label} με τιμές και διαθεσιμότητα: ${all.length} προϊόντα. Αγορά online μέσω Vape and More, αποστολή 1-3 ημέρες σε όλη την Ελλάδα.`
   ).slice(0, 160);
-  const canonical = `${SITE_URL}/marka/${brand.slug}`;
+  const base = `${SITE_URL}/marka/${brand.slug}`;
+  const canonical = paged ? `${base}?page=${search.page}` : base;
+  const noindex = paged || !isBrandIndexable(brand);
   return {
     title,
     description,
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      images: [{ url: "/og-image.png", width: 1200, height: 630 }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: ["/og-image.png"],
-    },
+    openGraph: { title, description, url: canonical, images: [OG_IMAGE_META] },
+    twitter: { card: "summary_large_image", title, description, images: [OG_IMAGE] },
     alternates: { canonical },
+    robots: noindex ? NOINDEX_FOLLOW : undefined,
   };
 }
 
@@ -53,8 +62,8 @@ export default async function BrandPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ brand: string }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  params: Params;
+  searchParams: Search;
 }) {
   const { brand: slug } = await params;
   const brand = brandBySlug(slug);
@@ -62,6 +71,8 @@ export default async function BrandPage({
 
   const all = productsByBrand(brand.slug);
   const search = parseListingSearch(await searchParams);
+  const filtered = applyFilters(all, { inStockOnly: search.instock === "1", sort: search.sort });
+  const { items, page, totalPages } = paginate(filtered, search.page);
   const meta = brandMeta(slug);
   const pageUrl = `${SITE_URL}/marka/${brand.slug}`;
 
@@ -79,17 +90,40 @@ export default async function BrandPage({
     })),
   };
 
+  const intro =
+    meta.intro ??
+    `Όλα τα προϊόντα ${brand.label} που διαθέτει το Vape and More, με τιμές, διαθεσιμότητα και απευθείας σύνδεσμο αγοράς. Αυθεντικά είδη από επίσημους διανομείς, αποστολή σε όλη την Ελλάδα.`;
+
   return (
     <>
-      <JsonLd data={itemListSchema} />
+      {page === 1 && <JsonLd data={itemListSchema} />}
       <JsonLd
         data={breadcrumbListJsonLd([
           { name: "Αρχική", item: `${SITE_URL}/` },
+          { name: "Μάρκες", item: `${SITE_URL}/katigories` },
           { name: brand.label, item: pageUrl },
         ])}
       />
-      <BrandPageClient brand={brand} all={all} search={search} intro={meta.intro} />
-      <RelatedGuides guideSlugs={meta.relatedGuides} />
+      <ListingShell
+        h1={`${brand.label}: Προϊόντα & Τιμές`}
+        intro={intro}
+        breadcrumbs={[
+          { label: "Αρχική", href: "/" },
+          { label: "Μάρκες", href: "/katigories" },
+          { label: brand.label },
+        ]}
+        basePath={`/marka/${brand.slug}`}
+        search={search}
+        facets={[]}
+        showBrandFacet={false}
+        cards={items.map(toCard)}
+        total={filtered.length}
+        inStockCount={filtered.filter((p) => p.inStock).length}
+        page={page}
+        totalPages={totalPages}
+      >
+        <RelatedGuides guideSlugs={meta.relatedGuides} />
+      </ListingShell>
     </>
   );
 }

@@ -4,6 +4,8 @@ export interface BlogPost {
   excerpt: string;
   category: string;
   publishedAt: string;
+  /** Set when a post is materially revised; used for dateModified and the sitemap. */
+  updatedAt?: string;
   readingTime: number;
   content: string[];
   metaDescription: string;

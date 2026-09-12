@@ -82,6 +82,23 @@ def main():
     categories_index = {}  # slug -> {slug, label, parent_slug, count, ancestors:[{slug,label}]}
     brands_index = {}      # slug -> {slug, label, count}
 
+    # First pass: collect variation prices per parent so variable products get
+    # a real "από X€" instead of no price at all. WooCommerce exports reference
+    # the parent as "id:123" or by SKU in the "Γονέας" column.
+    variation_prices = defaultdict(list)  # parent key -> [price, ...]
+    with open(CSV_PATH, encoding="utf-8-sig") as f:
+        for row in csv.DictReader(f):
+            if (row.get("Τύπος", "") or "").strip() != "variation":
+                continue
+            parent = (row.get("Γονέας", "") or row.get("Parent", "") or "").strip()
+            if not parent:
+                continue
+            key = parent[3:].strip() if parent.lower().startswith("id:") else parent
+            price = parse_price(row.get("Τιμή προσφοράς", "")) or parse_price(row.get("Κανονική τιμή", ""))
+            in_stock = (row.get("Σε απόθεμα;", "") or "").strip() == "1"
+            if price is not None and (in_stock or True):
+                variation_prices[key].append(price)
+
     with open(CSV_PATH, encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         for row in reader:
@@ -167,6 +184,18 @@ def main():
             sale_price = parse_price(row.get("Τιμή προσφοράς", ""))
             in_stock = (row.get("Σε απόθεμα;", "") or "").strip() == "1"
 
+            # Variable products: price range from their variations.
+            var_prices = variation_prices.get(pid) or variation_prices.get(sku) or []
+            min_price = round(min(var_prices), 2) if var_prices else None
+            max_price = round(max(var_prices), 2) if var_prices else None
+            if ptype == "variable" and price is None and min_price is not None and min_price == max_price:
+                price = min_price
+
+            # Last modification in the shop (WooCommerce exports it when the
+            # "Ημερομηνία τροποποίησης" / "Modified" column is enabled).
+            updated_raw = (row.get("Ημερομηνία τροποποίησης", "") or row.get("Modified", "") or "").strip()
+            updated_at = updated_raw[:10] if re.match(r"^\d{4}-\d{2}-\d{2}", updated_raw) else None
+
             short_desc = strip_html(row.get("Σύντομη περιγραφή", ""))
             long_desc = strip_html(row.get("Περιγραφή", ""))
             # Trim to reasonable size
@@ -213,6 +242,9 @@ def main():
                 "images": images,
                 "price": price,
                 "salePrice": sale_price if sale_price and price and sale_price < price else None,
+                "minPrice": min_price,
+                "maxPrice": max_price,
+                "updatedAt": updated_at,
                 "inStock": in_stock,
                 "shortDescription": short_desc,
                 "description": long_desc,

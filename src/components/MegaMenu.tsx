@@ -4,17 +4,9 @@ import Link from "next/link";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown } from "lucide-react";
-import {
-  relatedCategoriesForPillar,
-  subcategoriesOf,
-  productsInCategory,
-  formatPrice,
-  effectivePrice,
-  productImage,
-  type Product,
-  type Category,
-} from "../data/catalog";
-import { categoryMeta, type BadgeKind } from "../data/category-meta";
+import { priceLabel } from "@/data/catalog-types";
+import type { BadgeKind } from "@/data/category-meta";
+import type { NavPillar } from "@/data/nav-types";
 import { toGreekUppercase } from "@/lib/utils";
 
 const BADGE_COLORS: Record<BadgeKind, string> = {
@@ -28,21 +20,14 @@ const BADGE_COLORS: Record<BadgeKind, string> = {
 function Badge({ kind }: { kind: BadgeKind }) {
   return (
     <span
-      className={`ml-1.5 text-[9px] font-extrabold tracking-wider px-1.5 py-[1px] rounded-sm ${BADGE_COLORS[kind]}`}
+      className={`ml-1.5 hidden 2xl:inline text-[9px] font-extrabold tracking-wider px-1.5 py-[1px] rounded-sm ${BADGE_COLORS[kind]}`}
     >
       {kind}
     </span>
   );
 }
 
-function featuredProducts(catSlug: string): Product[] {
-  return productsInCategory(catSlug)
-    .filter((p) => p.inStock && p.images.length > 0)
-    .sort((a, b) => (effectivePrice(b) ?? 0) - (effectivePrice(a) ?? 0))
-    .slice(0, 4);
-}
-
-export function MegaMenu({ categories }: { categories: Category[] }) {
+export function MegaMenu({ pillars }: { pillars: NavPillar[] }) {
   const [open, setOpen] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -66,7 +51,6 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
 
   useEffect(() => () => cancelClose(), []);
 
-  // Measure nav position for fixed dropdown
   const updateDropdownPos = useCallback(() => {
     if (navRef.current) {
       const rect = navRef.current.getBoundingClientRect();
@@ -79,29 +63,26 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
       updateDropdownPos();
       window.addEventListener("scroll", updateDropdownPos, { passive: true });
       window.addEventListener("resize", updateDropdownPos);
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setOpen(null);
+      };
+      window.addEventListener("keydown", onKey);
       return () => {
         window.removeEventListener("scroll", updateDropdownPos);
         window.removeEventListener("resize", updateDropdownPos);
+        window.removeEventListener("keydown", onKey);
       };
     }
   }, [open, updateDropdownPos]);
 
-  const openSubs = open
-    ? [...subcategoriesOf(open), ...relatedCategoriesForPillar(open)]
-    : [];
-  const openMeta = open ? categoryMeta(open) : null;
-  const openFeatured = open ? featuredProducts(open) : [];
+  const active = open ? (pillars.find((p) => p.slug === open) ?? null) : null;
 
   const dropdownPanel =
-    open && openSubs.length > 0 && mounted
+    active && active.subs.length > 0 && mounted
       ? createPortal(
           <div
             className="fixed z-[9999] flex justify-center pointer-events-none"
-            style={{
-              top: dropdownTop,
-              left: 0,
-              right: 0,
-            }}
+            style={{ top: dropdownTop, left: 0, right: 0 }}
           >
             <div
               className="pointer-events-auto pt-3"
@@ -109,16 +90,15 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
               onMouseLeave={scheduleClose}
             >
               <div className="bg-background border border-border shadow-2xl shadow-black/[0.08] rounded-xl w-[1140px] max-w-[95vw] grid grid-cols-12 gap-8 p-8 animate-in fade-in slide-in-from-top-2 duration-200">
-                {/* Subcategories column */}
                 <div className="col-span-4">
                   <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">
                     ΥΠΟΚΑΤΗΓΟΡΙΕΣ
                   </div>
                   <ul className="grid grid-cols-2 gap-x-4 gap-y-1 max-h-80 overflow-y-auto pr-2">
-                    {openSubs.slice(0, 24).map((s) => (
+                    {active.subs.map((s) => (
                       <li key={s.slug}>
                         <Link
-                          href={s.depth === 0 ? `/${s.slug}` : `/${open}/${s.slug}`}
+                          href={s.href}
                           className="flex items-center justify-between gap-1.5 text-xs font-semibold normal-case tracking-normal text-foreground hover:text-primary hover:bg-primary/5 rounded-md px-2 py-1.5 transition-colors"
                           onClick={() => setOpen(null)}
                         >
@@ -130,51 +110,57 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
                       </li>
                     ))}
                   </ul>
-                  {openMeta?.intro && (
+                  {active.intro && (
                     <p className="text-[11px] normal-case tracking-normal text-muted-foreground leading-relaxed mt-5 border-t border-border pt-4">
-                      {openMeta.intro.slice(0, 160)}…
+                      {active.intro}…
                     </p>
                   )}
                 </div>
 
-                {/* Featured products column */}
                 <div className="col-span-8 border-l border-border/60 pl-8">
                   <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4 flex items-center justify-between">
                     <span>ΔΗΜΟΦΙΛΗ ΠΡΟΪΟΝΤΑ</span>
                     <Link
-                      href={`/${open}`}
+                      href={active.href}
                       className="text-primary hover:underline normal-case text-xs font-bold"
                       onClick={() => setOpen(null)}
                     >
                       Όλα →
                     </Link>
                   </div>
-                  {openFeatured.length > 0 ? (
+                  {active.featured.length > 0 ? (
                     <ul className="grid grid-cols-4 gap-4">
-                      {openFeatured.map((p) => (
-                        <li key={p.id}>
-                          <Link
-                            href={`/proionta/${p.slug}`}
-                            className="block group"
-                            onClick={() => setOpen(null)}
-                          >
-                            <div className="aspect-square bg-surface border border-border rounded-lg overflow-hidden mb-2 grid place-items-center group-hover:border-primary/40 transition-colors">
-                              <img
-                                src={productImage(p)}
-                                alt={p.name}
-                                className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
-                                loading="lazy"
-                              />
-                            </div>
-                            <div className="text-[11px] font-semibold normal-case tracking-normal leading-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors">
-                              {p.name}
-                            </div>
-                            <div className="text-xs font-extrabold text-primary mt-1">
-                              {formatPrice(effectivePrice(p))}
-                            </div>
-                          </Link>
-                        </li>
-                      ))}
+                      {active.featured.map((p) => {
+                        const label = priceLabel(p);
+                        return (
+                          <li key={p.id}>
+                            <Link
+                              href={`/proionta/${p.slug}`}
+                              className="block group"
+                              onClick={() => setOpen(null)}
+                            >
+                              <div className="aspect-square bg-surface border border-border rounded-lg overflow-hidden mb-2 grid place-items-center group-hover:border-primary/40 transition-colors">
+                                {p.image ? (
+                                  <img
+                                    src={p.image}
+                                    alt={p.name}
+                                    width={160}
+                                    height={160}
+                                    className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+                                    loading="lazy"
+                                  />
+                                ) : null}
+                              </div>
+                              <div className="text-[11px] font-semibold normal-case tracking-normal leading-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors">
+                                {p.name}
+                              </div>
+                              <div className="text-xs font-extrabold text-primary mt-1">
+                                {label?.text ?? "Δείτε τιμή"}
+                              </div>
+                            </Link>
+                          </li>
+                        );
+                      })}
                     </ul>
                   ) : (
                     <p className="text-xs text-muted-foreground normal-case">
@@ -191,14 +177,14 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
 
   return (
     <>
-      <nav ref={navRef} className="relative flex items-stretch justify-center gap-0 text-xs font-bold tracking-wider">
-        {categories.map((c) => {
-          const meta = categoryMeta(c.slug);
+      <nav
+        ref={navRef}
+        aria-label="Κατηγορίες"
+        className="relative flex items-stretch justify-center gap-0 text-xs font-bold tracking-wider"
+      >
+        {pillars.map((c) => {
           const isOpen = open === c.slug;
-          const directSubs = subcategoriesOf(c.slug);
-          const related = relatedCategoriesForPillar(c.slug);
-          const hasSubs = directSubs.length + related.length > 0;
-
+          const hasSubs = c.subs.length > 0;
           return (
             <div
               key={c.slug}
@@ -210,19 +196,20 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
               onMouseLeave={scheduleClose}
             >
               <Link
-                href={`/${c.slug}`}
-                className={`relative flex h-full items-center gap-1 px-2.5 2xl:px-3 transition-colors whitespace-nowrap ${
+                href={c.href}
+                aria-expanded={hasSubs ? isOpen : undefined}
+                onFocus={() => setOpen(c.slug)}
+                className={`relative flex h-full items-center gap-1 px-2 xl:px-2.5 2xl:px-3 transition-colors whitespace-nowrap ${
                   isOpen ? "text-primary" : "hover:text-primary"
                 }`}
               >
                 {toGreekUppercase(c.label)}
-                {meta.badge && <Badge kind={meta.badge} />}
+                {c.badge && <Badge kind={c.badge} />}
                 {hasSubs && (
                   <ChevronDown
                     className={`h-3 w-3 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
                   />
                 )}
-                {/* Active indicator */}
                 {isOpen && (
                   <span className="absolute bottom-0 left-2.5 right-2.5 h-0.5 bg-primary rounded-full" />
                 )}
@@ -243,4 +230,3 @@ export function MegaMenu({ categories }: { categories: Category[] }) {
     </>
   );
 }
-

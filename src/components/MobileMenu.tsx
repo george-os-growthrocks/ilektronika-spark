@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { X, ChevronRight } from "lucide-react";
-import { pillarCategories, relatedCategoriesForPillar, subcategoriesOf } from "../data/catalog";
-import { categoryMeta, type BadgeKind } from "../data/category-meta";
+import type { BadgeKind } from "@/data/category-meta";
+import type { NavData } from "@/data/nav-types";
 import { toGreekUppercase } from "@/lib/utils";
 
 const LOGO_SRC = "/logo.png";
@@ -17,7 +17,21 @@ const BADGE_COLORS: Record<BadgeKind, string> = {
   DEAL: "bg-secondary text-secondary-foreground",
 };
 
-export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
+const QUICK_TONE = {
+  hot: "bg-red-500 text-white",
+  top: "bg-primary text-primary-foreground",
+  new: "bg-emerald-500 text-white",
+};
+
+export function MobileMenu({
+  nav,
+  open,
+  onClose,
+}: {
+  nav: NavData;
+  open: boolean;
+  onClose: () => void;
+}) {
   const [activeCat, setActiveCat] = useState<string | null>(null);
 
   useEffect(() => {
@@ -34,18 +48,19 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
 
   if (!open) return null;
 
-  const tops = pillarCategories();
-  const subs = activeCat
-    ? [...subcategoriesOf(activeCat), ...relatedCategoriesForPillar(activeCat)]
-    : [];
-  const activeMeta = activeCat ? categoryMeta(activeCat) : null;
-  const activeLabel = activeCat ? tops.find((t) => t.slug === activeCat)?.label : "";
+  const active = activeCat ? (nav.pillars.find((p) => p.slug === activeCat) ?? null) : null;
 
   return (
-    <div className="fixed inset-0 z-[60] bg-background lg:hidden flex flex-col animate-in fade-in duration-150">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Μενού"
+      className="fixed inset-0 z-[60] bg-background lg:hidden flex flex-col animate-in fade-in duration-150"
+    >
       <div className="flex items-center justify-between px-4 h-16 border-b border-border shrink-0">
-        <Link href="/" onClick={onClose} className="flex items-center">
-          <img src={LOGO_SRC} alt="ilektronikatsigara.gr" className="h-8 w-auto" />
+        <Link href="/" onClick={onClose} className="flex items-center gap-2">
+          <img src={LOGO_SRC} alt="Vape and More" width={68} height={32} className="h-8 w-auto" />
+          <span className="font-extrabold tracking-tight text-sm">ilektronikatsigara.gr</span>
         </Link>
         <button
           onClick={onClose}
@@ -57,52 +72,38 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
       </div>
 
       <div className="flex-1 overflow-y-auto overscroll-contain">
-        {!activeCat ? (
+        {!active ? (
           <>
             <div className="px-4 py-3 bg-primary/5 border-b border-border flex gap-3 overflow-x-auto">
-              <Link
-                href="/disposables"
-                onClick={onClose}
-                className="shrink-0 text-[11px] font-bold uppercase bg-red-500 text-white px-3 py-1.5 rounded-full"
-              >
-                🔥 Disposables HOT
-              </Link>
-              <Link
-                href="/syskeyes-vape"
-                onClick={onClose}
-                className="shrink-0 text-[11px] font-bold uppercase bg-primary text-primary-foreground px-3 py-1.5 rounded-full"
-              >
-                ⭐ Top Kits
-              </Link>
-              <Link
-                href="/snus"
-                onClick={onClose}
-                className="shrink-0 text-[11px] font-bold uppercase bg-emerald-500 text-white px-3 py-1.5 rounded-full"
-              >
-                ✨ Snus NEW
-              </Link>
+              {nav.quick.map((q) => (
+                <Link
+                  key={q.href}
+                  href={q.href}
+                  onClick={onClose}
+                  className={`shrink-0 text-[11px] font-bold uppercase px-3 py-1.5 rounded-full ${QUICK_TONE[q.tone]}`}
+                >
+                  {q.label}
+                </Link>
+              ))}
             </div>
 
             <ul>
-              {tops.map((c) => {
-                const meta = categoryMeta(c.slug);
-                const hasSubs =
-                  subcategoriesOf(c.slug).length > 0 ||
-                  relatedCategoriesForPillar(c.slug).length > 0;
+              {nav.pillars.map((c) => {
+                const hasSubs = c.subs.length > 0;
                 return (
                   <li key={c.slug} className="border-b border-border">
                     <div className="flex items-stretch">
                       <Link
-                        href={`/${c.slug}`}
+                        href={c.href}
                         onClick={onClose}
                         className="flex-1 flex items-center gap-2 px-4 py-4"
                       >
                         <span className="font-bold text-base">{c.label}</span>
-                        {meta.badge && (
+                        {c.badge && (
                           <span
-                            className={`text-[9px] font-extrabold tracking-wider px-1.5 py-[1px] rounded-sm ${BADGE_COLORS[meta.badge]}`}
+                            className={`text-[9px] font-extrabold tracking-wider px-1.5 py-[1px] rounded-sm ${BADGE_COLORS[c.badge]}`}
                           >
-                            {meta.badge}
+                            {c.badge}
                           </span>
                         )}
                         <span className="text-xs text-muted-foreground font-mono ml-auto">
@@ -131,30 +132,26 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
               className="flex items-center gap-2 px-4 py-3 text-sm font-bold border-b border-border w-full text-left bg-surface"
             >
               <ChevronRight className="h-4 w-4 rotate-180" />
-              <span className="tracking-widest text-xs">{toGreekUppercase("Πίσω · " + activeLabel)}</span>
+              <span className="tracking-widest text-xs">
+                {toGreekUppercase("Πίσω · " + active.label)}
+              </span>
             </button>
             <Link
-              href={`/${activeCat}`}
+              href={active.href}
               onClick={onClose}
               className="block px-4 py-4 border-b border-border bg-primary/5"
             >
               <span className="text-sm font-extrabold text-primary">
-                Δείτε όλα στο {activeLabel} →
+                Δείτε όλα στο {active.label} →
               </span>
-              {activeMeta?.tagline && (
-                <span className="block text-xs text-muted-foreground mt-1">
-                  {activeMeta.tagline}
-                </span>
+              {active.tagline && (
+                <span className="block text-xs text-muted-foreground mt-1">{active.tagline}</span>
               )}
             </Link>
             <ul>
-              {subs.map((s) => (
+              {active.subs.map((s) => (
                 <li key={s.slug} className="border-b border-border">
-                  <Link
-                    href={s.depth === 0 ? `/${s.slug}` : `/${activeCat}/${s.slug}`}
-                    onClick={onClose}
-                    className="flex items-center px-4 py-4"
-                  >
+                  <Link href={s.href} onClick={onClose} className="flex items-center px-4 py-4">
                     <span className="flex-1 font-semibold text-sm">{s.label}</span>
                     <span className="text-xs text-muted-foreground font-mono mr-2">{s.count}</span>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />

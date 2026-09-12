@@ -58,7 +58,7 @@ function searchProducts(query: string, limit = 6): RecommendedProduct[] {
     price: effectivePrice(p),
     image: productImage(p),
     url: `/proionta/${p.slug}`,
-    affiliateUrl: productAffiliateUrl(p),
+    affiliateUrl: productAffiliateUrl(p, "chat"),
     inStock: p.inStock,
   }));
 }

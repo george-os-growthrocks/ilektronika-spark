@@ -5,7 +5,16 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/anazitisi", "/anazitisi/"],
+      disallow: [
+        "/anazitisi",
+        "/anazitisi/",
+        "/*?sort=",
+        "/*&sort=",
+        "/*?brand=",
+        "/*&brand=",
+        "/*?instock=",
+        "/*&instock=",
+      ],
     },
     sitemap: "https://ilektronikatsigara.gr/sitemap.xml",
   };

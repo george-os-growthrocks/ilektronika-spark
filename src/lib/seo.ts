@@ -1,19 +1,19 @@
-import type { CategoryNode, Product } from "@/data/catalog";
+import type { CategoryNode, Product } from "@/data/catalog-types";
+import { STORE_NAME } from "@/lib/affiliate";
 
 export const SITE_URL = "https://ilektronikatsigara.gr";
-export const CATALOG_LASTMOD = "2026-08-04";
+export const SITE_NAME = "ilektronikatsigara.gr";
+export const OG_IMAGE = "/og-image.jpg";
+export const OG_IMAGE_META = { url: OG_IMAGE, width: 1200, height: 630 };
 
 /** Build absolute breadcrumb URL for a category path node. */
 export function categoryPathUrl(path: CategoryNode[], index: number): string {
   if (index === 0) return `${SITE_URL}/${path[0].slug}`;
-  if (index === 1) return `${SITE_URL}/${path[0].slug}/${path[1].slug}`;
-  // Deeper than 2 levels: keep leaf under parent/child when possible
+  // Deeper than the top level: pages live under /top/leaf.
   return `${SITE_URL}/${path[0].slug}/${path[index].slug}`;
 }
 
-export function breadcrumbListJsonLd(
-  crumbs: { name: string; item: string }[],
-) {
+export function breadcrumbListJsonLd(crumbs: { name: string; item: string }[]) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -32,16 +32,11 @@ export function productBreadcrumbCrumbs(
   productName: string,
   productSlug: string,
 ): { name: string; item: string }[] {
-  const crumbs: { name: string; item: string }[] = [
-    { name: "Αρχική", item: `${SITE_URL}/` },
-  ];
+  const crumbs: { name: string; item: string }[] = [{ name: "Αρχική", item: `${SITE_URL}/` }];
   path.forEach((node, i) => {
     crumbs.push({ name: node.label, item: categoryPathUrl(path, i) });
   });
-  crumbs.push({
-    name: productName,
-    item: `${SITE_URL}/proionta/${productSlug}`,
-  });
+  crumbs.push({ name: productName, item: `${SITE_URL}/proionta/${productSlug}` });
   return crumbs;
 }
 
@@ -65,19 +60,36 @@ function attrSnippet(product: Product): string {
   return bits.join(" · ");
 }
 
-/** Effective SEO title for a product (uses stored or generated). */
+/** "Brand Name" unless the name already carries the brand. */
+export function productDisplayName(product: Product): string {
+  const name = product.name.replace(/\s+/g, " ").trim();
+  const brand = product.brand?.trim();
+  if (!brand) return name;
+  return name.toLowerCase().includes(brand.toLowerCase()) ? name : `${brand} ${name}`;
+}
+
+const TITLE_MAX = 62;
+
+/**
+ * Product title. No brand duplication, no site suffix (the domain shows in the
+ * SERP breadcrumb), and the "| Τιμή & Αγορά" tail only when it fits.
+ */
 export function productSeoTitle(product: Product): string {
   if (product.seoTitle?.trim()) {
     return product.seoTitle.replace(/\s* - \s*/g, " | ").trim();
   }
-  const brand = product.brand ? `${product.brand} ` : "";
-  return `${brand}${product.name} | Τιμή, Χαρακτηριστικά & Αγορά`.replace(/\s+/g, " ").trim();
+  const base = productDisplayName(product);
+  const withTail = `${base} | Τιμή & Αγορά`;
+  return withTail.length <= TITLE_MAX ? withTail : base;
 }
 
 /** Effective SEO description for a product (uses stored or generated). */
 export function productSeoDescription(product: Product): string {
   if (product.seoDescription?.trim()) {
-    return product.seoDescription.replace(/\s* - \s*/g, " | ").trim().slice(0, 160);
+    return product.seoDescription
+      .replace(/\s* - \s*/g, " | ")
+      .trim()
+      .slice(0, 160);
   }
   const short = stripHtml(product.shortDescription || product.description || "");
   if (short.length >= 80) {
@@ -94,11 +106,10 @@ export function productSeoDescription(product: Product): string {
 /** Longer unique body copy for thin PDPs (template enrichment). */
 export function productBodyEnrichment(product: Product): string {
   const brand = product.brand ?? "premium";
-  const cat =
-    product.primaryCategoryPath.map((n) => n.label).join(" › ") || "vape";
+  const cat = product.primaryCategoryPath.map((n) => n.label).join(" › ") || "vape";
   const attrs = attrSnippet(product);
   const stock = product.inStock
-    ? "Είναι άμεσα διαθέσιμο για παραφορία μέσω courier σε όλη την Ελλάδα."
+    ? "Είναι άμεσα διαθέσιμο για παραγγελία μέσω courier σε όλη την Ελλάδα."
     : "Ελέγξτε τη διαθεσιμότητα πριν την παραγγελία· το stock ανανεώνεται συχνά.";
   return [
     `Το ${product.name} ανήκει στην κατηγορία ${cat} και προέρχεται από τη μάρκα ${brand}.`,
@@ -109,4 +120,84 @@ export function productBodyEnrichment(product: Product): string {
   ]
     .filter(Boolean)
     .join(" ");
+}
+
+// ---------- Offer schema (merchant listing eligibility) ----------
+
+const FREE_SHIPPING_FROM = 30;
+
+function shippingDetails(price: number | null) {
+  const details: Record<string, unknown> = {
+    "@type": "OfferShippingDetails",
+    shippingDestination: { "@type": "DefinedRegion", addressCountry: "GR" },
+    deliveryTime: {
+      "@type": "ShippingDeliveryTime",
+      handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 1, unitCode: "DAY" },
+      transitTime: { "@type": "QuantitativeValue", minValue: 1, maxValue: 3, unitCode: "DAY" },
+    },
+  };
+  if (price != null && price >= FREE_SHIPPING_FROM) {
+    details.shippingRate = { "@type": "MonetaryAmount", value: 0, currency: "EUR" };
+  }
+  return details;
+}
+
+const RETURN_POLICY = {
+  "@type": "MerchantReturnPolicy",
+  applicableCountry: "GR",
+  returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+  merchantReturnDays: 14,
+  returnMethod: "https://schema.org/ReturnByMail",
+};
+
+function priceValidUntil(): string {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
+const SELLER = { "@type": "Organization", name: STORE_NAME, url: "https://vapeandmore.gr" };
+
+/** Offer / AggregateOffer for a product, or undefined when no price is known. */
+export function productOffersJsonLd(
+  product: Product,
+  url: string,
+): Record<string, unknown> | undefined {
+  const availability = product.inStock
+    ? "https://schema.org/InStock"
+    : "https://schema.org/OutOfStock";
+  const single = product.salePrice ?? product.price;
+  if (single != null) {
+    return {
+      "@type": "Offer",
+      url,
+      priceCurrency: "EUR",
+      price: single.toFixed(2),
+      priceValidUntil: priceValidUntil(),
+      availability,
+      itemCondition: "https://schema.org/NewCondition",
+      seller: SELLER,
+      shippingDetails: shippingDetails(single),
+      hasMerchantReturnPolicy: RETURN_POLICY,
+    };
+  }
+  if (product.minPrice != null) {
+    const high = product.maxPrice ?? product.minPrice;
+    return {
+      "@type": "AggregateOffer",
+      url,
+      priceCurrency: "EUR",
+      lowPrice: product.minPrice.toFixed(2),
+      highPrice: high.toFixed(2),
+      offerCount: Math.max(
+        1,
+        product.attributes.reduce((n, a) => n + a.values.length, 0),
+      ),
+      availability,
+      seller: SELLER,
+      shippingDetails: shippingDetails(product.minPrice),
+      hasMerchantReturnPolicy: RETURN_POLICY,
+    };
+  }
+  return undefined;
 }

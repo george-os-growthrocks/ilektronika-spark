@@ -3,24 +3,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  effectivePrice,
+  categoryBySlug,
+  categoryUrl,
   productBySlug,
   products,
   productsInCategory,
+  toCard,
 } from "@/data/catalog";
 import { MerchantCard } from "@/components/MerchantCard";
 import { ProductCard } from "@/components/ProductCard";
-import { FaqSection, faqJsonLd } from "@/components/FaqSection";
+import { FaqSection } from "@/components/FaqSection";
 import { RichText } from "@/components/RichText";
 import { faqsForProduct } from "@/data/faqs-generated";
-import { productCanonicalUrl, STORE_NAME } from "@/lib/affiliate";
+import { productCanonicalUrl } from "@/lib/affiliate";
 import { JsonLd } from "@/components/JsonLd";
-import { productImage } from "@/data/catalog";
 import { toGreekUppercase } from "@/lib/utils";
+import { extractSpecs } from "@/lib/specs";
+import { isProductIndexable, NOINDEX_FOLLOW } from "@/lib/indexing";
 import {
   breadcrumbListJsonLd,
+  OG_IMAGE,
+  OG_IMAGE_META,
   productBodyEnrichment,
   productBreadcrumbCrumbs,
+  productOffersJsonLd,
   productSeoDescription,
   productSeoTitle,
 } from "@/lib/seo";
@@ -44,10 +50,10 @@ export async function generateMetadata({
   const title = productSeoTitle(product);
   const description = productSeoDescription(product);
   const canonical = productCanonicalUrl(product);
-  const image = productImage(product);
+  const image = product.images[0];
 
   return {
-    title,
+    title: { absolute: title },
     description,
     openGraph: {
       title,
@@ -56,20 +62,26 @@ export async function generateMetadata({
       url: canonical,
       images: image
         ? [{ url: image, width: 800, height: 800, alt: product.name }]
-        : [{ url: "/og-image.png", width: 1200, height: 630 }],
+        : [OG_IMAGE_META],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: image ? [image] : ["/og-image.png"],
+      images: image ? [image] : [OG_IMAGE],
     },
     alternates: { canonical },
-    other: {
-      "product:brand": product.brand ?? "",
-      "og:type": "product",
-    },
+    robots: isProductIndexable(product) ? undefined : NOINDEX_FOLLOW,
   };
+}
+
+/** Drop a leading paragraph that just repeats the product name. */
+function trimDescription(description: string, name: string): string {
+  const paras = description.split(/\n{2,}/);
+  const first = paras[0]?.trim().replace(/^Περιγραφή\s*/i, "");
+  if (first && first.toLowerCase() === name.trim().toLowerCase())
+    return paras.slice(1).join("\n\n");
+  return description.replace(/^Περιγραφή\s*\n/i, "");
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -80,19 +92,26 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const related = product.primaryLeafSlug
     ? productsInCategory(product.primaryLeafSlug)
         .filter((p) => p.slug !== product.slug)
+        .sort((a, b) => Number(b.inStock) - Number(a.inStock))
         .slice(0, 4)
+        .map(toCard)
     : [];
 
   const breadcrumbs = product.primaryCategoryPath;
   const canonical = productCanonicalUrl(product);
-  const price = effectivePrice(product);
   const description = productSeoDescription(product);
   const faqs = faqsForProduct(product);
-  const hasRichBody =
-    Boolean(product.description?.trim()) || Boolean(product.shortDescription?.trim());
-  const enrichment = !hasRichBody || (product.description?.trim().length ?? 0) < 80
-    ? productBodyEnrichment(product)
-    : null;
+  const specs = extractSpecs(product.description);
+  const body = trimDescription(product.description ?? "", product.name);
+  const bodyLength = body.trim().length;
+  const enrichment = bodyLength < 120 ? productBodyEnrichment(product) : null;
+  const offers = productOffersJsonLd(product, canonical);
+
+  const crumbHref = (i: number) => {
+    const node = categoryBySlug(breadcrumbs[i].slug);
+    if (node) return categoryUrl(node);
+    return i === 0 ? `/${breadcrumbs[0].slug}` : `/${breadcrumbs[0].slug}/${breadcrumbs[i].slug}`;
+  };
 
   return (
     <>
@@ -100,24 +119,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         data={{
           "@context": "https://schema.org",
           "@type": "Product",
+          "@id": `${canonical}#product`,
           name: product.name,
           sku: product.sku || product.id,
           image: product.images.slice(0, 4),
           description,
           brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
-          offers:
-            price != null
-              ? {
-                  "@type": "Offer",
-                  url: canonical,
-                  priceCurrency: "EUR",
-                  price: price.toFixed(2),
-                  availability: product.inStock
-                    ? "https://schema.org/InStock"
-                    : "https://schema.org/OutOfStock",
-                  seller: { "@type": "Organization", name: STORE_NAME },
-                }
-              : undefined,
+          category: product.primaryCategoryPath.map((n) => n.label).join(" > ") || undefined,
+          offers,
         }}
       />
       <JsonLd
@@ -125,7 +134,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           productBreadcrumbCrumbs(product.primaryCategoryPath, product.name, product.slug),
         )}
       />
-      {faqs.length > 0 && <JsonLd data={faqJsonLd(faqs)} />}
 
       <nav
         aria-label="Breadcrumbs"
@@ -139,38 +147,32 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </li>
           {breadcrumbs.map((node, i) => (
             <li key={node.slug} className="flex items-center gap-2">
-              <span>›</span>
-              {i === 0 ? (
-                <Link href={`/${node.slug}`} className="hover:text-primary">
-                  {node.label}
-                </Link>
-              ) : i === 1 ? (
-                <Link href={`/${breadcrumbs[0].slug}/${node.slug}`} className="hover:text-primary">
-                  {node.label}
-                </Link>
-              ) : (
-                <span>{node.label}</span>
-              )}
+              <span aria-hidden>›</span>
+              <Link href={crumbHref(i)} className="hover:text-primary">
+                {node.label}
+              </Link>
             </li>
           ))}
           <li className="flex items-center gap-2">
-            <span>›</span>
-            <span className="text-foreground truncate max-w-[40ch]">{product.name}</span>
+            <span aria-hidden>›</span>
+            <span className="text-foreground truncate max-w-[40ch]" aria-current="page">
+              {product.name}
+            </span>
           </li>
         </ol>
       </nav>
 
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-7">
-            <div className="relative aspect-square bg-surface border border-border rounded-md overflow-hidden">
+          <div className="lg:col-span-6">
+            <div className="relative aspect-square max-h-[560px] mx-auto bg-surface border border-border rounded-md overflow-hidden">
               {product.images[0] ? (
                 <Image
                   src={product.images[0]}
                   alt={product.name}
                   fill
                   priority
-                  sizes="(max-width: 1024px) 100vw, 58vw"
+                  sizes="(max-width: 1024px) 100vw, 45vw"
                   className="object-contain p-6"
                 />
               ) : (
@@ -186,20 +188,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     key={i}
                     className="relative aspect-square bg-surface border border-border rounded overflow-hidden"
                   >
-                    <Image
-                      src={src}
-                      alt=""
-                      fill
-                      sizes="120px"
-                      className="object-contain p-2"
-                    />
+                    <Image src={src} alt="" fill sizes="120px" className="object-contain p-2" />
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          <div className="lg:col-span-5 flex flex-col gap-4">
+          <div className="lg:col-span-6 flex flex-col gap-4">
             {product.brand && product.brandSlug && (
               <Link
                 href={`/marka/${product.brandSlug}`}
@@ -242,23 +238,48 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     </div>
                   ))}
                 </dl>
+                <p className="text-[11px] text-muted-foreground mt-2">
+                  Η επιλογή παραλλαγής γίνεται στο κατάστημα κατά την παραγγελία.
+                </p>
+              </div>
+            )}
+            {specs.length > 0 && (
+              <div className="border-t border-border pt-4 mt-2">
+                <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
+                  ΧΑΡΑΚΤΗΡΙΣΤΙΚΑ
+                </h2>
+                <table className="w-full text-sm">
+                  <tbody>
+                    {specs.map((s) => (
+                      <tr key={s.key} className="border-b border-border/60 last:border-0">
+                        <th
+                          scope="row"
+                          className="text-left font-semibold py-1.5 pr-3 w-[42%] align-top"
+                        >
+                          {s.key}
+                        </th>
+                        <td className="py-1.5 text-muted-foreground">{s.value}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>
         </div>
       </section>
 
-      {(product.description || enrichment) && (
+      {(bodyLength > 0 || enrichment) && (
         <section className="py-12 bg-surface border-y border-border">
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-2xl font-extrabold tracking-tight mb-4">Περιγραφή</h2>
-            {product.description ? (
-              <RichText text={product.description} />
-            ) : (
-              <p className="text-muted-foreground leading-relaxed">{enrichment}</p>
-            )}
-            {product.description && enrichment && product.description.trim().length < 120 && (
-              <p className="text-muted-foreground leading-relaxed mt-4">{enrichment}</p>
+            {bodyLength > 0 && <RichText text={body} />}
+            {enrichment && (
+              <p
+                className={`text-muted-foreground leading-relaxed ${bodyLength > 0 ? "mt-4" : ""}`}
+              >
+                {enrichment}
+              </p>
             )}
           </div>
         </section>
@@ -279,10 +300,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       <FaqSection faqs={faqs} />
       {product.primaryTopSlug && (
-        <RelatedGuides
-          categorySlug={product.primaryTopSlug}
-          title="Διαβάστε επίσης"
-        />
+        <RelatedGuides categorySlug={product.primaryTopSlug} title="Διαβάστε επίσης" />
       )}
     </>
   );

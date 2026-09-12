@@ -6,7 +6,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Sparkles, X, Send, Loader2, ExternalLink, RotateCcw } from "lucide-react";
 import { sendChat } from "../lib/chat";
-import { formatPrice } from "../data/catalog";
+import { formatPrice } from "../data/catalog-types";
+import { OutboundLink } from "./OutboundLink";
 
 interface Msg {
   role: "user" | "assistant";
@@ -228,14 +229,20 @@ export function ChatWidget() {
                             <span className="text-sm font-extrabold text-primary">
                               {formatPrice(p.price)}
                             </span>
-                            <a
+                            <OutboundLink
                               href={p.affiliateUrl}
-                              target="_blank"
-                              rel="noopener"
+                              placement="chat"
+                              product={{
+                                id: p.slug,
+                                name: p.name,
+                                brand: p.brand,
+                                price: p.price,
+                                inStock: p.inStock,
+                              }}
                               className="text-[10px] font-extrabold uppercase tracking-widest bg-primary text-primary-foreground px-2.5 py-1 rounded inline-flex items-center gap-1 hover:opacity-90"
                             >
                               ΑΓΟΡΑ <ExternalLink className="h-3 w-3" />
-                            </a>
+                            </OutboundLink>
                           </div>
                         </div>
                       </div>

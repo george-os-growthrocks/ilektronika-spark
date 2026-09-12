@@ -27,7 +27,7 @@ export default function AboutPage() {
             <a
               href="https://vapeandmore.gr"
               target="_blank"
-              rel="noopener"
+              rel="sponsored noopener"
               className="text-primary underline font-bold"
             >
               vapeandmore.gr
@@ -48,7 +48,7 @@ export default function AboutPage() {
               <a
                 href="https://vapeandmore.gr/?utm_source=ilektronikatsigara&utm_medium=referral&utm_campaign=about"
                 target="_blank"
-                rel="noopener"
+                rel="sponsored noopener"
                 className="text-primary underline font-bold"
               >
                 vapeandmore.gr
