@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { storeUrl } from "@/lib/affiliate";
+import { OutboundLink } from "./OutboundLink";
 
 export function MerchantBlock() {
   return (
@@ -19,14 +21,13 @@ export function MerchantBlock() {
       </div>
       <div className="text-sm mt-2">
         Κατάστημα:{" "}
-        <a
-          href="https://vapeandmore.gr"
-          target="_blank"
-          rel="noopener"
+        <OutboundLink
+          href={storeUrl("merchant_block")}
+          placement="merchant_block"
           className="text-primary underline font-bold"
         >
           vapeandmore.gr
-        </a>
+        </OutboundLink>
       </div>
     </aside>
   );
@@ -35,14 +36,13 @@ export function MerchantBlock() {
 export function LegalCta() {
   return (
     <div className="mt-10 flex flex-wrap gap-3">
-      <a
-        href="https://vapeandmore.gr"
-        target="_blank"
-        rel="noopener"
+      <OutboundLink
+        href={storeUrl("legal_cta")}
+        placement="legal_cta"
         className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 font-extrabold uppercase tracking-widest text-sm rounded hover:opacity-90"
       >
         ΑΓΟΡΑΣΤΕ ΣΤΟ vapeandmore.gr →
-      </a>
+      </OutboundLink>
       <Link
         href="/epikoinonia"
         className="inline-flex items-center gap-2 border border-border px-5 py-3 font-bold uppercase tracking-widest text-sm rounded hover:border-primary hover:text-primary"

@@ -20,7 +20,7 @@ export default function CookiesPage() {
         <a
           href="https://vapeandmore.gr"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="sponsored noopener"
           className="text-primary underline"
         >
           vapeandmore.gr

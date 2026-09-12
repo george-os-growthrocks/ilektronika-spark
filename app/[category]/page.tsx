@@ -1,17 +1,28 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { categories, categoryBySlug, productsInCategory, subcategoriesOf } from "@/data/catalog";
-import { faqsForCategory } from "@/data/faqs-generated";
-import { faqJsonLd } from "@/components/FaqSection";
+import {
+  applyFilters,
+  brandsInProducts,
+  categories,
+  categoryBySlug,
+  categoryUrl,
+  paginate,
+  productsInCategory,
+  subcategoriesOf,
+  toCard,
+} from "@/data/catalog";
+import { categoryDescription, faqsForCategory } from "@/data/faqs-generated";
+import { categoryH1, categorySeoDescription, categorySeoTitle } from "@/data/category-meta";
+import { FaqSection, faqJsonLd } from "@/components/FaqSection";
 import { JsonLd } from "@/components/JsonLd";
-import { CategoryPageClient } from "@/components/CategoryPageClient";
+import { ListingShell } from "@/components/listing/ListingShell";
 import { RelatedGuides } from "@/components/RelatedGuides";
 import { parseListingSearch } from "@/lib/listing-search";
-import {
-  categorySeoDescription,
-  categorySeoTitle,
-} from "@/data/category-meta";
-import { breadcrumbListJsonLd, SITE_URL } from "@/lib/seo";
+import { isCategoryIndexable, NOINDEX_FOLLOW } from "@/lib/indexing";
+import { breadcrumbListJsonLd, OG_IMAGE, OG_IMAGE_META, SITE_URL } from "@/lib/seo";
+
+type Params = Promise<{ category: string }>;
+type Search = Promise<Record<string, string | string[] | undefined>>;
 
 export const dynamicParams = true;
 
@@ -21,32 +32,29 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
-  params: Promise<{ category: string }>;
+  params: Params;
+  searchParams: Search;
 }): Promise<Metadata> {
   const { category: slug } = await params;
   const category = categoryBySlug(slug);
   if (!category || category.depth !== 0) return {};
+  const search = parseListingSearch(await searchParams);
   const all = productsInCategory(category.slug);
-  const title = categorySeoTitle(slug, category.label);
+  const baseTitle = categorySeoTitle(slug, category.label);
+  const paged = search.page > 1;
+  const title = paged ? `${baseTitle} · Σελίδα ${search.page}` : baseTitle;
   const description = categorySeoDescription(slug, category.label, all.length);
-  const canonical = `${SITE_URL}/${slug}`;
+  const canonical = paged ? `${SITE_URL}/${slug}?page=${search.page}` : `${SITE_URL}/${slug}`;
+  const noindex = paged || !isCategoryIndexable(category);
   return {
     title,
     description,
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      images: [{ url: "/og-image.png", width: 1200, height: 630 }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: ["/og-image.png"],
-    },
+    openGraph: { title, description, url: canonical, images: [OG_IMAGE_META] },
+    twitter: { card: "summary_large_image", title, description, images: [OG_IMAGE] },
     alternates: { canonical },
+    robots: noindex ? NOINDEX_FOLLOW : undefined,
   };
 }
 
@@ -54,16 +62,23 @@ export default async function CategoryPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ category: string }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  params: Params;
+  searchParams: Search;
 }) {
   const { category: slug } = await params;
   const cat = categoryBySlug(slug);
   if (!cat || cat.depth !== 0) notFound();
 
   const all = productsInCategory(cat.slug);
-  const subs = subcategoriesOf(cat.slug);
   const search = parseListingSearch(await searchParams);
+  const filtered = applyFilters(all, {
+    brand: search.brand,
+    inStockOnly: search.instock === "1",
+    sort: search.sort,
+  });
+  const { items, page, totalPages } = paginate(filtered, search.page);
+  const facets = brandsInProducts(all).slice(0, 12);
+  const subs = subcategoriesOf(cat.slug);
   const faqs = faqsForCategory(cat.slug);
   const pageUrl = `${SITE_URL}/${cat.slug}`;
 
@@ -83,16 +98,32 @@ export default async function CategoryPage({
 
   return (
     <>
-      <JsonLd data={faqJsonLd(faqs)} />
-      <JsonLd data={itemListSchema} />
+      {page === 1 && <JsonLd data={faqJsonLd(faqs)} />}
+      {page === 1 && <JsonLd data={itemListSchema} />}
       <JsonLd
         data={breadcrumbListJsonLd([
           { name: "Αρχική", item: `${SITE_URL}/` },
           { name: cat.label, item: pageUrl },
         ])}
       />
-      <CategoryPageClient category={cat} all={all} subs={subs} search={search} />
-      <RelatedGuides categorySlug={cat.slug} />
+      <ListingShell
+        h1={categoryH1(cat.slug, cat.label)}
+        intro={categoryDescription(cat.slug)}
+        breadcrumbs={[{ label: "Αρχική", href: "/" }, { label: cat.label }]}
+        chips={subs.map((s) => ({ label: s.label, href: categoryUrl(s), count: s.count }))}
+        basePath={`/${cat.slug}`}
+        search={search}
+        facets={facets}
+        showBrandFacet
+        cards={items.map(toCard)}
+        total={filtered.length}
+        inStockCount={filtered.filter((p) => p.inStock).length}
+        page={page}
+        totalPages={totalPages}
+      >
+        <FaqSection faqs={faqs} />
+        <RelatedGuides categorySlug={cat.slug} />
+      </ListingShell>
     </>
   );
 }

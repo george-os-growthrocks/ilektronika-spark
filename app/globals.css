@@ -112,3 +112,31 @@
 @utility animate-fade-up {
   animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
+/* Age gate: hidden before paint for returning visitors (class set by the pre-paint script). */
+html.age-ok [data-age-gate] {
+  display: none;
+}
+html:not(.age-ok):has([data-age-gate]) body {
+  overflow: hidden;
+}
+
+/* Links inside running text must be recognisable without colour. */
+.prose-content a,
+.rich-links a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

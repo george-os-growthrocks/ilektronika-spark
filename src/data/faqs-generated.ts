@@ -1,6 +1,7 @@
 import {
   categoryBySlug,
   productsInCategory,
+  productsByBrand,
   brandsInProducts,
   type Product,
   type Category,
@@ -128,19 +129,20 @@ export function faqsForCategory(slug: string): FAQItem[] {
   return [...buildCategoryFaqs(cat, products), ...GENERIC_FAQS];
 }
 
-/** Public API: get FAQs for a single product (derived from its attributes + category FAQs). */
+/**
+ * FAQs for a single product. Only questions whose answer is specific to this
+ * product are generated; the generic delivery/authenticity questions live on
+ * the category pages so 1,000+ PDPs don't repeat the same block.
+ */
 export function faqsForProduct(product: Product): FAQItem[] {
   const items: FAQItem[] = [];
 
-  items.push({
-    q: `Είναι αυθεντικό το ${product.name};`,
-    a: `Ναι. Το ${product.name} προέρχεται απευθείας από τον επίσημο διανομέα ${product.brand ?? "του κατασκευαστή"} με πλήρη εγγύηση. Ελέγξτε τον κωδικό αυθεντικότητας (scratch QR) στην επίσημη σελίδα του κατασκευαστή.`,
-  });
-
-  items.push({
-    q: `Πόσο γρήγορα μπορώ να παραλάβω το ${product.name};`,
-    a: `Παράδοση 1-3 εργάσιμες σε όλη την Ελλάδα μέσω vapeandmore.gr. ${product.inStock ? "Το προϊόν είναι άμεσα διαθέσιμο." : "Αυτή τη στιγμή είναι σε αναμονή - επικοινωνήστε με το κατάστημα για ETA."}`,
-  });
+  if (!product.inStock) {
+    items.push({
+      q: `Πότε θα είναι ξανά διαθέσιμο το ${product.name};`,
+      a: `Το προϊόν είναι προσωρινά εξαντλημένο στο vapeandmore.gr. Το απόθεμα ανανεώνεται συχνά· για ακριβή εκτίμηση καλέστε το κατάστημα στο 2831 181 046 ή δείτε τις διαθέσιμες εναλλακτικές στην ίδια κατηγορία.`,
+    });
+  }
 
   if (product.attributes.length > 0) {
     const attrLines = product.attributes
@@ -153,22 +155,22 @@ export function faqsForProduct(product: Product): FAQItem[] {
   }
 
   if (product.brand) {
-    items.push({
-      q: `Έχετε και άλλα προϊόντα ${product.brand};`,
-      a: `Ναι, δείτε όλη τη συλλογή ${product.brand} στη σελίδα του brand. Συνεργαζόμαστε επίσημα με τη μάρκα και διαθέτουμε όλη τη γκάμα.`,
-    });
+    const count = productsByBrand(product.brandSlug ?? "").length;
+    if (count > 1) {
+      items.push({
+        q: `Έχετε και άλλα προϊόντα ${product.brand};`,
+        a: `Ναι, ${count} προϊόντα ${product.brand} με τιμές και διαθεσιμότητα στη σελίδα της μάρκας.`,
+      });
+    }
   }
 
-  // Pull 2 relevant general FAQs based on category
+  // One category-specific question (not the generic shipping/authenticity ones)
   if (product.primaryTopSlug) {
     const catFaqs = faqsForCategory(product.primaryTopSlug);
-    // Take 2 that aren't about counts
-    const extras = catFaqs
-      .filter((f) => !f.q.includes("Πόσα") && !f.q.includes("Σε ποιο εύρος"))
-      .slice(0, 2);
-    items.push(...extras);
-  } else {
-    items.push(...GENERIC_FAQS.slice(0, 2));
+    const extra = catFaqs.find(
+      (f) => !f.q.includes("Πόσα") && !f.q.includes("Σε ποιο εύρος") && !GENERIC_FAQS.includes(f),
+    );
+    if (extra) items.push(extra);
   }
 
   return items;

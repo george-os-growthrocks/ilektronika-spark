@@ -6,7 +6,12 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AgeGate } from "@/components/AgeGate";
 import { ChatWidget } from "@/components/ChatWidget";
+import { Consent } from "@/components/Consent";
 import { JsonLd } from "@/components/JsonLd";
+import { buildNavData } from "@/data/catalog";
+import { OG_IMAGE_META } from "@/lib/seo";
+
+const GA_ID = "G-GDY2BQN6MZ";
 
 const inter = Inter({
   subsets: ["greek", "latin"],
@@ -23,11 +28,11 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://ilektronikatsigara.gr"),
   title: {
-    default: "ilektronikatsigara.gr | Ηλεκτρονικά Τσιγάρα, Disposables, Υγρά, Ναργιλέδες",
+    default: "ilektronikatsigara.gr | Ηλεκτρονικό Τσιγάρο, Disposables, Υγρά, Snus, Ναργιλέδες",
     template: "%s | ilektronikatsigara.gr",
   },
   description:
-    "Κορυφαίος ελληνικός κατάλογος για ηλεκτρονικά τσιγάρα, disposable vapes, pod systems, υγρά αναπλήρωσης και ναργιλέδες. Δείτε τιμές και αγοράστε online.",
+    "Ο ελληνικός κατάλογος για ηλεκτρονικό τσιγάρο: pod kits, disposable vapes, υγρά αναπλήρωσης, snus και ναργιλέδες με τιμές. Αγορά μέσω Vape and More, Ρέθυμνο.",
   authors: [{ name: "ilektronikatsigara.gr" }],
   verification: {
     google: "v9zhe62cagLZ0K9p_cw_9d8aQGQQzYDEG9MHkgKQ4I4",
@@ -36,15 +41,10 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "ilektronikatsigara.gr",
     locale: "el_GR",
-    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+    images: [OG_IMAGE_META],
   },
   twitter: {
     card: "summary_large_image",
-  },
-  alternates: {
-    languages: {
-      el: "https://ilektronikatsigara.gr",
-    },
   },
   other: {
     "geo.region": "GR",
@@ -52,26 +52,43 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Runs before first paint:
+ *  - Google Consent Mode v2 defaults (denied) and restore of a stored choice.
+ *  - Marks returning, age-verified visitors so the age gate never flashes.
+ */
+const PRE_PAINT_SCRIPT = `
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
+try{var m=document.cookie.match(/(?:^|; )its_consent=(granted|denied)/);if(m&&m[1]==='granted'){gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'});}}catch(e){}
+try{if(localStorage.getItem('ageVerified-v1')==='yes'){document.documentElement.classList.add('age-ok');}}catch(e){}
+`;
+
+const GA_CONFIG_SCRIPT = `
+gtag('js', new Date());
+gtag('config', '${GA_ID}', { linker: { domains: ['ilektronikatsigara.gr', 'vapeandmore.gr'] } });
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const nav = buildNavData();
+
   return (
-    <html lang="el" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html
+      lang="el"
+      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
       <head>
-        {/* Google tag (gtag.js) */}
+        <script dangerouslySetInnerHTML={{ __html: PRE_PAINT_SCRIPT }} />
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-GDY2BQN6MZ"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-GDY2BQN6MZ');
-          `}
+          {GA_CONFIG_SCRIPT}
         </Script>
       </head>
       <body>
-        {/* Global Schema Graph */}
         <JsonLd
           data={{
             "@context": "https://schema.org",
@@ -79,91 +96,78 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {
                 "@type": "WebSite",
                 "@id": "https://ilektronikatsigara.gr/#website",
-                "url": "https://ilektronikatsigara.gr",
-                "name": "ilektronikatsigara.gr",
-                "description": "Ηλεκτρονικά τσιγάρα, disposable vapes, υγρά αναπλήρωσης και ναργιλέδες στην Ελλάδα.",
-                "publisher": {
-                  "@id": "https://ilektronikatsigara.gr/#organization"
-                },
-                "inLanguage": "el",
-                "potentialAction": {
+                url: "https://ilektronikatsigara.gr",
+                name: "ilektronikatsigara.gr",
+                description:
+                  "Ηλεκτρονικό τσιγάρο, disposable vapes, υγρά αναπλήρωσης, snus και ναργιλέδες στην Ελλάδα.",
+                publisher: { "@id": "https://ilektronikatsigara.gr/#organization" },
+                inLanguage: "el",
+                potentialAction: {
                   "@type": "SearchAction",
-                  "target": {
+                  target: {
                     "@type": "EntryPoint",
-                    "urlTemplate": "https://ilektronikatsigara.gr/anazitisi?q={search_term_string}"
+                    urlTemplate: "https://ilektronikatsigara.gr/anazitisi?q={search_term_string}",
                   },
-                  "query-input": "required name=search_term_string"
-                }
+                  "query-input": "required name=search_term_string",
+                },
               },
               {
                 "@type": "Organization",
                 "@id": "https://ilektronikatsigara.gr/#organization",
-                "name": "ilektronikatsigara.gr",
-                "url": "https://ilektronikatsigara.gr",
-                "logo": {
+                name: "ilektronikatsigara.gr",
+                alternateName: "ilektronikatsigara.gr by Vape and More",
+                url: "https://ilektronikatsigara.gr",
+                logo: {
                   "@type": "ImageObject",
-                  "url": "https://ilektronikatsigara.gr/logo.png"
+                  url: "https://ilektronikatsigara.gr/logo.png",
+                  width: 540,
+                  height: 255,
                 },
-                "sameAs": [
+                sameAs: [
                   "https://vapeandmore.gr",
                   "https://www.fagi.gr/rethymno/eshops/vapeandmore/",
-                  "https://www.bestprice.gr/m/15927/vapeandmore.html"
+                  "https://www.bestprice.gr/m/15927/vapeandmore.html",
                 ],
-                "parentOrganization": {
-                  "@id": "https://vapeandmore.gr/#localbusiness"
-                }
+                parentOrganization: { "@id": "https://vapeandmore.gr/#localbusiness" },
               },
               {
-                "@type": "LocalBusiness",
+                "@type": ["LocalBusiness", "Store"],
                 "@id": "https://vapeandmore.gr/#localbusiness",
-                "name": "Vape and More",
-                "image": "https://vapeandmore.gr/wp-content/uploads/2025/02/remove-bg_3.png",
-                "telephone": "+302831181046",
-                "email": "info@vapeandmore.gr",
-                "url": "https://vapeandmore.gr",
-                "sameAs": [
+                name: "Vape and More",
+                image: "https://vapeandmore.gr/wp-content/uploads/2025/02/remove-bg_3.png",
+                telephone: "+302831181046",
+                email: "info@vapeandmore.gr",
+                url: "https://vapeandmore.gr",
+                sameAs: [
                   "https://ilektronikatsigara.gr",
                   "https://www.fagi.gr/rethymno/eshops/vapeandmore/",
-                  "https://www.bestprice.gr/m/15927/vapeandmore.html"
+                  "https://www.bestprice.gr/m/15927/vapeandmore.html",
                 ],
-                "address": {
+                address: {
                   "@type": "PostalAddress",
-                  "streetAddress": "Αρκαδίου 82",
-                  "addressLocality": "Ρέθυμνο",
-                  "postalCode": "74100",
-                  "addressCountry": "GR"
+                  streetAddress: "Αρκαδίου 82",
+                  addressLocality: "Ρέθυμνο",
+                  postalCode: "74100",
+                  addressCountry: "GR",
                 },
-                "geo": {
-                  "@type": "GeoCoordinates",
-                  "latitude": 35.3694084,
-                  "longitude": 24.475459
-                },
-                "openingHoursSpecification": {
+                geo: { "@type": "GeoCoordinates", latitude: 35.3694084, longitude: 24.475459 },
+                openingHoursSpecification: {
                   "@type": "OpeningHoursSpecification",
-                  "dayOfWeek": [
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday"
-                  ],
-                  "opens": "10:00",
-                  "closes": "21:00"
+                  dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                  opens: "10:00",
+                  closes: "21:00",
                 },
-                "priceRange": "€€",
-                "areaServed": {
-                  "@type": "Country",
-                  "name": "Greece"
-                }
-              }
-            ]
+                priceRange: "€€",
+                areaServed: { "@type": "Country", name: "Greece" },
+              },
+            ],
           }}
         />
-        <Header />
+        <Header nav={nav} />
         <main className="min-h-[calc(100vh-200px)]">{children}</main>
         <Footer />
         <AgeGate />
+        <Consent />
         <ChatWidget />
       </body>
     </html>
