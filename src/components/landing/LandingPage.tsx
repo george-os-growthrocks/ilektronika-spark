@@ -142,10 +142,10 @@ export function LandingPage({
               </p>
               <h1 className="mt-4 max-w-3xl font-serif text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl">
                 {t.hero.titleLead ? <span className="block">{t.hero.titleLead}</span> : null}
-                <span className="mt-1 block text-[clamp(1.85rem,7.2vw,4.6rem)] leading-[1.02]">
+                <span className="mt-2 block break-words bg-gradient-to-r from-primary to-accent bg-clip-text text-[clamp(1.85rem,7.2vw,4.6rem)] leading-[1.05] text-transparent">
                   {DOMAIN}
                 </span>
-                <span className="mt-1 block">{t.hero.titleTail}</span>
+                <span className="mt-3 block text-2xl font-normal text-muted-foreground sm:text-3xl">{t.hero.titleTail}</span>
               </h1>
             </div>
 
@@ -154,12 +154,12 @@ export function LandingPage({
             </p>
 
             <aside className="order-2 lg:order-none lg:col-span-5 lg:col-start-8 lg:row-span-3 lg:row-start-1">
-              <div className="rounded-3xl border border-border border-t-4 border-t-accent bg-card p-6 shadow-sm">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              <div className="rounded-3xl bg-secondary p-7 text-secondary-foreground shadow-[0_30px_60px_-30px_rgb(43_72_120/0.6)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary-foreground/70">
                   {t.hero.asking}
                 </p>
                 <p className="mt-2 font-serif text-5xl tracking-tight">{price}</p>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-3 text-sm leading-relaxed text-secondary-foreground/80">
                   {t.hero.fraction}
                 </p>
                 <div className="mt-6 flex gap-2">
@@ -167,7 +167,7 @@ export function LandingPage({
                     {t.hero.buy}
                   </a>
                   <a
-                    className={`${quietBtn} flex-1 px-3 text-center`}
+                    className="inline-flex min-h-11 flex-1 items-center justify-center rounded-full border border-secondary-foreground/30 px-3 py-2.5 text-center text-sm font-semibold transition-colors hover:bg-secondary-foreground/10"
                     href={hrefFor(locale, "offer", "contact")}
                   >
                     {t.hero.offer}
@@ -175,11 +175,11 @@ export function LandingPage({
                 </div>
                 <a
                   href={hrefFor(locale, "lease", "contact")}
-                  className="mt-4 inline-flex text-sm font-semibold text-primary underline underline-offset-4"
+                  className="mt-4 inline-flex text-sm font-semibold underline underline-offset-4"
                 >
                   {t.hero.lease}
                 </a>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{t.hero.eu}</p>
+                <p className="mt-4 border-t border-secondary-foreground/15 pt-4 text-sm leading-relaxed text-secondary-foreground/75">{t.hero.eu}</p>
               </div>
             </aside>
 
@@ -481,8 +481,8 @@ function Stat({
   children: React.ReactNode;
 }) {
   return (
-    <article className="rounded-3xl border border-border bg-card px-4 py-5 sm:px-5">
-      <p className="font-serif text-3xl tracking-tight sm:text-4xl">{children}</p>
+    <article className="rounded-3xl border border-border bg-card px-4 py-5 transition-shadow hover:shadow-lg sm:px-5">
+      <p className="font-serif text-3xl tracking-tight text-primary sm:text-4xl">{children}</p>
       <h3 className="mt-2 text-sm font-semibold leading-snug">{label}</h3>
       <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{note}</p>
     </article>
