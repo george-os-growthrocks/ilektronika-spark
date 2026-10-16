@@ -2,7 +2,7 @@
 
 Domain-for-sale site. Greek is `/`. English is `/en`. The asking price is €1,500.
 
-The public inbox is `CONTACT_EMAIL` in `src/config/site.ts`. Replace `offers@example.com` before launch.
+The public inbox is `anotherseoguru@mail.grokbot.com` (`CONTACT_EMAIL` in `src/config/site.ts`). JSON-LD, the offer form, and mailto links use that constant.
 
 ## Environment variables
 
