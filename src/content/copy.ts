@@ -35,7 +35,7 @@ export function getCopy(locale: Locale) {
         heated: "Heated tobacco",
         generic: "Generic e-cig / vape",
         devices: "Device brands",
-        pouches: "Φακελάκια νικοτίνης",
+        pouches: "Nicotine pouches",
       };
 
   const inShort = el
