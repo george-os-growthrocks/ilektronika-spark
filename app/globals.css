@@ -33,27 +33,27 @@
 }
 
 :root {
-  --radius: 0.75rem;
-  --background: #f4f0e6;
-  --foreground: #1c1915;
-  --surface: #ebe4d4;
-  --card: #fbf8f2;
-  --card-foreground: #1c1915;
-  --popover: #fbf8f2;
-  --popover-foreground: #1c1915;
-  --primary: #1e3d34;
-  --primary-foreground: #f7f3ea;
-  --secondary: #efe7d6;
-  --secondary-foreground: #1c1915;
-  --muted: #efe7d6;
-  --muted-foreground: #3f3a33;
-  --accent: #c4a35a;
-  --accent-foreground: #1c1915;
-  --destructive: #8f2d2d;
-  --destructive-foreground: #fbf8f2;
-  --border: #e0d6c6;
-  --input: #d9cebc;
-  --ring: #1e3d34;
+  --radius: 1rem;
+  --background: #f6f8f7;
+  --foreground: #1f2e2d;
+  --surface: #e6eeed;
+  --card: #ffffff;
+  --card-foreground: #1f2e2d;
+  --popover: #ffffff;
+  --popover-foreground: #1f2e2d;
+  --primary: #168781;
+  --primary-foreground: #ffffff;
+  --secondary: #2b4878;
+  --secondary-foreground: #ffffff;
+  --muted: #e6eeed;
+  --muted-foreground: #4c6260;
+  --accent: #6079ad;
+  --accent-foreground: #ffffff;
+  --destructive: #b42318;
+  --destructive-foreground: #ffffff;
+  --border: #d3dfdd;
+  --input: #c3d3d1;
+  --ring: #168781;
 }
 
 @layer base {
@@ -67,8 +67,8 @@
 
   body {
     background:
-      radial-gradient(900px 420px at 0% -10%, rgb(196 163 90 / 18%), transparent 55%),
-      radial-gradient(700px 380px at 100% 0%, rgb(30 61 52 / 8%), transparent 50%),
+      radial-gradient(900px 420px at 0% -10%, rgb(22 135 129 / 14%), transparent 55%),
+      radial-gradient(700px 380px at 100% 0%, rgb(96 121 173 / 12%), transparent 50%),
       var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
@@ -76,8 +76,8 @@
   }
 
   ::selection {
-    background: #e7d7a1;
-    color: #1c1915;
+    background: #95b1ae;
+    color: #1f2e2d;
   }
 }
 
