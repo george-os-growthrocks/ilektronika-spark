@@ -1,55 +1,64 @@
-import { topLevelCategories } from "@/data/catalog";
-import { blogPosts } from "@/data/blog";
+import { ASKING_PRICE_EUR, CONTACT_EMAIL, DOMAIN, SITE_URL } from "@/config/site";
+import {
+  BACKLINKS,
+  BRANDED_VOLUME,
+  COMPETITOR_DR,
+  HEAD_KD,
+  HEAD_TERM,
+  HEAD_VOLUME,
+  KEYWORDS,
+  NON_BRAND_VOLUME,
+  REFERRING_DOMAINS,
+  SOURCE,
+  TRAFFIC_VALUE_USD,
+} from "@/content/facts";
 
-const BASE_URL = "https://ilektronikatsigara.gr";
+export const dynamic = "force-static";
 
-export async function GET() {
-  const cats = topLevelCategories();
-  const body = `# ilektronikatsigara.gr
+export function GET() {
+  const keywords = KEYWORDS.map(
+    (row) => `- ${row.term}: ${row.volume.toLocaleString("en-US")}`,
+  ).join("\n");
 
-> Ελληνικός κατάλογος για ηλεκτρονικά τσιγάρα, disposable vapes, pod systems, υγρά αναπλήρωσης, ναργιλέδες και snus. Συνεργαζόμαστε με το vapeandmore.gr (Ρέθυμνο, πανελλαδική αποστολή).
+  const body = `# ${DOMAIN}
 
-## Σημαντικές πολιτικές
-- Μόνο για ενήλικες 18+. Προϊόντα νικοτίνης δεν προορίζονται για ανηλίκους ή μη χρήστες νικοτίνης.
-- Affiliate αποκάλυψη: λαμβάνουμε προμήθεια από αγορές μέσω συνδέσμων προς vapeandmore.gr· η τιμή για τον πελάτη δεν αλλάζει.
-- Δεν παρέχουμε ιατρικές συμβουλές ούτε ισχυρισμούς διακοπής καπνίσματος.
-- Πλήρες κείμενο για AI crawlers: ${BASE_URL}/llms-full.txt
+> Premium .gr domain name for sale. Asking price: €${ASKING_PRICE_EUR.toLocaleString("en-US")}.
 
-## Κατηγορίες
-${cats.map((c) => `- [${c.label}](${BASE_URL}/${c.slug}) - ${c.count} προϊόντα`).join("\n")}
+This site is a domain-sale page. It does not sell or advertise nicotine products.
 
-## Βασικές σελίδες
-- [Όλες οι κατηγορίες](${BASE_URL}/katigories)
-- [Blog / Οδηγοί](${BASE_URL}/blog)
-- [Συχνές ερωτήσεις](${BASE_URL}/syxnes-erotiseis)
-- [Σχετικά / E-E-A-T](${BASE_URL}/sxetika)
-- [Επικοινωνία](${BASE_URL}/epikoinonia)
-- [Όροι χρήσης](${BASE_URL}/oroi-xrisis)
-- [Πολιτική απορρήτου](${BASE_URL}/politiki-aporritou)
-- Partner store: [vapeandmore.gr](https://vapeandmore.gr)
+## Offer
+- Domain: ${DOMAIN}
+- Asking price: €${ASKING_PRICE_EUR.toLocaleString("en-US")} to buy outright
+- Also available: lease or lease-to-own (no published lease price)
+- .gr transfer requires an EU-based buyer
+- Included: a ready-to-launch Next.js e-shop with a custom SEO setup and payments already configured
+- Contact: ${CONTACT_EMAIL}
+- Greek page: ${SITE_URL}
+- English page: ${SITE_URL}/en
 
-## Blog (πρόσφατα)
-${blogPosts
-  .slice(0, 12)
-  .map((p) => `- [${p.title}](${BASE_URL}/blog/${p.slug}) - ${p.excerpt}`)
-  .join("\n")}
+## Verified search facts
+${SOURCE}
+- Exact match "${HEAD_TERM}": ${HEAD_VOLUME.toLocaleString("en-US")} searches/month in Greece, keyword difficulty ${HEAD_KD}
+- "ilektroniko tsigaro": 450 monthly searches; "ηλεκτρονικά τσιγάρα": 800 monthly searches
+- Non-brand category searches: ${NON_BRAND_VOLUME.toLocaleString("en-US")}/month
+- Including brands: ${BRANDED_VOLUME.toLocaleString("en-US")}+/month (heated tobacco 92,700; generic e-cig/vape 22,170; device brands 13,740; nicotine pouches 11,370)
+- The current #1 for the head term is a DR ${COMPETITOR_DR} shop, so a top ranking is a realistic goal, not a guarantee
+- Greek law bans paid e-cigarette advertising, so organic search is the main acquisition channel and this traffic cannot be bought with ads
+- Conservative organic traffic value at a top-3 ranking: about $${TRAFFIC_VALUE_USD.toLocaleString("en-US")}/year
+- The €${ASKING_PRICE_EUR.toLocaleString("en-US")} asking price is a fraction of that yearly traffic value
+- ${REFERRING_DOMAINS}+ referring domains and ${BACKLINKS}+ backlinks
+- Short premium .gr
 
-## Οντότητες / Citations
-- Retailer: Vape and More — Αρκαδίου 82, 74100 Ρέθυμνο — +30 2831 181046 — info@vapeandmore.gr
-- Catalog: ilektronikatsigara.gr (affiliate informational catalog)
-- Local listing: https://www.fagi.gr/rethymno/eshops/vapeandmore/
-- Marketplace citation: https://www.bestprice.gr/m/15927/vapeandmore.html
+## Keyword volumes (monthly searches, Greece)
+${keywords}
 
-## Δομημένα δεδομένα
-- Sitemap: ${BASE_URL}/sitemap.xml
-- Robots: ${BASE_URL}/robots.txt
-- Πλήρες llms: ${BASE_URL}/llms-full.txt
+${SOURCE}
 `;
 
   return new Response(body, {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "public, max-age=3600",
+      "Cache-Control": "public, max-age=86400",
     },
   });
 }
