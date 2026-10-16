@@ -1,9 +1,9 @@
 /**
- * Public inbox for domain offers. Replace this placeholder before launch.
+ * Public inbox for domain offers.
  * Sending mail requires RESEND_API_KEY and OFFER_FROM_EMAIL. If either is
  * missing, the form falls back to a mailto link to this address.
  */
-export const CONTACT_EMAIL = "offers@example.com";
+export const CONTACT_EMAIL = "anotherseoguru@mail.grokbot.com";
 
 export const DOMAIN = "ilektronikatsigara.gr";
 
