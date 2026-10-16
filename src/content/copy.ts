@@ -156,6 +156,21 @@ export function getCopy(locale: Locale) {
         ? ["Δημοσιευμένη τιμή", "Πληρωμή μέσω escrow", "Χωρίς δέσμευση στην πρώτη επαφή"]
         : ["Published price", "Payment through escrow", "No obligation on the first message"],
     },
+    thanks: {
+      title: el ? "Ευχαριστούμε" : "Thank you",
+      lead: el
+        ? "Αν η πληρωμή στο Checkout ολοκληρώθηκε, η μεταβίβαση ακολουθεί τα βήματα παρακάτω."
+        : "If checkout completed, the transfer follows the steps below.",
+      steps: el
+        ? [
+            "Ελέγχουμε ότι ο αγοραστής έχει έδρα στην Ευρωπαϊκή Ένωση. Η μεταβίβαση .gr το απαιτεί.",
+            "Η μεταβίβαση ξεκινά μέσα σε λίγες εργάσιμες ημέρες.",
+          ]
+        : [
+            "We check that the buyer is based in the European Union. A .gr transfer requires it.",
+            "The transfer starts within a few business days.",
+          ],
+    },
     statsTitle: el ? "Τα στοιχεία" : "The figures",
     statsIntro: el
       ? "Μηνιαία αναζήτηση στην Ελλάδα, εκτός αν σημειώνεται διαφορετικά."

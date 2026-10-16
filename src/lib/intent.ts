@@ -19,3 +19,21 @@ export function hrefFor(locale: "el" | "en", intent?: Intent, hash?: string): st
   const query = params.toString();
   return `${path}${query ? `?${query}` : ""}${hash ? `#${hash}` : ""}`;
 }
+
+export function buyHref(locale: "el" | "en"): string {
+  return `/api/checkout?locale=${locale}`;
+}
+
+export function parsePaid(value: string | string[] | undefined): boolean {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw === "1";
+}
+
+export function withPaid(href: string, paid: boolean): string {
+  if (!paid) return href;
+  const hashAt = href.indexOf("#");
+  const hash = hashAt === -1 ? "" : href.slice(hashAt);
+  const base = hashAt === -1 ? href : href.slice(0, hashAt);
+  const sep = base.includes("?") ? "&" : "?";
+  return `${base}${sep}paid=1${hash}`;
+}

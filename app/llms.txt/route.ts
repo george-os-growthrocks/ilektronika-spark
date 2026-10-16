@@ -32,6 +32,7 @@ This site is a domain-sale page. It does not sell or advertise nicotine products
 - Also available: lease or lease-to-own (no published lease price)
 - .gr transfer requires an EU-based buyer
 - Included: a ready-to-launch Next.js e-shop with a custom SEO setup and payments already configured
+- Buy now opens Stripe Checkout for €${ASKING_PRICE_EUR.toLocaleString("en-US")} when STRIPE_SECRET_KEY is set; otherwise it opens the offer form
 - Contact: ${CONTACT_EMAIL}
 - Greek page: ${SITE_URL}
 - English page: ${SITE_URL}/en

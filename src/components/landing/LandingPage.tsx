@@ -15,7 +15,7 @@ import {
 import type { Locale } from "@/content/locale";
 import { formatEur, formatInt } from "@/lib/format";
 import type { Intent } from "@/lib/intent";
-import { hrefFor } from "@/lib/intent";
+import { buyHref, hrefFor, withPaid } from "@/lib/intent";
 import { buildJsonLd } from "@/lib/jsonld";
 import { LinkedText } from "@/lib/links";
 import { CountUp } from "@/components/landing/CountUp";
@@ -26,11 +26,22 @@ const primaryBtn =
 const quietBtn =
   "inline-flex min-h-11 items-center justify-center rounded-full border border-foreground/15 bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-foreground/40";
 
-export function LandingPage({ locale, intent }: { locale: Locale; intent: Intent | null }) {
+export function LandingPage({
+  locale,
+  intent,
+  paid,
+}: {
+  locale: Locale;
+  intent: Intent | null;
+  paid: boolean;
+}) {
   const t = getCopy(locale);
   const price = formatEur(locale, ASKING_PRICE_EUR);
   const jsonLd = JSON.stringify(buildJsonLd(locale, t)).replace(/</g, "\\u003c");
-  const home = hrefFor(locale);
+  const home = withPaid(hrefFor(locale), paid);
+  const buy = buyHref(locale);
+  const greek = withPaid(hrefFor("el", intent ?? undefined), paid);
+  const english = withPaid(hrefFor("en", intent ?? undefined), paid);
 
   const sectionLinks = [
     [t.nav.why, "why"],
@@ -68,7 +79,7 @@ export function LandingPage({ locale, intent }: { locale: Locale; intent: Intent
               aria-label={t.langLabel}
             >
               <Link
-                href={hrefFor("el", intent ?? undefined)}
+                href={greek}
                 hrefLang="el"
                 lang="el"
                 aria-current={locale === "el" ? "page" : undefined}
@@ -80,7 +91,7 @@ export function LandingPage({ locale, intent }: { locale: Locale; intent: Intent
                 /
               </span>
               <Link
-                href={hrefFor("en", intent ?? undefined)}
+                href={english}
                 hrefLang="en"
                 lang="en"
                 aria-current={locale === "en" ? "page" : undefined}
@@ -91,7 +102,7 @@ export function LandingPage({ locale, intent }: { locale: Locale; intent: Intent
             </div>
             <div className="hidden items-center gap-2 md:flex">
               <span className="font-serif text-lg leading-none">{price}</span>
-              <a className={primaryBtn} href={hrefFor(locale, "buy", "contact")}>
+              <a className={primaryBtn} href={buy}>
                 {t.hero.buy}
               </a>
               <a className={quietBtn} href={hrefFor(locale, "offer", "contact")}>
@@ -103,6 +114,26 @@ export function LandingPage({ locale, intent }: { locale: Locale; intent: Intent
       </header>
 
       <main id="content">
+        {paid ? (
+          <section
+            className="border-b border-border bg-primary text-primary-foreground"
+            aria-labelledby="thanks-title"
+          >
+            <div className="mx-auto max-w-6xl px-5 py-8 md:py-10">
+              <h2 id="thanks-title" className="font-serif text-3xl font-semibold tracking-tight">
+                {t.thanks.title}
+              </h2>
+              <p className="mt-3 max-w-2xl leading-relaxed text-primary-foreground/90">
+                {t.thanks.lead}
+              </p>
+              <ol className="mt-4 max-w-2xl list-decimal space-y-2 pl-5 text-sm leading-relaxed">
+                {t.thanks.steps.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
+            </div>
+          </section>
+        ) : null}
         <section className="mx-auto max-w-6xl px-5 pb-8 pt-10 md:pb-16 md:pt-16">
           <div className="grid items-start gap-6 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-6">
             <div className="order-1 lg:order-none lg:col-span-7 lg:col-start-1 lg:row-start-1">
@@ -132,10 +163,7 @@ export function LandingPage({ locale, intent }: { locale: Locale; intent: Intent
                   {t.hero.fraction}
                 </p>
                 <div className="mt-6 flex gap-2">
-                  <a
-                    className={`${primaryBtn} flex-1 px-3 text-center`}
-                    href={hrefFor(locale, "buy", "contact")}
-                  >
+                  <a className={`${primaryBtn} flex-1 px-3 text-center`} href={buy}>
                     {t.hero.buy}
                   </a>
                   <a
@@ -334,7 +362,7 @@ export function LandingPage({ locale, intent }: { locale: Locale; intent: Intent
                 <div className="mt-6 flex flex-col gap-2 sm:flex-row">
                   <a
                     className="inline-flex min-h-11 items-center justify-center rounded-full bg-background px-5 py-2.5 text-sm font-semibold text-foreground"
-                    href={hrefFor(locale, "buy", "contact")}
+                    href={buy}
                   >
                     {t.hero.buy}
                   </a>
@@ -434,7 +462,7 @@ export function LandingPage({ locale, intent }: { locale: Locale; intent: Intent
           <a className={quietBtn} href={hrefFor(locale, "offer", "contact")}>
             {t.hero.offerShort}
           </a>
-          <a className={primaryBtn} href={hrefFor(locale, "buy", "contact")}>
+          <a className={primaryBtn} href={buy}>
             {t.hero.buy}
           </a>
         </div>
