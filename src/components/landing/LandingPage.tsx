@@ -145,7 +145,9 @@ export function LandingPage({
                 <span className="mt-2 block break-words bg-gradient-to-r from-primary to-accent bg-clip-text text-[clamp(1.85rem,7.2vw,4.6rem)] leading-[1.05] text-transparent">
                   {DOMAIN}
                 </span>
-                <span className="mt-3 block text-2xl font-normal text-muted-foreground sm:text-3xl">{t.hero.titleTail}</span>
+                <span className="mt-3 block text-2xl font-normal text-muted-foreground sm:text-3xl">
+                  {t.hero.titleTail}
+                </span>
               </h1>
             </div>
 
@@ -179,7 +181,9 @@ export function LandingPage({
                 >
                   {t.hero.lease}
                 </a>
-                <p className="mt-4 border-t border-secondary-foreground/15 pt-4 text-sm leading-relaxed text-secondary-foreground/75">{t.hero.eu}</p>
+                <p className="mt-4 border-t border-secondary-foreground/15 pt-4 text-sm leading-relaxed text-secondary-foreground/75">
+                  {t.hero.eu}
+                </p>
               </div>
             </aside>
 

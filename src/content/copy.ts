@@ -50,7 +50,9 @@ export function getCopy(locale: Locale) {
       a: inShort,
     },
     {
-      q: el ? "Γιατί έχει αξία η ακριβής αντιστοιχία με την αναζήτηση;" : "Why does the exact match matter?",
+      q: el
+        ? "Γιατί έχει αξία η ακριβής αντιστοιχία με την αναζήτηση;"
+        : "Why does the exact match matter?",
       a: el
         ? `Το ${head} έχει περίπου ${n(HEAD_VOLUME)} μηνιαίες αναζητήσεις στην Ελλάδα και δείκτη δυσκολίας ${HEAD_KD} στα 100. Το όνομα είναι ακριβώς αυτό που πληκτρολογεί ο χρήστης. Συγγενικές αναζητήσεις: «ilektroniko tsigaro» με ${n(450)} και «ηλεκτρονικά τσιγάρα» με ${n(800)} αναζητήσεις τον μήνα.`
         : `${head} has about ${n(HEAD_VOLUME)} monthly searches in Greece and keyword difficulty ${HEAD_KD}. The domain matches that query exactly. Nearby forms: “ilektroniko tsigaro” at ${n(450)} and “ηλεκτρονικά τσιγάρα” at ${n(800)} monthly searches.`,
@@ -153,7 +155,11 @@ export function getCopy(locale: Locale) {
         ? "Η μεταβίβαση .gr απαιτεί αγοραστή με έδρα στην ΕΕ."
         : "A .gr transfer requires an EU-based buyer.",
       trust: el
-        ? ["Σταθερή, δημοσιευμένη τιμή", "Ασφαλής πληρωμή με μεσεγγύηση", "Καμία δέσμευση στην πρώτη επαφή"]
+        ? [
+            "Σταθερή, δημοσιευμένη τιμή",
+            "Ασφαλής πληρωμή με μεσεγγύηση",
+            "Καμία δέσμευση στην πρώτη επαφή",
+          ]
         : ["Published price", "Payment through escrow", "No obligation on the first message"],
     },
     thanks: {
@@ -194,7 +200,9 @@ export function getCopy(locale: Locale) {
       },
       links: {
         label: el ? "Ιστότοποι με συνδέσμους προς το όνομα" : "Referring domains",
-        note: el ? `και πάνω από ${n(BACKLINKS)} εισερχόμενοι σύνδεσμοι` : `and ${n(BACKLINKS)}+ backlinks`,
+        note: el
+          ? `και πάνω από ${n(BACKLINKS)} εισερχόμενοι σύνδεσμοι`
+          : `and ${n(BACKLINKS)}+ backlinks`,
       },
       value: {
         label: el ? "Αξία θέσης στην πρώτη τριάδα / χρόνο" : "Top-3 value / year",
@@ -226,15 +234,15 @@ export function getCopy(locale: Locale) {
             : `Greek law bans paid e-cigarette advertising, so organic search is the main acquisition channel. Conservative top-3 value: ${usd} per year.`,
         },
         {
-          title: el ? `${price}: λιγότερο από την αξία ενός έτους` : `${price}, a fraction of one year`,
+          title: el
+            ? `${price}: λιγότερο από την αξία ενός έτους`
+            : `${price}, a fraction of one year`,
           body: el
             ? `Η τιμή είναι μικρό μέρος της ετήσιας αξίας που αποφέρει η οργανική επισκεψιμότητα (${usd} για θέση στην πρώτη τριάδα).`
             : `The asking price is a fraction of the conservative yearly organic traffic value (${usd} at a top-3 ranking).`,
         },
         {
-          title: el
-            ? "Σύντομο .gr με έτοιμο κύρος"
-            : "Short .gr with links already in place",
+          title: el ? "Σύντομο .gr με έτοιμο κύρος" : "Short .gr with links already in place",
           body: el
             ? `Ήδη πάνω από ${n(REFERRING_DOMAINS)} ιστότοποι και ${n(BACKLINKS)} σύνδεσμοι δείχνουν προς το όνομα. Σύντομο, εύκολο στη μνήμη, ιδανικό για κατάστημα ηλεκτρονικού τσιγάρου, θερμαινόμενου καπνού ή νικοτίνης.`
             : `More than ${n(REFERRING_DOMAINS)} referring domains and ${n(BACKLINKS)} backlinks already point at the name. It is a short, memorable premium .gr, and it fits a retailer of e-cigarettes, heated tobacco, or nicotine.`,
