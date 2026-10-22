@@ -174,12 +174,17 @@ export function LandingPage({
                     {t.hero.offer}
                   </a>
                 </div>
-                <a
-                  href={hrefFor(locale, "lease", "contact")}
-                  className="mt-4 inline-flex text-sm font-semibold underline underline-offset-4"
-                >
-                  {t.hero.lease}
-                </a>
+                <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-secondary-foreground/90">
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 20 20"
+                    className="size-4 shrink-0"
+                    fill="currentColor"
+                  >
+                    <path d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 9.7a1 1 0 1 1 1.4-1.4l3.8 3.8 6.8-6.8a1 1 0 0 1 1.4 0Z" />
+                  </svg>
+                  {t.hero.invoice}
+                </p>
                 <p className="mt-4 border-t border-secondary-foreground/15 pt-4 text-sm leading-relaxed text-secondary-foreground/75">
                   {t.hero.eu}
                 </p>
@@ -359,16 +364,16 @@ export function LandingPage({
               </article>
               <article className="rounded-3xl border border-border bg-card px-6 py-7">
                 <h3 className="font-serif text-2xl font-semibold tracking-tight">
-                  {t.options.leaseTitle}
+                  {t.options.offerTitle}
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {t.options.leaseBody}
+                  {t.options.offerBody}
                 </p>
                 <a
-                  href={hrefFor(locale, "lease", "contact")}
+                  href={hrefFor(locale, "offer", "contact")}
                   className="mt-5 inline-flex text-sm font-semibold text-primary underline underline-offset-4"
                 >
-                  {t.hero.lease}
+                  {t.hero.offer}
                 </a>
               </article>
             </div>
