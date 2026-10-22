@@ -1,11 +1,10 @@
-export type Intent = "buy" | "offer" | "lease";
+export type Intent = "buy" | "offer";
 
 export function parseIntent(value: string | string[] | undefined): Intent | null {
   const raw = Array.isArray(value) ? value[0] : value;
   switch (raw) {
     case "buy":
     case "offer":
-    case "lease":
       return raw;
     default:
       return null;

@@ -12,21 +12,6 @@ type FormCopy = Copy["form"];
 
 type Status = "idle" | "submitting" | "sent" | "mailto" | "error";
 
-function dealFromIntent(intent: Intent | null): Deal {
-  switch (intent) {
-    case "lease":
-      return "lease";
-    case "buy":
-    case "offer":
-    case null:
-      return "buy";
-    default: {
-      const unreachable: never = intent;
-      return unreachable;
-    }
-  }
-}
-
 function statusText(status: Status, copy: FormCopy): string | null {
   switch (status) {
     case "idle":
@@ -50,14 +35,14 @@ export function OfferForm({ intent, copy }: { intent: Intent | null; copy: FormC
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
   const [amount, setAmount] = useState(intent === "buy" ? String(ASKING_PRICE_EUR) : "");
-  const [deal, setDeal] = useState<Deal>(dealFromIntent(intent));
+  const deal: Deal = "buy";
   const [message, setMessage] = useState("");
   const [website, setWebsite] = useState("");
   const [errors, setErrors] = useState<Partial<Record<"name" | "email" | "amount", string>>>({});
   const [status, setStatus] = useState<Status>("idle");
 
   const mailto = offerMailto({ name, email, company, amount, deal, message });
-  const confirmBuy = intent === "buy" && deal === "buy" && parseAmount(amount) === ASKING_PRICE_EUR;
+  const confirmBuy = intent === "buy" && parseAmount(amount) === ASKING_PRICE_EUR;
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -211,41 +196,10 @@ export function OfferForm({ intent, copy }: { intent: Intent | null; copy: FormC
             id="offer-amount-hint"
             className={`mt-1 text-sm ${errors.amount ? "text-destructive" : "text-muted-foreground"}`}
           >
-            {errors.amount ?? (deal === "lease" ? copy.leaseHint : copy.offerHint)}
+            {errors.amount ?? copy.offerHint}
           </p>
         </div>
       </div>
-
-      <fieldset className="mt-4">
-        <legend className="text-sm font-semibold">{copy.deal}</legend>
-        <div className="mt-2 flex flex-wrap gap-3">
-          {(
-            [
-              ["buy", copy.buy],
-              ["lease", copy.lease],
-            ] as const
-          ).map(([value, label]) => (
-            <label
-              key={value}
-              className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold focus-within:ring-2 focus-within:ring-ring ${
-                deal === value
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-background"
-              }`}
-            >
-              <input
-                type="radio"
-                name="deal"
-                value={value}
-                checked={deal === value}
-                onChange={() => setDeal(value)}
-                className="size-4 accent-primary"
-              />
-              {label}
-            </label>
-          ))}
-        </div>
-      </fieldset>
 
       <div className="mt-4">
         <label htmlFor="offer-message" className="text-sm font-semibold">

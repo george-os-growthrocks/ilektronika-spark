@@ -1,6 +1,6 @@
 import { CONTACT_EMAIL, DOMAIN } from "@/config/site";
 
-export type Deal = "buy" | "lease";
+export type Deal = "buy";
 
 export type OfferFields = {
   name: string;

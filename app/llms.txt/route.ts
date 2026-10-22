@@ -30,8 +30,8 @@ This site is a domain-sale page. It does not sell or advertise nicotine products
 ## Offer
 - Domain: ${DOMAIN} (the domain name only)
 - Asking price: €${eur} to buy outright
-- Also available: lease or lease-to-own (terms agreed separately)
 - Payment through escrow; transfer through the EETT .gr registry
+- Invoice available
 - A .gr name can be assigned to any natural or legal person, Greek or foreign
 - Contact: ${CONTACT_EMAIL}
 - Greek page: ${SITE_URL}

@@ -29,8 +29,8 @@ export function getCopy(locale: Locale) {
     : "The transfer runs through the EETT .gr registry. A .gr name can be assigned to any natural or legal person, Greek or foreign.";
 
   const inShort = el
-    ? `Ναι. Το ${DOMAIN} πωλείται στα ${price}, ως όνομα τομέα. Ταυτίζεται λέξη προς λέξη με την αναζήτηση ${head} και διατίθεται για εξαγορά, μίσθωση ή μίσθωση με δικαίωμα εξαγοράς.`
-    : `Yes. ${DOMAIN} is for sale at ${price}, as a domain name. It matches the search ${head} word for word and is available to buy, lease, or lease-to-own.`;
+    ? `Ναι. Το ${DOMAIN} πωλείται στα ${price}, ως όνομα τομέα. Ταυτίζεται λέξη προς λέξη με την αναζήτηση ${head} και διατίθεται για άμεση εξαγορά.`
+    : `Yes. ${DOMAIN} is for sale at ${price}, as a domain name. It matches the search ${head} word for word and is available to buy outright.`;
 
   const faq = [
     {
@@ -80,10 +80,10 @@ export function getCopy(locale: Locale) {
         : "With escrow, a typical transfer closes in a few business days to about two weeks. Timing depends on the registrar and on verifying both parties.",
     },
     {
-      q: el ? "Μπορώ να το μισθώσω αντί να το αγοράσω;" : "Can I lease it instead of buying it?",
+      q: el ? "Τι γίνεται μετά την πληρωμή;" : "What happens after payment?",
       a: el
-        ? `Ναι. Εκτός από την εξαγορά στα ${price}, το όνομα διατίθεται και με μίσθωση ή μίσθωση με δικαίωμα εξαγοράς. Οι όροι συμφωνούνται χωριστά.`
-        : `Yes. Besides an outright purchase at ${price}, the domain is available on a lease or lease-to-own. Those terms are agreed separately.`,
+        ? "Η πληρωμή κρατείται σε μεσεγγύηση, ξεκινά η μεταβίβαση στο μητρώο .gr και τα χρήματα αποδεσμεύονται μόλις το όνομα περάσει σε εσάς. Δυνατότητα έκδοσης τιμολογίου."
+        : "Payment is held in escrow, the .gr registry transfer starts, and the funds are released once the name is yours. Invoice available.",
     },
     {
       q: el ? "Εγγυάται η αγορά πρώτη θέση στη Google;" : "Does buying it guarantee a top ranking?",
@@ -110,8 +110,8 @@ export function getCopy(locale: Locale) {
         ? `Πωλείται το ${DOMAIN} · Domain για ηλεκτρονικό τσιγάρο`
         : `${DOMAIN} for sale · Exact-match Greek e-cigarette domain`,
       description: el
-        ? `Το ${DOMAIN} πωλείται: σύντομο .gr που ταυτίζεται με την αναζήτηση ${head}. Αγορά, μίσθωση ή μίσθωση με εξαγορά, με ασφαλή μεσεγγύηση.`
-        : `${DOMAIN} is for sale: a short .gr that matches the Greek search ${head} exactly. Buy, lease, or lease-to-own through secure escrow.`,
+        ? `Το ${DOMAIN} πωλείται: σύντομο .gr που ταυτίζεται με την αναζήτηση ${head}. Άμεση εξαγορά με ασφαλή μεσεγγύηση.`
+        : `${DOMAIN} is for sale: a short .gr that matches the Greek search ${head} exactly. Buy it outright through secure escrow.`,
       ogAlt: el ? `Πωλείται το ${DOMAIN}` : `${DOMAIN} is for sale`,
     },
     skip: el ? "Μετάβαση στο περιεχόμενο" : "Skip to content",
@@ -134,12 +134,12 @@ export function getCopy(locale: Locale) {
       answer: inShort,
       asking: el ? "Ζητούμενη τιμή" : "Asking price",
       fraction: el
-        ? "Σταθερή τιμή για το όνομα. Δεκτές και προτάσεις ή μίσθωση."
-        : "A fixed price for the name. Offers and leases are welcome.",
+        ? "Σταθερή τιμή για το όνομα. Δεκτές και προτάσεις."
+        : "A fixed price for the name. Offers are welcome.",
       buy: el ? "Αγορά τώρα" : "Buy now",
       offer: el ? "Κάντε πρόταση" : "Make an offer",
       offerShort: el ? "Προσφορά" : "Offer",
-      lease: el ? "Ή μίσθωση, και με δικαίωμα εξαγοράς" : "Or lease / lease-to-own",
+      invoice: el ? "Δυνατότητα έκδοσης τιμολογίου" : "Invoice available",
       eu: transferNote,
       trust: el
         ? [
@@ -262,23 +262,23 @@ export function getCopy(locale: Locale) {
             : "The name moves to you through the .gr registry, with a registrar of your choice.",
         },
         {
-          title: el ? "Ευελιξία" : "Flexibility",
+          title: el ? "Καθαρή εξαγορά" : "Clean sale",
           body: el
-            ? "Εξαγορά, μίσθωση ή μίσθωση με δικαίωμα εξαγοράς, ανάλογα με τα σχέδιά σας."
-            : "Buy, lease, or lease-to-own, depending on your plans.",
+            ? "Μία πληρωμή, πλήρης μεταβίβαση. Το όνομα γίνεται δικό σας οριστικά."
+            : "One payment, full transfer. The name is yours for good.",
         },
       ],
     },
     options: {
-      title: el ? "Αγορά ή μίσθωση" : "Buy or lease",
+      title: el ? "Αγορά ή πρόταση" : "Buy or make an offer",
       buyTitle: el ? `Εξαγορά στα ${price}` : `Buy outright for ${price}`,
       buyBody: el
         ? "Η τιμή είναι σταθερή και δημοσιευμένη. Η πληρωμή γίνεται με ασφάλεια μέσω μεσεγγύησης (π.χ. Escrow.com ή Sedo) και ακολουθεί η μεταβίβαση."
         : "The asking price is published. Payment can close through escrow, for example Escrow.com or Sedo, and the domain transfers after that.",
-      leaseTitle: el ? "Μίσθωση, και με δικαίωμα εξαγοράς" : "Lease or lease-to-own",
-      leaseBody: el
-        ? "Αν δεν θέλετε να αγοράσετε αμέσως, στείλτε πρόταση μίσθωσης. Οι όροι συμφωνούνται κατά περίπτωση."
-        : "If you do not want to buy outright yet, send a lease proposal. Terms are agreed separately, and no lease price is published.",
+      offerTitle: el ? "Έχετε άλλο ποσό κατά νου;" : "Have a different figure in mind?",
+      offerBody: el
+        ? "Στείλτε την πρότασή σας μέσω της φόρμας. Κάθε σοβαρή προσφορά εξετάζεται."
+        : "Send your offer through the form. Every serious offer is considered.",
     },
     faq: {
       title: el ? "Συχνές ερωτήσεις" : "Questions, answered",
@@ -294,9 +294,6 @@ export function getCopy(locale: Locale) {
       company: el ? "Εταιρεία" : "Company",
       optional: el ? "προαιρετικό" : "optional",
       amount: el ? "Ποσό πρότασης (€)" : "Offer amount (€)",
-      deal: el ? "Τύπος συμφωνίας" : "Deal type",
-      buy: el ? "Αγορά" : "Buy",
-      lease: el ? "Μίσθωση" : "Lease",
       message: el ? "Μήνυμα" : "Message",
       submit: el ? "Αποστολή πρότασης" : "Send offer",
       submitBuy: el ? `Επιβεβαίωση αγοράς στα ${price}` : `Confirm purchase at ${price}`,
@@ -318,9 +315,6 @@ export function getCopy(locale: Locale) {
       buyBanner: el
         ? `Αίτημα αγοράς στην τιμή των ${price}. Αν θέλετε, αλλάξτε το ποσό για να κάνετε διαφορετική πρόταση.`
         : `Purchase request at ${price}. You can change the amount if you want to make a different offer.`,
-      leaseHint: el
-        ? "Προτεινόμενο ποσό σε ευρώ. Στη σημείωση διευκρινίστε αν είναι μηνιαίο ή συνολικό."
-        : "Proposed amount in euros. In the note, say whether it is monthly or total.",
       offerHint: el ? "Το ποσό που προτείνετε, σε ευρώ." : "The amount you propose, in euros.",
       required: el ? "υποχρεωτικό" : "required",
     },

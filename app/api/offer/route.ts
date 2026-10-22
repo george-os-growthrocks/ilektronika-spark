@@ -7,7 +7,7 @@ const offerSchema = z.object({
   email: z.string().trim().email().max(200),
   company: z.string().trim().max(200).optional().default(""),
   amount: z.coerce.number().positive().max(100_000_000),
-  deal: z.enum(["buy", "lease"]),
+  deal: z.enum(["buy"]).optional().default("buy"),
   message: z.string().trim().max(5000).optional().default(""),
   website: z.string().max(200).optional().default(""),
 });
