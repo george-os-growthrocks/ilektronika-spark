@@ -23,7 +23,7 @@ Checkout reads `STRIPE_SECRET_KEY` only. The webhook signing secret is separate 
 
 - `mode`: `payment`
 - price: EUR 1,500.00, inline `price_data`
-- product: `Domain ilektronikatsigara.gr + Next.js e-shop`
+- product: `Domain ilektronikatsigara.gr`
 - billing address required (includes country)
 - phone number collection enabled
 - `tax_id_collection` enabled
@@ -32,7 +32,7 @@ Checkout reads `STRIPE_SECRET_KEY` only. The webhook signing secret is separate 
 
 `POST /api/checkout` with `{ "locale": "el" }` or `{ "locale": "en" }` returns `{ "url": "..." }`. When the key is missing, or Stripe returns an error, the response is `{ "url": null, "fallback": "/?intent=buy#contact" }` (or the English equivalent) and the GET route redirects there.
 
-After a verified payment, confirm the buyer is based in the EU, then start the `.gr` transfer within a few business days. The webhook logs the Checkout Session id and billing country for that check. It does not transfer the domain by itself.
+After a verified payment, confirm the buyer's details for the .gr registry declaration, then start the `.gr` transfer within a few business days. The webhook logs the Checkout Session id and billing country. It does not transfer the domain by itself.
 
 ## Scripts
 

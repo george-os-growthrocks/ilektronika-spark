@@ -3,7 +3,7 @@ import { ASKING_PRICE_EUR, DOMAIN } from "@/config/site";
 import type { Locale } from "@/content/locale";
 
 /** Shown on the Stripe Checkout line item. */
-export const CHECKOUT_PRODUCT_NAME = "Domain ilektronikatsigara.gr + Next.js e-shop";
+export const CHECKOUT_PRODUCT_NAME = `Domain ${DOMAIN}`;
 
 /** EUR 1,500.00 in cents. */
 export const CHECKOUT_UNIT_AMOUNT = ASKING_PRICE_EUR * 100;

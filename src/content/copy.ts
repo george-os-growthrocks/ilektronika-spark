@@ -1,19 +1,19 @@
 import { ASKING_PRICE_EUR, CONTACT_EMAIL, DOMAIN } from "@/config/site";
 import {
-  BACKLINKS,
-  BRANDED_VOLUME,
-  CLUSTERS,
-  COMPETITOR_DR,
+  GREEKLISH_TERM,
+  GREEKLISH_VOLUME,
+  GSC_CLICKS,
+  GSC_IMPRESSIONS,
   HEAD_KD,
   HEAD_TERM,
   HEAD_VOLUME,
-  NON_BRAND_VOLUME,
-  REFERRING_DOMAINS,
-  TRAFFIC_VALUE_USD,
-  type ClusterId,
+  PLURAL_TERM,
+  PLURAL_VOLUME,
+  SOURCE_EL,
+  SOURCE_EN,
 } from "@/content/facts";
 import type { Locale } from "@/content/locale";
-import { formatEur, formatInt, formatUsd } from "@/lib/format";
+import { formatEur, formatInt } from "@/lib/format";
 
 export type Copy = ReturnType<typeof getCopy>;
 
@@ -21,26 +21,16 @@ export function getCopy(locale: Locale) {
   const el = locale === "el";
   const n = (value: number) => formatInt(locale, value);
   const price = formatEur(locale, ASKING_PRICE_EUR);
-  const usd = formatUsd(locale, TRAFFIC_VALUE_USD, true);
   const head = `«${HEAD_TERM}»`;
+  const gscPeriod = el ? "1 Ιουνίου έως 19 Οκτωβρίου 2026" : "1 June to 19 October 2026";
 
-  const clusterLabels: Record<ClusterId, string> = el
-    ? {
-        heated: "Θερμαινόμενος καπνός",
-        generic: "Γενικοί όροι (ηλεκτρονικό τσιγάρο, άτμισμα)",
-        devices: "Μάρκες συσκευών",
-        pouches: "Φακελάκια νικοτίνης",
-      }
-    : {
-        heated: "Heated tobacco",
-        generic: "Generic e-cig / vape",
-        devices: "Device brands",
-        pouches: "Nicotine pouches",
-      };
+  const transferNote = el
+    ? "Η μεταβίβαση γίνεται μέσω του μητρώου .gr της ΕΕΤΤ. Ένα .gr μπορεί να εκχωρηθεί σε οποιοδήποτε φυσικό ή νομικό πρόσωπο, ελληνικό ή αλλοδαπό."
+    : "The transfer runs through the EETT .gr registry. A .gr name can be assigned to any natural or legal person, Greek or foreign.";
 
   const inShort = el
-    ? `Ναι. Το ${DOMAIN} πωλείται στα ${price}. Η αγορά περιλαμβάνει το domain και ένα πλήρες ηλεκτρονικό κατάστημα, έτοιμο να λειτουργήσει, με στημένη βελτιστοποίηση για μηχανές αναζήτησης και ενεργές πληρωμές. Υπάρχει και επιλογή μίσθωσης ή μίσθωσης με εξαγορά. Η μεταβίβαση .gr απαιτεί αγοραστή με έδρα στην ΕΕ.`
-    : `Yes. ${DOMAIN} is for sale at ${price}. The purchase includes the domain and a ready-to-launch Next.js e-shop with a custom SEO setup and payments already configured. Lease and lease-to-own are also available. A .gr transfer requires an EU-based buyer.`;
+    ? `Ναι. Το ${DOMAIN} πωλείται στα ${price}, ως όνομα τομέα. Ταυτίζεται λέξη προς λέξη με την αναζήτηση ${head} και διατίθεται για εξαγορά, μίσθωση ή μίσθωση με δικαίωμα εξαγοράς.`
+    : `Yes. ${DOMAIN} is for sale at ${price}, as a domain name. It matches the search ${head} word for word and is available to buy, lease, or lease-to-own.`;
 
   const faq = [
     {
@@ -50,26 +40,32 @@ export function getCopy(locale: Locale) {
       a: inShort,
     },
     {
-      q: el ? "Γιατί έχει αξία η ακριβής αντιστοιχία με την αναζήτηση;" : "Why does the exact match matter?",
+      q: el ? "Τι ακριβώς αγοράζω;" : "What exactly am I buying?",
       a: el
-        ? `Το ${head} έχει περίπου ${n(HEAD_VOLUME)} μηνιαίες αναζητήσεις στην Ελλάδα και δείκτη δυσκολίας ${HEAD_KD} στα 100. Το όνομα είναι ακριβώς αυτό που πληκτρολογεί ο χρήστης. Συγγενικές αναζητήσεις: «ilektroniko tsigaro» με ${n(450)} και «ηλεκτρονικά τσιγάρα» με ${n(800)} αναζητήσεις τον μήνα.`
-        : `${head} has about ${n(HEAD_VOLUME)} monthly searches in Greece and keyword difficulty ${HEAD_KD}. The domain matches that query exactly. Nearby forms: “ilektroniko tsigaro” at ${n(450)} and “ηλεκτρονικά τσιγάρα” at ${n(800)} monthly searches.`,
+        ? `Το όνομα τομέα ${DOMAIN}. Το περιεχόμενο και η πλατφόρμα του καταστήματος που θα στήσετε είναι δική σας επιλογή.`
+        : `The domain name ${DOMAIN}. The shop you build on it, and the platform you use, are your choice.`,
     },
     {
       q: el
-        ? "Γιατί αυτή η επισκεψιμότητα δεν αγοράζεται με διαφήμιση;"
-        : "Why can’t this traffic be bought with ads?",
+        ? "Γιατί έχει αξία η ακριβής αντιστοιχία με την αναζήτηση;"
+        : "Why does the exact match matter?",
       a: el
-        ? "Η ελληνική νομοθεσία απαγορεύει τη διαφήμιση του ηλεκτρονικού τσιγάρου. Οι πελάτες έρχονται κυρίως από την αναζήτηση στη Google, και αυτή την επισκεψιμότητα δεν μπορεί κανείς να την αγοράσει."
-        : "Greek law bans paid e-cigarette advertising. Organic search is the main acquisition channel, so this traffic cannot be bought with ads.",
+        ? `Το ${head} έχει περίπου ${n(HEAD_VOLUME)} μηνιαίες αναζητήσεις στην Ελλάδα και δείκτη δυσκολίας ${HEAD_KD} στα 100. Το όνομα είναι ακριβώς αυτό που πληκτρολογεί ο χρήστης. Συγγενικές αναζητήσεις: «${GREEKLISH_TERM}» με ${n(GREEKLISH_VOLUME)} και «${PLURAL_TERM}» με ${n(PLURAL_VOLUME)} αναζητήσεις τον μήνα.`
+        : `${head} has about ${n(HEAD_VOLUME)} monthly searches in Greece and keyword difficulty ${HEAD_KD} out of 100. The domain matches that query exactly. Related searches: “${GREEKLISH_TERM}” at ${n(GREEKLISH_VOLUME)} and “${PLURAL_TERM}” at ${n(PLURAL_VOLUME)} per month.`,
+    },
+    {
+      q: el ? "Έχει ήδη ιστορικό στη Google;" : "Does it already have a history in Google?",
+      a: el
+        ? `Ναι. Από ${gscPeriod}, το Google Search Console κατέγραψε ${n(GSC_CLICKS)} κλικ και ${n(GSC_IMPRESSIONS)} εμφανίσεις για τον προηγούμενο ιστότοπο του ονόματος.`
+        : `Yes. From ${gscPeriod}, Google Search Console recorded ${n(GSC_CLICKS)} clicks and ${n(GSC_IMPRESSIONS)} impressions for the previous site on the domain.`,
     },
     {
       q: el
-        ? `Πώς συγκρίνεται η τιμή των ${price} με την αξία της κίνησης;`
-        : `How does ${price} compare with the traffic value?`,
+        ? "Γιατί η οργανική αναζήτηση μετράει τόσο σε αυτή την αγορά;"
+        : "Why does organic search matter so much in this market?",
       a: el
-        ? `Με συντηρητική εκτίμηση, η οργανική επισκεψιμότητα από μια θέση στην πρώτη τριάδα αξίζει ${usd} τον χρόνο. Η τιμή των ${price} αντιστοιχεί σε μικρό μέρος αυτής της ετήσιας αξίας.`
-        : `A conservative estimate of organic value at a top-3 ranking is ${usd} per year. The ${price} asking price is a fraction of that yearly value.`,
+        ? "Η ελληνική νομοθεσία δεν επιτρέπει τη διαφήμιση του ηλεκτρονικού τσιγάρου στο διαδίκτυο. Γι’ αυτό η αναζήτηση στη Google είναι από τους λίγους δρόμους για να σας βρει ο πελάτης."
+        : "Greek law does not allow e-cigarette advertising online. That makes Google search one of the few ways customers can find a shop.",
     },
     {
       q: el ? "Πώς γίνεται η μεταβίβαση;" : "How does the transfer work?",
@@ -86,26 +82,18 @@ export function getCopy(locale: Locale) {
     {
       q: el ? "Μπορώ να το μισθώσω αντί να το αγοράσω;" : "Can I lease it instead of buying it?",
       a: el
-        ? `Ναι. Εκτός από την εξαγορά στα ${price}, το όνομα διατίθεται και με μίσθωση ή μίσθωση με εξαγορά. Οι όροι συμφωνούνται χωριστά.`
+        ? `Ναι. Εκτός από την εξαγορά στα ${price}, το όνομα διατίθεται και με μίσθωση ή μίσθωση με δικαίωμα εξαγοράς. Οι όροι συμφωνούνται χωριστά.`
         : `Yes. Besides an outright purchase at ${price}, the domain is available on a lease or lease-to-own. Those terms are agreed separately.`,
-    },
-    {
-      q: el ? "Τι άλλο περιλαμβάνει η πώληση;" : "What else is included?",
-      a: el
-        ? "Μαζί με το όνομα παραλαμβάνετε πλήρες ηλεκτρονικό κατάστημα, έτοιμο να λειτουργήσει, με στημένη βελτιστοποίηση για τη Google και ενεργές πληρωμές."
-        : "A ready-to-launch Next.js e-shop, with a custom SEO setup and payments already configured, together with the domain itself.",
     },
     {
       q: el ? "Εγγυάται η αγορά πρώτη θέση στη Google;" : "Does buying it guarantee a top ranking?",
       a: el
-        ? `Όχι. Τα στοιχεία δείχνουν τη ζήτηση, δεν υπόσχονται κατάταξη. Σήμερα πρώτο για τον κύριο όρο είναι κατάστημα με ισχύ τομέα (DR) ${COMPETITOR_DR}, οπότε μια κορυφαία θέση είναι ρεαλιστικός στόχος.`
-        : `No. The figures describe demand, not a ranking promise. The current #1 for the head term is a DR ${COMPETITOR_DR} shop, so a top ranking is a realistic goal.`,
+        ? "Όχι. Τα στοιχεία δείχνουν τη ζήτηση, δεν υπόσχονται κατάταξη. Η θέση στη Google εξαρτάται από το κατάστημα και το περιεχόμενο που θα χτίσετε."
+        : "No. The figures describe demand, not a ranking promise. Rankings depend on the shop and content you build.",
     },
     {
-      q: el ? "Ποιος μπορεί να παραλάβει ένα .gr;" : "Who can take a .gr domain?",
-      a: el
-        ? "Η μεταβίβαση .gr απαιτεί αγοραστή με έδρα στην Ευρωπαϊκή Ένωση."
-        : "A .gr transfer requires a buyer based in the European Union.",
+      q: el ? "Ποιος μπορεί να αποκτήσει ένα .gr;" : "Who can hold a .gr domain?",
+      a: transferNote,
     },
     {
       q: el ? "Πώς στέλνω προσφορά;" : "How do I send an offer?",
@@ -116,44 +104,49 @@ export function getCopy(locale: Locale) {
   ];
 
   return {
+    source: el ? SOURCE_EL : SOURCE_EN,
     meta: {
-      title: el ? `Πωλείται το ${DOMAIN} | ${price}` : `${DOMAIN} is for sale — ${price}`,
+      title: el
+        ? `Πωλείται το ${DOMAIN} · Domain για ηλεκτρονικό τσιγάρο`
+        : `${DOMAIN} for sale · Exact-match Greek e-cigarette domain`,
       description: el
-        ? `Πωλείται το ${DOMAIN} στα ${price}: ακριβώς ό,τι αναζητούν ${n(HEAD_VOLUME)} χρήστες τον μήνα στην Ελλάδα για ${head}, με σχεδόν μηδενικό ανταγωνισμό.`
-        : `${DOMAIN} is for sale at ${price}. Exact match for ${head}: about ${n(HEAD_VOLUME)} monthly searches in Greece, keyword difficulty ${HEAD_KD}.`,
-      ogAlt: el ? `${DOMAIN} πωλείται, ${price}` : `${DOMAIN} is for sale, ${price}`,
+        ? `Το ${DOMAIN} πωλείται: σύντομο .gr που ταυτίζεται με την αναζήτηση ${head}. Αγορά, μίσθωση ή μίσθωση με εξαγορά, με ασφαλή μεσεγγύηση.`
+        : `${DOMAIN} is for sale: a short .gr that matches the Greek search ${head} exactly. Buy, lease, or lease-to-own through secure escrow.`,
+      ogAlt: el ? `Πωλείται το ${DOMAIN}` : `${DOMAIN} is for sale`,
     },
     skip: el ? "Μετάβαση στο περιεχόμενο" : "Skip to content",
     langLabel: el ? "Γλώσσα" : "Language",
     nav: {
       why: el ? "Γιατί αξίζει" : "Why",
       keywords: el ? "Αναζητήσεις" : "Keywords",
-      included: el ? "Πακέτο" : "Included",
+      included: el ? "Τι περιλαμβάνει" : "Included",
       faq: el ? "Ερωτήσεις" : "FAQ",
       contact: el ? "Επικοινωνία" : "Contact",
     },
     hero: {
       eyebrow: el ? "Όνομα τομέα προς πώληση · .gr" : "Domain for sale · .gr",
       titleLead: el ? "Πωλείται το" : "",
-      titleTail: el ? "η πιο καθαρή διεύθυνση της αγοράς" : "is for sale",
+      titleTail: el ? "η διεύθυνση που ψάχνει η αγορά" : "is for sale",
       sub: el
-        ? `Είναι ακριβώς η λέξη που πληκτρολογούν ${n(HEAD_VOLUME)} άνθρωποι κάθε μήνα στην Ελλάδα, ${head}, με δείκτη δυσκολίας μόλις ${HEAD_KD}/100.`
-        : `Exact match for ${head}: about ${n(HEAD_VOLUME)} monthly searches in Greece, keyword difficulty ${HEAD_KD}.`,
+        ? `Είναι ακριβώς η φράση που πληκτρολογούν περίπου ${n(HEAD_VOLUME)} φορές τον μήνα στην Ελλάδα, ${head}, με δείκτη δυσκολίας ${HEAD_KD}/100.`
+        : `Exact match for ${head}: about ${n(HEAD_VOLUME)} monthly searches in Greece, keyword difficulty ${HEAD_KD}/100.`,
       answerLabel: el ? "Με δυο λόγια" : "In short",
       answer: inShort,
       asking: el ? "Ζητούμενη τιμή" : "Asking price",
       fraction: el
-        ? `Μικρό μέρος της ετήσιας αξίας μιας θέσης στην πρώτη τριάδα (${usd} τον χρόνο, συντηρητικά).`
-        : `A fraction of the conservative top-3 value (${usd}/year).`,
+        ? "Σταθερή τιμή για το όνομα. Δεκτές και προτάσεις ή μίσθωση."
+        : "A fixed price for the name. Offers and leases are welcome.",
       buy: el ? "Αγορά τώρα" : "Buy now",
       offer: el ? "Κάντε πρόταση" : "Make an offer",
       offerShort: el ? "Προσφορά" : "Offer",
       lease: el ? "Ή μίσθωση, και με δικαίωμα εξαγοράς" : "Or lease / lease-to-own",
-      eu: el
-        ? "Η μεταβίβαση .gr απαιτεί αγοραστή με έδρα στην ΕΕ."
-        : "A .gr transfer requires an EU-based buyer.",
+      eu: transferNote,
       trust: el
-        ? ["Σταθερή, δημοσιευμένη τιμή", "Ασφαλής πληρωμή με μεσεγγύηση", "Καμία δέσμευση στην πρώτη επαφή"]
+        ? [
+            "Σταθερή, δημοσιευμένη τιμή",
+            "Ασφαλής πληρωμή με μεσεγγύηση",
+            "Καμία δέσμευση στην πρώτη επαφή",
+          ]
         : ["Published price", "Payment through escrow", "No obligation on the first message"],
     },
     thanks: {
@@ -163,95 +156,76 @@ export function getCopy(locale: Locale) {
         : "If checkout completed, the transfer follows the steps below.",
       steps: el
         ? [
-            "Ελέγχουμε ότι ο αγοραστής έχει έδρα στην Ευρωπαϊκή Ένωση. Η μεταβίβαση .gr το απαιτεί.",
+            "Επιβεβαιώνουμε τα στοιχεία του νέου δικαιούχου για τη δήλωση στο μητρώο .gr.",
             "Η μεταβίβαση ξεκινά μέσα σε λίγες εργάσιμες ημέρες.",
           ]
         : [
-            "We check that the buyer is based in the European Union. A .gr transfer requires it.",
+            "We confirm the new holder’s details for the .gr registry declaration.",
             "The transfer starts within a few business days.",
           ],
     },
     statsTitle: el ? "Τα νούμερα" : "The figures",
     statsIntro: el
-      ? "Μηνιαία αναζήτηση στην Ελλάδα, εκτός αν σημειώνεται διαφορετικά."
-      : "Monthly searches in Greece, unless noted otherwise.",
+      ? "Μηνιαίες αναζητήσεις στην Ελλάδα, και το ιστορικό του ονόματος στη Google."
+      : "Monthly searches in Greece, plus the domain’s history in Google.",
     stats: {
       exact: {
-        label: el ? "Ακριβείς αναζητήσεις τον μήνα" : "Exact-match searches / month",
+        label: el ? "Αναζητήσεις τον μήνα" : "Searches / month",
         note: head,
       },
       kd: {
-        label: el ? "Δυσκολία κατάταξης (0-100)" : "Keyword difficulty",
+        label: el ? "Δυσκολία κατάταξης (0-100)" : "Keyword difficulty (0-100)",
         note: head,
       },
-      category: {
-        label: el ? "Γενικές αναζητήσεις κατηγορίας / μήνα" : "Non-brand category / month",
-        note: el ? "Χωρίς ονόματα εταιρειών" : "Category terms, without brands",
+      plural: {
+        label: el ? "Αναζητήσεις τον μήνα" : "Searches / month",
+        note: `«${PLURAL_TERM}»`,
       },
-      brands: {
-        label: el ? "Μαζί με επώνυμες αναζητήσεις / μήνα" : "Including brands / month",
-        note: el ? "Ευρύτερη ζήτηση της αγοράς" : "Wider market demand",
+      greeklish: {
+        label: el ? "Αναζητήσεις τον μήνα" : "Searches / month",
+        note: `«${GREEKLISH_TERM}»`,
       },
-      links: {
-        label: el ? "Ιστότοποι με συνδέσμους προς το όνομα" : "Referring domains",
-        note: el ? `και πάνω από ${n(BACKLINKS)} εισερχόμενοι σύνδεσμοι` : `and ${n(BACKLINKS)}+ backlinks`,
+      clicks: {
+        label: el ? "Κλικ από τη Google" : "Clicks from Google",
+        note: el ? `Search Console, ${gscPeriod}` : `Search Console, ${gscPeriod}`,
       },
-      value: {
-        label: el ? "Αξία θέσης στην πρώτη τριάδα / χρόνο" : "Top-3 value / year",
-        note: el ? "Συντηρητική εκτίμηση" : "Conservative estimate",
+      impressions: {
+        label: el ? "Εμφανίσεις στη Google" : "Impressions in Google",
+        note: el ? `Search Console, ${gscPeriod}` : `Search Console, ${gscPeriod}`,
       },
     },
     why: {
       title: el ? `Γιατί το ${DOMAIN} είναι ευκαιρία` : `Why buy ${DOMAIN}`,
       intro: el
-        ? "Σύντομο .gr, ακριβώς η λέξη που ψάχνει ο κόσμος, σε μια αγορά όπου η διαφήμιση απαγορεύεται."
-        : "A short .gr, an exact match on the head term, and demand that cannot be bought with ads.",
+        ? "Σύντομο .gr, ακριβώς η φράση που ψάχνει ο κόσμος, σε μια αγορά όπου η διαφήμιση στο διαδίκτυο δεν επιτρέπεται."
+        : "A short .gr, an exact match on the head term, in a market where online advertising is not allowed.",
       points: [
         {
-          title: el ? "Η λέξη που ψάχνουν, χωρίς ανταγωνισμό" : "Exact match, difficulty 0",
+          title: el ? "Η φράση που ψάχνουν, λέξη προς λέξη" : "Exact match, difficulty 0",
           body: el
-            ? `Το ${head} συγκεντρώνει ${n(HEAD_VOLUME)} αναζητήσεις τον μήνα στην Ελλάδα με δυσκολία κατάταξης ${HEAD_KD}. Οι παραλλαγές «ilektroniko tsigaro» (${n(450)}) και «ηλεκτρονικά τσιγάρα» (${n(800)}) ενισχύουν την ίδια πρόθεση.`
-            : `${head} has ${n(HEAD_VOLUME)} monthly searches in Greece and keyword difficulty ${HEAD_KD}. The forms “ilektroniko tsigaro” (${n(450)}) and “ηλεκτρονικά τσιγάρα” (${n(800)}) sit beside the same query.`,
+            ? `Το ${head} συγκεντρώνει περίπου ${n(HEAD_VOLUME)} αναζητήσεις τον μήνα στην Ελλάδα, με δείκτη δυσκολίας ${HEAD_KD}. Οι παραλλαγές «${PLURAL_TERM}» (${n(PLURAL_VOLUME)}) και «${GREEKLISH_TERM}» (${n(GREEKLISH_VOLUME)}) δείχνουν την ίδια πρόθεση.`
+            : `${head} has about ${n(HEAD_VOLUME)} monthly searches in Greece and keyword difficulty ${HEAD_KD}. The forms “${PLURAL_TERM}” (${n(PLURAL_VOLUME)}) and “${GREEKLISH_TERM}” (${n(GREEKLISH_VOLUME)}) share the same intent.`,
         },
         {
-          title: el ? "Ολόκληρη κατηγορία, όχι μία λέξη" : "Category demand, not one keyword",
+          title: el ? "Η Google το γνωρίζει ήδη" : "Already known to Google",
           body: el
-            ? `Οι γενικές αναζητήσεις της κατηγορίας φτάνουν τις ${n(NON_BRAND_VOLUME)} τον μήνα. Μαζί με τις επώνυμες, ξεπερνούν τις ${n(BRANDED_VOLUME)}.`
-            : `Non-brand category searches are ${n(NON_BRAND_VOLUME)} per month. Including brands, the wider volume is ${n(BRANDED_VOLUME)}+ per month.`,
+            ? `Το όνομα δεν ξεκινά από το μηδέν: από ${gscPeriod} κατέγραψε ${n(GSC_CLICKS)} κλικ και ${n(GSC_IMPRESSIONS)} εμφανίσεις στο Google Search Console.`
+            : `The name does not start from zero: from ${gscPeriod} it recorded ${n(GSC_CLICKS)} clicks and ${n(GSC_IMPRESSIONS)} impressions in Google Search Console.`,
         },
         {
-          title: el ? "Επισκεψιμότητα που δεν αγοράζεται" : "This traffic cannot be bought",
+          title: el ? "Η αναζήτηση είναι ο βασικός δρόμος" : "Search is the main channel",
           body: el
-            ? `Η διαφήμιση ηλεκτρονικού τσιγάρου απαγορεύεται στην Ελλάδα, άρα οι πελάτες έρχονται από τη Google. Συντηρητική αξία μιας θέσης στην πρώτη τριάδα: ${usd} τον χρόνο.`
-            : `Greek law bans paid e-cigarette advertising, so organic search is the main acquisition channel. Conservative top-3 value: ${usd} per year.`,
+            ? "Η διαφήμιση του ηλεκτρονικού τσιγάρου στο διαδίκτυο δεν επιτρέπεται στην Ελλάδα. Ένα όνομα που ταυτίζεται με την αναζήτηση βοηθά τον πελάτη να σας θυμηθεί και να σας εμπιστευτεί."
+            : "Online e-cigarette advertising is not allowed in Greece. A name that matches the search helps customers remember and trust a shop.",
         },
         {
-          title: el ? `${price}: λιγότερο από την αξία ενός έτους` : `${price}, a fraction of one year`,
+          title: el ? "Σύντομο, καθαρό, ελληνικό" : "Short, clean, Greek",
           body: el
-            ? `Η τιμή είναι μικρό μέρος της ετήσιας αξίας που αποφέρει η οργανική επισκεψιμότητα (${usd} για θέση στην πρώτη τριάδα).`
-            : `The asking price is a fraction of the conservative yearly organic traffic value (${usd} at a top-3 ranking).`,
-        },
-        {
-          title: el
-            ? "Σύντομο .gr με έτοιμο κύρος"
-            : "Short .gr with links already in place",
-          body: el
-            ? `Ήδη πάνω από ${n(REFERRING_DOMAINS)} ιστότοποι και ${n(BACKLINKS)} σύνδεσμοι δείχνουν προς το όνομα. Σύντομο, εύκολο στη μνήμη, ιδανικό για κατάστημα ηλεκτρονικού τσιγάρου, θερμαινόμενου καπνού ή νικοτίνης.`
-            : `More than ${n(REFERRING_DOMAINS)} referring domains and ${n(BACKLINKS)} backlinks already point at the name. It is a short, memorable premium .gr, and it fits a retailer of e-cigarettes, heated tobacco, or nicotine.`,
-        },
-        {
-          title: el ? "Η κορυφή είναι ρεαλιστική" : "A realistic shot at the top",
-          body: el
-            ? `Πρώτο σήμερα για τον κύριο όρο είναι κατάστημα με ισχύ τομέα ${COMPETITOR_DR}. Η πρώτη θέση είναι ρεαλιστικός στόχος, όχι εγγύηση.`
-            : `The current #1 for the head term is a DR ${COMPETITOR_DR} shop. A top ranking is a realistic goal, not a guarantee.`,
+            ? "Εύκολο στη μνήμη και στην πληκτρολόγηση. Ταιριάζει σε κατάστημα ηλεκτρονικού τσιγάρου, υγρών αναπλήρωσης ή αξεσουάρ."
+            : "Easy to remember and type. It fits a retailer of e-cigarettes, e-liquids, or accessories.",
         },
       ],
     },
-    clustersTitle: el
-      ? `Πώς μοιράζονται οι ${n(BRANDED_VOLUME)}+ αναζητήσεις`
-      : `Inside the ${n(BRANDED_VOLUME)}+ (including brands)`,
-    clusterLabels,
-    clusters: CLUSTERS,
     keywords: {
       title: el ? "Τι ψάχνει ο κόσμος" : "Keyword opportunity",
       intro: el
@@ -260,38 +234,38 @@ export function getCopy(locale: Locale) {
       keyword: el ? "Λέξη-κλειδί" : "Keyword",
       volume: el ? "Αναζητήσεις / μήνα" : "Searches / month",
       caption: el
-        ? "Μηνιαίες αναζητήσεις στην Ελλάδα. Ο δείκτης δυσκολίας αφορά μόνο τον κύριο όρο."
-        : "Monthly searches in Greece. Difficulty 0 applies only to the head term.",
+        ? "Μηνιαίες αναζητήσεις στην Ελλάδα. Ο δείκτης δυσκολίας αφορά τον κύριο όρο."
+        : "Monthly searches in Greece. Difficulty applies to the head term.",
     },
     included: {
       title: el ? "Τι περιλαμβάνει η πώληση" : "What the sale includes",
       intro: el
-        ? "Δεν παίρνετε μόνο ένα όνομα. Παίρνετε μια επιχείρηση έτοιμη να ανοίξει."
-        : "The name is not the whole parcel. The package is ready to launch.",
+        ? "Μια καθαρή, ασφαλής συναλλαγή για ένα όνομα που αντέχει στον χρόνο."
+        : "A clean, secure transaction for a name that lasts.",
       items: [
         {
           title: el ? "Το όνομα" : "The domain",
           body: el
             ? `Το ${DOMAIN}, σύντομο .gr που ταυτίζεται με την αναζήτηση ${head}.`
-            : `${DOMAIN}, a short premium .gr and an exact match for ${head}.`,
+            : `${DOMAIN}, a short .gr and an exact match for ${head}.`,
         },
         {
-          title: el ? "Ηλεκτρονικό κατάστημα" : "Next.js e-shop",
+          title: el ? "Μεσεγγύηση" : "Escrow",
           body: el
-            ? "Σύγχρονο, γρήγορο κατάστημα, έτοιμο να δεχτεί παραγγελίες."
-            : "A ready-to-launch store, built on Next.js.",
+            ? "Η πληρωμή περνά από υπηρεσία μεσεγγύησης και αποδεσμεύεται μόνο όταν ολοκληρωθεί η μεταβίβαση."
+            : "Payment is held in escrow and released only once the transfer is complete.",
         },
         {
-          title: el ? "Βελτιστοποίηση για τη Google" : "Custom SEO setup",
+          title: el ? "Μεταβίβαση στο μητρώο" : "Registry transfer",
           body: el
-            ? "Δομή, τίτλοι και περιγραφές είναι ήδη στημένα για καλή κατάταξη."
-            : "SEO is already set up on the e-shop.",
+            ? "Το όνομα περνά στο όνομά σας μέσω του μητρώου .gr, με καταχωρητή της επιλογής σας."
+            : "The name moves to you through the .gr registry, with a registrar of your choice.",
         },
         {
-          title: el ? "Πληρωμές" : "Payments",
+          title: el ? "Ευελιξία" : "Flexibility",
           body: el
-            ? "Οι πληρωμές με κάρτα είναι ήδη ενεργές."
-            : "Payments integration is already configured.",
+            ? "Εξαγορά, μίσθωση ή μίσθωση με δικαίωμα εξαγοράς, ανάλογα με τα σχέδιά σας."
+            : "Buy, lease, or lease-to-own, depending on your plans.",
         },
       ],
     },
