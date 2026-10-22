@@ -141,7 +141,7 @@ export function LandingPage({
               </p>
               <h1 className="mt-4 max-w-3xl font-serif text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl">
                 {t.hero.titleLead ? <span className="block">{t.hero.titleLead}</span> : null}
-                <span className="mt-2 block break-words bg-gradient-to-r from-primary to-accent bg-clip-text text-[clamp(1.85rem,7.2vw,4.6rem)] leading-[1.05] text-transparent">
+                <span className="mt-2 block break-words bg-gradient-to-r from-primary to-accent bg-clip-text text-[clamp(1.85rem,7.2vw,4.6rem)] leading-[1.05] text-transparent lg:text-[clamp(2.5rem,4.4vw,4rem)]">
                   {DOMAIN}
                 </span>
                 <span className="mt-3 block text-2xl font-normal text-muted-foreground sm:text-3xl">
