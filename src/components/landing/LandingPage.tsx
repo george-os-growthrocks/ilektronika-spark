@@ -100,7 +100,12 @@ export function LandingPage({
               </Link>
             </div>
             <div className="hidden items-center gap-2 md:flex">
-              <span className="font-serif text-lg leading-none">{price}</span>
+              <span className="font-serif text-lg leading-none">
+                {price}{" "}
+                <span className="font-sans text-xs font-semibold text-muted-foreground">
+                  {t.hero.vatShort}
+                </span>
+              </span>
               <a className={primaryBtn} href={buy}>
                 {t.hero.buy}
               </a>
@@ -160,6 +165,9 @@ export function LandingPage({
                   {t.hero.asking}
                 </p>
                 <p className="mt-2 font-serif text-5xl tracking-tight">{price}</p>
+                <p className="mt-2 text-sm font-semibold text-secondary-foreground/90">
+                  {t.hero.vatLine}
+                </p>
                 <p className="mt-3 text-sm leading-relaxed text-secondary-foreground/80">
                   {t.hero.fraction}
                 </p>
@@ -341,6 +349,9 @@ export function LandingPage({
                 <h3 className="font-serif text-3xl font-semibold tracking-tight">
                   {t.options.buyTitle}
                 </h3>
+                <p className="mt-2 text-sm font-semibold text-primary-foreground/90">
+                  {t.options.buyTotal}
+                </p>
                 <p className="mt-3 max-w-xl leading-relaxed text-primary-foreground/85">
                   <LinkedText
                     text={t.options.buyBody}
@@ -441,16 +452,24 @@ export function LandingPage({
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 backdrop-blur md:hidden">
         <div className="flex items-center gap-2 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-          <div className="mr-auto">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+          <div className="mr-auto min-w-0">
+            <p className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
               {t.hero.asking}
             </p>
-            <p className="font-serif text-xl leading-none">{price}</p>
+            <p className="font-serif text-xl leading-none">
+              {price}{" "}
+              <span className="font-sans text-[11px] font-semibold text-muted-foreground">
+                {t.hero.vatShort}
+              </span>
+            </p>
           </div>
-          <a className={quietBtn} href={hrefFor(locale, "offer", "contact")}>
+          <a
+            className={`${quietBtn} whitespace-nowrap px-4`}
+            href={hrefFor(locale, "offer", "contact")}
+          >
             {t.hero.offerShort}
           </a>
-          <a className={primaryBtn} href={buy}>
+          <a className={`${primaryBtn} whitespace-nowrap px-4`} href={buy}>
             {t.hero.buy}
           </a>
         </div>

@@ -1,4 +1,13 @@
-import { ASKING_PRICE_EUR, CONTACT_EMAIL, DOMAIN, SITE_URL } from "@/config/site";
+import {
+  ASKING_PRICE_EUR,
+  CONTACT_EMAIL,
+  DOMAIN,
+  SITE_URL,
+  TOTAL_EUR,
+  VAT_EUR,
+  VAT_RATE_PERCENT,
+  checkoutEnabled,
+} from "@/config/site";
 import {
   GREEKLISH_TERM,
   GREEKLISH_VOLUME,
@@ -17,21 +26,26 @@ export const dynamic = "force-static";
 
 export function GET() {
   const eur = ASKING_PRICE_EUR.toLocaleString("en-US");
+  const total = TOTAL_EUR.toLocaleString("en-US");
+  const vatLine = `€${eur} + ${VAT_RATE_PERCENT}% Greek VAT (€${VAT_EUR}) = €${total} total`;
+  const payment = checkoutEnabled()
+    ? "Payment by card through Stripe (Buy now), or through escrow on request; transfer through the EETT .gr registry after payment"
+    : "Payment through escrow; transfer through the EETT .gr registry";
   const keywords = KEYWORDS.map(
     (row) => `- ${row.term}: ${row.volume.toLocaleString("en-US")}`,
   ).join("\n");
 
   const body = `# ${DOMAIN}
 
-> Greek .gr domain name for sale. Asking price: €${eur}.
+> Greek .gr domain name for sale. Asking price: ${vatLine}.
 
 This site is a domain-sale page. It does not sell or advertise nicotine products.
 
 ## Offer
 - Domain: ${DOMAIN} (the domain name only)
-- Asking price: €${eur} to buy outright
-- Payment through escrow; transfer through the EETT .gr registry
-- Invoice available
+- Asking price: ${vatLine}, to buy outright
+- ${payment}
+- Invoice available (issued for the purchase)
 - A .gr name can be assigned to any natural or legal person, Greek or foreign
 - Contact: ${CONTACT_EMAIL}
 - Greek page: ${SITE_URL}

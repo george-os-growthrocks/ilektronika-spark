@@ -1,12 +1,26 @@
 import { randomBytes } from "node:crypto";
-import { ASKING_PRICE_EUR, DOMAIN } from "@/config/site";
+import { ASKING_PRICE_EUR, DOMAIN, TOTAL_EUR, VAT_EUR, VAT_RATE_PERCENT } from "@/config/site";
 import type { Locale } from "@/content/locale";
 
 /** Shown on the Stripe Checkout line item. */
-export const CHECKOUT_PRODUCT_NAME = `Domain ${DOMAIN}`;
+export const CHECKOUT_PRODUCT_NAME = `${DOMAIN} – domain & website (outright sale)`;
 
-/** EUR 1,500.00 in cents. */
-export const CHECKOUT_UNIT_AMOUNT = ASKING_PRICE_EUR * 100;
+/** Line item description: net price, VAT and total. */
+export function checkoutDescription(locale: Locale): string {
+  return locale === "en"
+    ? `€${ASKING_PRICE_EUR.toLocaleString("en-US")} + ${VAT_RATE_PERCENT}% VAT (€${VAT_EUR}) = €${TOTAL_EUR.toLocaleString("en-US")} total. Invoice issued.`
+    : `${ASKING_PRICE_EUR.toLocaleString("el-GR")} € + ΦΠΑ ${VAT_RATE_PERCENT}% (${VAT_EUR} €) = ${TOTAL_EUR.toLocaleString("el-GR")} € σύνολο. Εκδίδεται τιμολόγιο.`;
+}
+
+/** Shown under the pay button. */
+export function checkoutSubmitMessage(locale: Locale): string {
+  return locale === "en"
+    ? "After payment we will contact you to complete the .gr transfer. An invoice is issued for the purchase."
+    : "Μετά την πληρωμή θα επικοινωνήσουμε μαζί σας για την ολοκλήρωση της μεταβίβασης του .gr. Για την αγορά εκδίδεται τιμολόγιο.";
+}
+
+/** Total including 24% VAT, in cents (EUR 1,860.00). */
+export const CHECKOUT_UNIT_AMOUNT = TOTAL_EUR * 100;
 
 export function parseCheckoutLocale(value: string | null | undefined): Locale {
   return value === "en" ? "en" : "el";
