@@ -1,59 +1,52 @@
 import { ASKING_PRICE_EUR, CONTACT_EMAIL, DOMAIN, SITE_URL } from "@/config/site";
 import {
-  BACKLINKS,
-  BRANDED_VOLUME,
-  COMPETITOR_DR,
+  GREEKLISH_TERM,
+  GREEKLISH_VOLUME,
+  GSC_CLICKS,
+  GSC_IMPRESSIONS,
   HEAD_KD,
   HEAD_TERM,
   HEAD_VOLUME,
   KEYWORDS,
-  NON_BRAND_VOLUME,
-  REFERRING_DOMAINS,
-  SOURCE,
-  TRAFFIC_VALUE_USD,
+  PLURAL_TERM,
+  PLURAL_VOLUME,
+  SOURCE_EN,
 } from "@/content/facts";
 
 export const dynamic = "force-static";
 
 export function GET() {
+  const eur = ASKING_PRICE_EUR.toLocaleString("en-US");
   const keywords = KEYWORDS.map(
     (row) => `- ${row.term}: ${row.volume.toLocaleString("en-US")}`,
   ).join("\n");
 
   const body = `# ${DOMAIN}
 
-> Premium .gr domain name for sale. Asking price: €${ASKING_PRICE_EUR.toLocaleString("en-US")}.
+> Greek .gr domain name for sale. Asking price: €${eur}.
 
 This site is a domain-sale page. It does not sell or advertise nicotine products.
 
 ## Offer
-- Domain: ${DOMAIN}
-- Asking price: €${ASKING_PRICE_EUR.toLocaleString("en-US")} to buy outright
-- Also available: lease or lease-to-own (no published lease price)
-- .gr transfer requires an EU-based buyer
-- Included: a ready-to-launch Next.js e-shop with a custom SEO setup and payments already configured
-- Buy now opens Stripe Checkout for €${ASKING_PRICE_EUR.toLocaleString("en-US")} when STRIPE_SECRET_KEY is set; otherwise it opens the offer form
+- Domain: ${DOMAIN} (the domain name only)
+- Asking price: €${eur} to buy outright
+- Also available: lease or lease-to-own (terms agreed separately)
+- Payment through escrow; transfer through the EETT .gr registry
+- A .gr name can be assigned to any natural or legal person, Greek or foreign
 - Contact: ${CONTACT_EMAIL}
 - Greek page: ${SITE_URL}
 - English page: ${SITE_URL}/en
 
-## Verified search facts
-${SOURCE}
-- Exact match "${HEAD_TERM}": ${HEAD_VOLUME.toLocaleString("en-US")} searches/month in Greece, keyword difficulty ${HEAD_KD}
-- "ilektroniko tsigaro": 450 monthly searches; "ηλεκτρονικά τσιγάρα": 800 monthly searches
-- Non-brand category searches: ${NON_BRAND_VOLUME.toLocaleString("en-US")}/month
-- Including brands: ${BRANDED_VOLUME.toLocaleString("en-US")}+/month (heated tobacco 92,700; generic e-cig/vape 22,170; device brands 13,740; nicotine pouches 11,370)
-- The current #1 for the head term is a DR ${COMPETITOR_DR} shop, so a top ranking is a realistic goal, not a guarantee
-- Greek law bans paid e-cigarette advertising, so organic search is the main acquisition channel and this traffic cannot be bought with ads
-- Conservative organic traffic value at a top-3 ranking: about $${TRAFFIC_VALUE_USD.toLocaleString("en-US")}/year
-- The €${ASKING_PRICE_EUR.toLocaleString("en-US")} asking price is a fraction of that yearly traffic value
-- ${REFERRING_DOMAINS}+ referring domains and ${BACKLINKS}+ backlinks
-- Short premium .gr
+## Search facts
+${SOURCE_EN}
+- Exact match "${HEAD_TERM}": about ${HEAD_VOLUME.toLocaleString("en-US")} searches/month in Greece, keyword difficulty ${HEAD_KD}
+- "${PLURAL_TERM}": ${PLURAL_VOLUME.toLocaleString("en-US")}/month; "${GREEKLISH_TERM}": ${GREEKLISH_VOLUME.toLocaleString("en-US")}/month
+- Google Search Console, 1 Jun to 19 Oct 2026: ${GSC_CLICKS} clicks, ${GSC_IMPRESSIONS.toLocaleString("en-US")} impressions (previous site on the domain)
+- Online e-cigarette advertising is not allowed in Greece, so organic search matters
+- The figures describe demand, not a ranking guarantee
 
 ## Keyword volumes (monthly searches, Greece)
 ${keywords}
-
-${SOURCE}
 `;
 
   return new Response(body, {

@@ -2,15 +2,14 @@ import Link from "next/link";
 import { ASKING_PRICE_EUR, CONTACT_EMAIL, DOMAIN } from "@/config/site";
 import { getCopy } from "@/content/copy";
 import {
-  BRANDED_VOLUME,
+  GREEKLISH_VOLUME,
+  GSC_CLICKS,
+  GSC_IMPRESSIONS,
   HEAD_KD,
   HEAD_TERM,
   HEAD_VOLUME,
   KEYWORDS,
-  NON_BRAND_VOLUME,
-  REFERRING_DOMAINS,
-  SOURCE,
-  TRAFFIC_VALUE_USD,
+  PLURAL_VOLUME,
 } from "@/content/facts";
 import type { Locale } from "@/content/locale";
 import { formatEur, formatInt } from "@/lib/format";
@@ -225,20 +224,20 @@ export function LandingPage({
             <Stat label={t.stats.kd.label} note={t.stats.kd.note}>
               <CountUp value={HEAD_KD} locale={locale} />
             </Stat>
-            <Stat label={t.stats.category.label} note={t.stats.category.note}>
-              <CountUp value={NON_BRAND_VOLUME} locale={locale} />
+            <Stat label={t.stats.plural.label} note={t.stats.plural.note}>
+              <CountUp value={PLURAL_VOLUME} locale={locale} />
             </Stat>
-            <Stat label={t.stats.brands.label} note={t.stats.brands.note}>
-              <CountUp value={BRANDED_VOLUME} locale={locale} suffix="+" />
+            <Stat label={t.stats.greeklish.label} note={t.stats.greeklish.note}>
+              <CountUp value={GREEKLISH_VOLUME} locale={locale} />
             </Stat>
-            <Stat label={t.stats.links.label} note={t.stats.links.note}>
-              <CountUp value={REFERRING_DOMAINS} locale={locale} suffix="+" />
+            <Stat label={t.stats.clicks.label} note={t.stats.clicks.note}>
+              <CountUp value={GSC_CLICKS} locale={locale} />
             </Stat>
-            <Stat label={t.stats.value.label} note={t.stats.value.note}>
-              <CountUp value={TRAFFIC_VALUE_USD} locale={locale} currency="USD" approximate />
+            <Stat label={t.stats.impressions.label} note={t.stats.impressions.note}>
+              <CountUp value={GSC_IMPRESSIONS} locale={locale} />
             </Stat>
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">{SOURCE}</p>
+          <p className="mt-4 text-xs text-muted-foreground">{t.source}</p>
         </section>
 
         <section id="why" className="scroll-mt-24 border-t border-border/80">
@@ -248,32 +247,12 @@ export function LandingPage({
             </h2>
             <p className="mt-3 max-w-2xl text-muted-foreground">{t.why.intro}</p>
             <div className="mt-8 grid gap-4 md:grid-cols-2">
-              {t.why.points.map((point, index) => (
+              {t.why.points.map((point) => (
                 <article key={point.title} className="rounded-3xl border border-border bg-card p-6">
                   <h3 className="font-serif text-2xl font-semibold tracking-tight">
                     {point.title}
                   </h3>
                   <p className="mt-3 leading-relaxed text-muted-foreground">{point.body}</p>
-                  {index === 1 ? (
-                    <div className="mt-5">
-                      <h4 className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-                        {t.clustersTitle}
-                      </h4>
-                      <ul className="mt-2">
-                        {t.clusters.map((cluster) => (
-                          <li
-                            key={cluster.id}
-                            className="flex items-baseline justify-between gap-4 border-t border-border py-2 text-sm"
-                          >
-                            <span>{t.clusterLabels[cluster.id]}</span>
-                            <span className="font-semibold tabular-nums">
-                              {formatInt(locale, cluster.volume)}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : null}
                 </article>
               ))}
             </div>
@@ -321,7 +300,7 @@ export function LandingPage({
                 </tbody>
               </table>
               <p className="border-t border-border px-4 py-3 text-xs text-muted-foreground">
-                {SOURCE}
+                {t.source}
               </p>
             </div>
           </div>
@@ -450,7 +429,7 @@ export function LandingPage({
             ))}
           </nav>
           <p className="mt-6 max-w-2xl leading-relaxed">{t.footer.disclaimer}</p>
-          <p className="mt-3">{SOURCE}</p>
+          <p className="mt-3">{t.source}</p>
           <p className="mt-6">{t.footer.rights}</p>
         </div>
       </footer>

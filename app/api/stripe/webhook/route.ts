@@ -6,8 +6,8 @@ export const dynamic = "force-dynamic";
 
 /**
  * Payment confirmation lives here, not on `/?paid=1`.
- * A paid session still needs a person to confirm an EU billing country and
- * start the .gr transfer. This handler records that signal; it does not
+ * A paid session still needs a person to confirm the buyer's registry details
+ * and start the .gr transfer. This handler records that signal; it does not
  * transfer the domain.
  */
 function record(event: Stripe.Event, session: Stripe.Checkout.Session): void {
