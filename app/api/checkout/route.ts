@@ -3,12 +3,15 @@ import type { Locale } from "@/content/locale";
 import {
   CHECKOUT_PRODUCT_NAME,
   CHECKOUT_UNIT_AMOUNT,
+  checkoutDescription,
   checkoutMetadata,
   checkoutReturnUrls,
+  checkoutSubmitMessage,
   integrationIdentifier,
   offerFallbackPath,
   parseCheckoutLocale,
 } from "@/lib/checkout";
+import { stripePaymentLinkUrl } from "@/config/site";
 import { safeStripeError, stripeClient } from "@/lib/stripe";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +30,14 @@ function fallbackRedirect(request: Request, locale: Locale): NextResponse {
 }
 
 async function createSessionUrl(request: Request, locale: Locale): Promise<string | null> {
+  // A Stripe Payment Link, when configured, takes precedence over sessions.
+  const link = stripePaymentLinkUrl();
+  if (link) {
+    const url = new URL(link);
+    url.searchParams.set("locale", locale);
+    return url.toString();
+  }
+
   const stripe = stripeClient();
   if (!stripe) return null;
 
@@ -39,6 +50,15 @@ async function createSessionUrl(request: Request, locale: Locale): Promise<strin
     billing_address_collection: "required",
     phone_number_collection: { enabled: true },
     tax_id_collection: { enabled: true },
+    name_collection: { business: { enabled: true, optional: true } },
+    invoice_creation: {
+      enabled: true,
+      invoice_data: {
+        description: checkoutDescription(locale),
+        metadata: checkoutMetadata(locale),
+      },
+    },
+    custom_text: { submit: { message: checkoutSubmitMessage(locale) } },
     integration_identifier: integrationIdentifier(),
     success_url: urls.success_url,
     cancel_url: urls.cancel_url,
@@ -49,7 +69,11 @@ async function createSessionUrl(request: Request, locale: Locale): Promise<strin
         price_data: {
           currency: "eur",
           unit_amount: CHECKOUT_UNIT_AMOUNT,
-          product_data: { name: CHECKOUT_PRODUCT_NAME },
+          // Gross amount: asking price plus 24% Greek VAT.
+          product_data: {
+            name: CHECKOUT_PRODUCT_NAME,
+            description: checkoutDescription(locale),
+          },
         },
       },
     ],

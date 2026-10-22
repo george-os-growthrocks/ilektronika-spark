@@ -1,4 +1,12 @@
-import { ASKING_PRICE_EUR, CONTACT_EMAIL, DOMAIN } from "@/config/site";
+import {
+  ASKING_PRICE_EUR,
+  CONTACT_EMAIL,
+  DOMAIN,
+  TOTAL_EUR,
+  VAT_EUR,
+  VAT_RATE_PERCENT,
+  checkoutEnabled,
+} from "@/config/site";
 import {
   GREEKLISH_TERM,
   GREEKLISH_VOLUME,
@@ -21,6 +29,14 @@ export function getCopy(locale: Locale) {
   const el = locale === "el";
   const n = (value: number) => formatInt(locale, value);
   const price = formatEur(locale, ASKING_PRICE_EUR);
+  const total = formatEur(locale, TOTAL_EUR);
+  const vat = formatEur(locale, VAT_EUR);
+  const rate = `${VAT_RATE_PERCENT}%`;
+  const priceFull = el
+    ? `${price} + ΦΠΑ ${rate} (σύνολο ${total})`
+    : `${price} + ${rate} VAT (${total} total)`;
+  // Card checkout through Stripe is live only when it is configured.
+  const card = checkoutEnabled();
   const head = `«${HEAD_TERM}»`;
   const gscPeriod = el ? "1 Ιουνίου έως 19 Οκτωβρίου 2026" : "1 June to 19 October 2026";
 
@@ -29,8 +45,8 @@ export function getCopy(locale: Locale) {
     : "The transfer runs through the EETT .gr registry. A .gr name can be assigned to any natural or legal person, Greek or foreign.";
 
   const inShort = el
-    ? `Ναι. Το ${DOMAIN} πωλείται στα ${price}, ως όνομα τομέα. Ταυτίζεται λέξη προς λέξη με την αναζήτηση ${head} και διατίθεται για άμεση εξαγορά.`
-    : `Yes. ${DOMAIN} is for sale at ${price}, as a domain name. It matches the search ${head} word for word and is available to buy outright.`;
+    ? `Ναι. Το ${DOMAIN} πωλείται στα ${priceFull}, ως όνομα τομέα. Ταυτίζεται λέξη προς λέξη με την αναζήτηση ${head} και διατίθεται για άμεση εξαγορά.`
+    : `Yes. ${DOMAIN} is for sale at ${priceFull}, as a domain name. It matches the search ${head} word for word and is available to buy outright.`;
 
   const faq = [
     {
@@ -39,6 +55,22 @@ export function getCopy(locale: Locale) {
         : `Is ${DOMAIN} for sale, and what is the price?`,
       a: inShort,
     },
+    {
+      q: el ? "Η τιμή περιλαμβάνει ΦΠΑ;" : "Does the price include VAT?",
+      a: el
+        ? `Όχι. Στην τιμή των ${price} προστίθεται ΦΠΑ ${rate} (${vat}), οπότε το σύνολο είναι ${total}. Για την αγορά εκδίδεται τιμολόγιο.`
+        : `No. ${rate} Greek VAT (${vat}) is added to the ${price} price, for a total of ${total}. An invoice is issued for the purchase.`,
+    },
+    ...(card
+      ? [
+          {
+            q: el ? "Πώς γίνεται η πληρωμή;" : "How do I pay?",
+            a: el
+              ? `Με κάρτα, μέσω της ασφαλούς σελίδας πληρωμής της Stripe, πατώντας «Αγορά τώρα». Πληρώνετε ${total} (${price} + ΦΠΑ ${rate}) και συμπληρώνετε επωνυμία, διεύθυνση τιμολόγησης και ΑΦΜ. Εκδίδεται τιμολόγιο και η μεταβίβαση ξεκινά αμέσως μετά την πληρωμή.`
+              : `By card, on Stripe’s secure checkout page, via “Buy now”. You pay ${total} (${price} + ${rate} VAT) and enter your company name, billing address and VAT number. An invoice is issued, and the transfer starts right after payment.`,
+          },
+        ]
+      : []),
     {
       q: el ? "Τι ακριβώς αγοράζω;" : "What exactly am I buying?",
       a: el
@@ -70,8 +102,12 @@ export function getCopy(locale: Locale) {
     {
       q: el ? "Πώς γίνεται η μεταβίβαση;" : "How does the transfer work?",
       a: el
-        ? "Συμφωνείται η τιμή, το ποσό κατατίθεται σε υπηρεσία μεσεγγύησης (π.χ. Escrow.com ή Sedo) και, με την ολοκλήρωση της συναλλαγής, το όνομα μεταβιβάζεται μέσω του μητρώου .gr."
-        : "You agree the price, payment is placed in escrow (for example Escrow.com or Sedo), and the domain is transferred through the .gr registry after the transaction completes.",
+        ? card
+          ? "Πληρώνετε online με κάρτα μέσω Stripe ή, αν προτιμάτε, μέσω υπηρεσίας μεσεγγύησης (π.χ. Escrow.com ή Sedo). Μετά την πληρωμή, το όνομα μεταβιβάζεται σε εσάς μέσω του μητρώου .gr."
+          : "Συμφωνείται η τιμή, το ποσό κατατίθεται σε υπηρεσία μεσεγγύησης (π.χ. Escrow.com ή Sedo) και, με την ολοκλήρωση της συναλλαγής, το όνομα μεταβιβάζεται μέσω του μητρώου .gr."
+        : card
+          ? "You pay online by card through Stripe or, if you prefer, through escrow (for example Escrow.com or Sedo). After payment, the domain is transferred to you through the .gr registry."
+          : "You agree the price, payment is placed in escrow (for example Escrow.com or Sedo), and the domain is transferred through the .gr registry after the transaction completes.",
     },
     {
       q: el ? "Πόσο διαρκεί μια τυπική μεταβίβαση;" : "How long does a typical transfer take?",
@@ -82,8 +118,12 @@ export function getCopy(locale: Locale) {
     {
       q: el ? "Τι γίνεται μετά την πληρωμή;" : "What happens after payment?",
       a: el
-        ? "Η πληρωμή κρατείται σε μεσεγγύηση, ξεκινά η μεταβίβαση στο μητρώο .gr και τα χρήματα αποδεσμεύονται μόλις το όνομα περάσει σε εσάς. Δυνατότητα έκδοσης τιμολογίου."
-        : "Payment is held in escrow, the .gr registry transfer starts, and the funds are released once the name is yours. Invoice available.",
+        ? card
+          ? "Λαμβάνετε επιβεβαίωση και τιμολόγιο. Επικοινωνούμε μαζί σας για τα στοιχεία του νέου δικαιούχου και ξεκινά η μεταβίβαση στο μητρώο .gr."
+          : "Η πληρωμή κρατείται σε μεσεγγύηση, ξεκινά η μεταβίβαση στο μητρώο .gr και τα χρήματα αποδεσμεύονται μόλις το όνομα περάσει σε εσάς. Δυνατότητα έκδοσης τιμολογίου."
+        : card
+          ? "You receive a confirmation and an invoice. We contact you for the new holder’s details and the .gr registry transfer starts."
+          : "Payment is held in escrow, the .gr registry transfer starts, and the funds are released once the name is yours. Invoice available.",
     },
     {
       q: el ? "Εγγυάται η αγορά πρώτη θέση στη Google;" : "Does buying it guarantee a top ranking?",
@@ -133,6 +173,8 @@ export function getCopy(locale: Locale) {
       answerLabel: el ? "Με δυο λόγια" : "In short",
       answer: inShort,
       asking: el ? "Ζητούμενη τιμή" : "Asking price",
+      vatLine: el ? `+ ΦΠΑ ${rate} · σύνολο ${total}` : `+ ${rate} VAT · ${total} total`,
+      vatShort: el ? "+ ΦΠΑ" : "+ VAT",
       fraction: el
         ? "Σταθερή τιμή για το όνομα. Δεκτές και προτάσεις."
         : "A fixed price for the name. Offers are welcome.",
@@ -144,10 +186,14 @@ export function getCopy(locale: Locale) {
       trust: el
         ? [
             "Σταθερή, δημοσιευμένη τιμή",
-            "Ασφαλής πληρωμή με μεσεγγύηση",
+            card ? "Πληρωμή με κάρτα μέσω Stripe" : "Ασφαλής πληρωμή με μεσεγγύηση",
             "Καμία δέσμευση στην πρώτη επαφή",
           ]
-        : ["Published price", "Payment through escrow", "No obligation on the first message"],
+        : [
+            "Published price",
+            card ? "Card payment via Stripe" : "Payment through escrow",
+            "No obligation on the first message",
+          ],
     },
     thanks: {
       title: el ? "Ευχαριστούμε" : "Thank you",
@@ -250,10 +296,14 @@ export function getCopy(locale: Locale) {
             : `${DOMAIN}, a short .gr and an exact match for ${head}.`,
         },
         {
-          title: el ? "Μεσεγγύηση" : "Escrow",
-          body: el
-            ? "Η πληρωμή περνά από υπηρεσία μεσεγγύησης και αποδεσμεύεται μόνο όταν ολοκληρωθεί η μεταβίβαση."
-            : "Payment is held in escrow and released only once the transfer is complete.",
+          title: card ? (el ? "Ασφαλής πληρωμή" : "Secure payment") : el ? "Μεσεγγύηση" : "Escrow",
+          body: card
+            ? el
+              ? "Πληρωμή με κάρτα μέσω Stripe, με τιμολόγιο. Αν προτιμάτε, η συναλλαγή μπορεί να γίνει και μέσω μεσεγγύησης."
+              : "Card payment through Stripe, with an invoice. Escrow is also available if you prefer."
+            : el
+              ? "Η πληρωμή περνά από υπηρεσία μεσεγγύησης και αποδεσμεύεται μόνο όταν ολοκληρωθεί η μεταβίβαση."
+              : "Payment is held in escrow and released only once the transfer is complete.",
         },
         {
           title: el ? "Μεταβίβαση στο μητρώο" : "Registry transfer",
@@ -271,10 +321,17 @@ export function getCopy(locale: Locale) {
     },
     options: {
       title: el ? "Αγορά ή πρόταση" : "Buy or make an offer",
-      buyTitle: el ? `Εξαγορά στα ${price}` : `Buy outright for ${price}`,
-      buyBody: el
-        ? "Η τιμή είναι σταθερή και δημοσιευμένη. Η πληρωμή γίνεται με ασφάλεια μέσω μεσεγγύησης (π.χ. Escrow.com ή Sedo) και ακολουθεί η μεταβίβαση."
-        : "The asking price is published. Payment can close through escrow, for example Escrow.com or Sedo, and the domain transfers after that.",
+      buyTitle: el ? `Εξαγορά στα ${price} + ΦΠΑ` : `Buy outright for ${price} + VAT`,
+      buyTotal: el
+        ? `Σύνολο ${total} με ΦΠΑ ${rate} · Δυνατότητα έκδοσης τιμολογίου`
+        : `${total} total with ${rate} VAT · Invoice available`,
+      buyBody: card
+        ? el
+          ? "Η τιμή είναι σταθερή και δημοσιευμένη. Πληρώνετε με κάρτα μέσω Stripe, εκδίδεται τιμολόγιο και η μεταβίβαση ξεκινά αμέσως μετά. Αν προτιμάτε μεσεγγύηση (π.χ. Escrow.com ή Sedo), γράψτε μας."
+          : "The asking price is published. You pay by card through Stripe, an invoice is issued, and the transfer starts right after. Prefer escrow, for example Escrow.com or Sedo? Get in touch."
+        : el
+          ? "Η τιμή είναι σταθερή και δημοσιευμένη. Η πληρωμή γίνεται με ασφάλεια μέσω μεσεγγύησης (π.χ. Escrow.com ή Sedo) και ακολουθεί η μεταβίβαση."
+          : "The asking price is published. Payment can close through escrow, for example Escrow.com or Sedo, and the domain transfers after that.",
       offerTitle: el ? "Έχετε άλλο ποσό κατά νου;" : "Have a different figure in mind?",
       offerBody: el
         ? "Στείλτε την πρότασή σας μέσω της φόρμας. Κάθε σοβαρή προσφορά εξετάζεται."
@@ -296,7 +353,9 @@ export function getCopy(locale: Locale) {
       amount: el ? "Ποσό πρότασης (€)" : "Offer amount (€)",
       message: el ? "Μήνυμα" : "Message",
       submit: el ? "Αποστολή πρότασης" : "Send offer",
-      submitBuy: el ? `Επιβεβαίωση αγοράς στα ${price}` : `Confirm purchase at ${price}`,
+      submitBuy: el
+        ? `Επιβεβαίωση αγοράς στα ${price} + ΦΠΑ`
+        : `Confirm purchase at ${price} + VAT`,
       sending: el ? "Αποστολή…" : "Sending…",
       success: el
         ? "Η πρότασή σας στάλθηκε. Θα σας απαντήσουμε σύντομα."
@@ -313,8 +372,8 @@ export function getCopy(locale: Locale) {
       emailInvalid: el ? "Συμπληρώστε έγκυρο email." : "Enter a valid email.",
       amountInvalid: el ? "Συμπληρώστε ποσό σε ευρώ." : "Enter an amount in euros.",
       buyBanner: el
-        ? `Αίτημα αγοράς στην τιμή των ${price}. Αν θέλετε, αλλάξτε το ποσό για να κάνετε διαφορετική πρόταση.`
-        : `Purchase request at ${price}. You can change the amount if you want to make a different offer.`,
+        ? `Αίτημα αγοράς στην τιμή των ${priceFull}. Αν θέλετε, αλλάξτε το ποσό για να κάνετε διαφορετική πρόταση.`
+        : `Purchase request at ${priceFull}. You can change the amount if you want to make a different offer.`,
       offerHint: el ? "Το ποσό που προτείνετε, σε ευρώ." : "The amount you propose, in euros.",
       required: el ? "υποχρεωτικό" : "required",
     },

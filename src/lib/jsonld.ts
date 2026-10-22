@@ -1,4 +1,4 @@
-import { ASKING_PRICE_EUR, CONTACT_EMAIL, DOMAIN, SITE_URL } from "@/config/site";
+import { ASKING_PRICE_EUR, CONTACT_EMAIL, DOMAIN, SITE_URL, TOTAL_EUR } from "@/config/site";
 import type { Copy } from "@/content/copy";
 import type { Locale } from "@/content/locale";
 
@@ -42,8 +42,22 @@ export function buildJsonLd(locale: Locale, copy: Copy) {
           "@type": "Offer",
           "@id": `${SITE_URL}/#offer`,
           url: `${SITE_URL}/#contact`,
-          price: String(ASKING_PRICE_EUR),
+          price: String(TOTAL_EUR),
           priceCurrency: "EUR",
+          priceSpecification: [
+            {
+              "@type": "UnitPriceSpecification",
+              price: String(TOTAL_EUR),
+              priceCurrency: "EUR",
+              valueAddedTaxIncluded: true,
+            },
+            {
+              "@type": "UnitPriceSpecification",
+              price: String(ASKING_PRICE_EUR),
+              priceCurrency: "EUR",
+              valueAddedTaxIncluded: false,
+            },
+          ],
           availability: "https://schema.org/InStock",
           seller: { "@id": `${SITE_URL}/#organization` },
         },
